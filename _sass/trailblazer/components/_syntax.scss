@@ -23,9 +23,12 @@ div.highlighter-rouge,
 figure.highlight,
 .tb-code {
   position: relative;
-  background: var(--tb-ink-950);
-  color: var(--tb-ink-100);
-  border: var(--tb-border-hair) solid rgb(255 255 255 / 0.08);
+  // Salesforce navy, not neutral black — the code slab wears the platform's
+  // own deep blue (the SLDS "cloud at night" family), which is what makes an
+  // Apex block on this theme read as Apex before a keyword is coloured.
+  background: #03234a;
+  color: #d9e6f4;
+  border: var(--tb-border-hair) solid rgb(120 170 220 / 0.18);
   border-radius: var(--tb-radius-lg);
   overflow: hidden;
   color-scheme: dark;
@@ -62,12 +65,14 @@ figure.highlight,
   align-items: center;
   gap: var(--tb-space-3);
   padding: var(--tb-space-2) var(--tb-space-2) var(--tb-space-2) var(--tb-space-4);
-  border-bottom: var(--tb-border-hair) solid rgb(255 255 255 / 0.08);
+  background: #032050;
+  background: linear-gradient(#0b2f5e, #062449);
+  border-bottom: var(--tb-border-2) solid var(--tb-accent);
   font-family: var(--tb-font-mono);
   font-size: var(--tb-text-2xs);
   letter-spacing: var(--tb-tracking-mono);
   text-transform: uppercase;
-  color: rgb(255 255 255 / 0.5);
+  color: rgb(214 232 250 / 0.75);
 }
 
 .tb-code__lang { margin-right: auto; }
@@ -91,7 +96,7 @@ figure.highlight,
 
 // Line numbers, when Rouge is configured to emit them.
 .lineno {
-  color: rgb(255 255 255 / 0.25);
+  color: rgb(160 195 230 / 0.35);
   user-select: none;
   padding-right: var(--tb-space-4);
 }
@@ -115,13 +120,16 @@ figure.highlight,
 // in value that no single role jumps off the page.
 // =============================================================================
 
-$tb-syn-comment: #6b7f95;
-$tb-syn-keyword: #ff7b9c;
-$tb-syn-string:  #7ee0a8;
-$tb-syn-number:  #f2b872;
-$tb-syn-name:    #7cc7ff;
-$tb-syn-fn:      #c4a8ff;
-$tb-syn-type:    #6fd7d2;
+// The token palette is the Salesforce hue family, lifted to survive the navy:
+// comments in cloud grey, keywords in the platform pink, strings in success
+// teal, numbers in the warning orange, names in sky blue.
+$tb-syn-comment: #7d97b5;
+$tb-syn-keyword: #ff6ea8;   // SLDS pink family
+$tb-syn-string:  #4fd1b0;   // success teal
+$tb-syn-number:  #ffb75d;   // warning orange
+$tb-syn-name:    #6ec1ff;   // brand sky
+$tb-syn-fn:      #c1a6ff;
+$tb-syn-type:    #4de1d2;
 
 .highlight,
 .tb-code {

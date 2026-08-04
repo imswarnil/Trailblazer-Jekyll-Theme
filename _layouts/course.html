@@ -89,8 +89,13 @@ layout: default
         sacrificing the reading column.
       {%- endcomment -%}
       <details class="tb-toc-mobile">
-        <summary>Course contents · {{ lessons.size }} lessons</summary>
+        <summary>Course content · {{ lessons.size }} lessons</summary>
         {%- include lesson-list.html lessons=lessons compact=true bare=true -%}
+      </details>
+
+      <details class="tb-toc-mobile" data-tb-toc-mobile hidden>
+        <summary>In this lesson</summary>
+        <ul class="tb-toc"></ul>
       </details>
 
       <div class="tb-prose" data-tb-article>
@@ -131,14 +136,16 @@ layout: default
     {%- comment -%} The player rail: the whole course, current lesson marked. {%- endcomment -%}
     <aside class="tb-sidebar" aria-label="Course contents">
       <div class="tb-widget">
-        {%- comment -%}
-          Plain link, not the growing-underline treatment — a widget heading
-          is furniture, and furniture does not perform on hover.
-        {%- endcomment -%}
-        <h2 class="tb-widget__head">
-          <a class="tb-u-no-underline" style="color:inherit;text-decoration:none" href="{{ course.url | relative_url }}">{{ course.title }}</a>
-        </h2>
+        <h2 class="tb-widget__head">Course content</h2>
         {%- include lesson-list.html lessons=lessons compact=true bare=true -%}
+        <p class="tb-u-mt-4">
+          <a class="tb-link tb-u-text-sm" href="{{ course.url | relative_url }}">About this course →</a>
+        </p>
+      </div>
+
+      <div class="tb-widget" data-tb-toc-widget hidden>
+        <h2 class="tb-widget__head">In this lesson</h2>
+        <ul class="tb-toc"></ul>
       </div>
     </aside>
   </div>

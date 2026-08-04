@@ -106,6 +106,30 @@ First release.
   level meters; the experience and education timelines use circular icon
   nodes, education with GPA; the resume summary lives in its hero band.
 
+### The workspace era
+
+- Documentation renders in a full-width three-column workspace under a
+  viewport-wide full bar; reading progress measures the page's own scroll on
+  every page.
+- Every collection owns its sidebar: series posts get a vertical route rail,
+  videos their chapters, books their buying card, projects their build log,
+  everything a "more from" list — and nothing shows that is merely about the
+  author.
+- Snippet cards render as editor windows; code blocks wear Salesforce navy
+  with an SLDS-family token palette; skills are full-width level bars with
+  words; certifications compress to credential cards; experience and
+  education timelines carry calendar/pin/GPA glyphs and circular icon nodes.
+- Page hierarchy animation — a fast settle, then children rise top-to-bottom
+  a beat apart — plus a PWA install card that asks once and then not again
+  for three days.
+- /uses (data-driven, affiliate-marked), /home (the personal-homepage live
+  preview, linked from the landing hero), an animated trail illustration,
+  llms.txt, Course/FAQPage structured data, six new icons, real screenshots
+  in the README and showcase, and a "Built with Trailblazer" wall fed by
+  _data/showcase.yml.
+- Grid-line hero pattern fading at the corners; `breadcrumb: false` honoured
+  per page and per collection.
+
 ### SEO
 
 - Hand-written per-collection JSON-LD: `BlogPosting`, `CreativeWork`,

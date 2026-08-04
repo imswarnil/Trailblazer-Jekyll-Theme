@@ -1,0 +1,42 @@
+---
+layout: null
+permalink: /llms.txt
+sitemap: false
+---
+# Trailblazer
+
+> An open-source (MIT) Jekyll theme for Salesforce developers: typed
+> collections, courses with a lesson player, a printable YAML resume, a
+> certification wall, and a token-first design system that re-brands from a
+> single accent colour. No build step beyond Jekyll; every plugin runs on
+> GitHub Pages.
+
+This site is both the theme's landing page and its live demo — the demo
+content is a fictional Salesforce-developer persona, and every feature links
+to the page that proves it.
+
+## Docs
+
+- [Documentation index]({{ '/docs/' | absolute_url }}): the numbered setup path
+- [Installing]({{ '/docs/installing/' | absolute_url }}): fork, gem or remote theme
+- [Deploying]({{ '/docs/deploying/' | absolute_url }}): GitHub Pages end to end
+- [Configuring]({{ '/docs/configuring/' | absolute_url }}): every _config.yml key
+- [Content]({{ '/docs/content/' | absolute_url }}): collections, front matter, courses
+- [Components]({{ '/docs/components/' | absolute_url }}): the Markdown shortcodes
+- [Customising]({{ '/docs/customising/' | absolute_url }}): tokens and overrides
+
+## Live references
+
+- [Style guide]({{ '/style-guide/' | absolute_url }}): every component, rendered
+- [Layout showcase]({{ '/showcase/' | absolute_url }}): every article shape, live
+- [Personal homepage preview]({{ '/home/' | absolute_url }}): the layout a real site uses
+
+## Source
+
+- [Repository](https://github.com/imswarnil/trailblazer-jekyll-theme): MIT, template-enabled
+- [Contribution guide](https://github.com/imswarnil/trailblazer-jekyll-theme/blob/main/CONTRIBUTING.md)
+
+## Optional
+
+- [Archive]({{ '/archive/' | absolute_url }}): every demo entry by year and tag
+- [Search index]({{ '/search.json' | absolute_url }}): title/tags/excerpt JSON for every page

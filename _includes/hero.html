@@ -28,7 +28,7 @@
 {%- assign lead = page.hero_lead | default: page.description -%}
 {%- assign hero_class = 'tb-hero tb-hero--' | append: style -%}
 {%- if style == 'band' and page.hero_image %}{% assign hero_class = hero_class | append: ' tb-hero--media' %}{% endif -%}
-{%- if style == 'statement' or style == 'minimal' %}{% assign hero_class = hero_class | append: ' tb-pattern tb-pattern-dots' %}{% endif -%}
+{%- if style == 'statement' or style == 'minimal' %}{% assign hero_class = hero_class | append: ' tb-pattern tb-pattern-grid-fade' %}{% endif -%}
 
 <section class="{{ hero_class }}">
 

@@ -22,7 +22,7 @@ description: >-
 {%- assign repo = 'https://github.com/imswarnil/trailblazer-jekyll-theme' -%}
 
 <div class="tb-container">
-  <section class="tb-hero tb-hero--statement tb-pattern tb-pattern-dots">
+  <section class="tb-hero tb-hero--statement tb-pattern tb-pattern-grid-fade">
     <p class="tb-hero__eyebrow">Open source · MIT · Jekyll</p>
     <h1 class="tb-hero__title">A Jekyll theme for <em>Salesforce developers</em>.</h1>
     <p class="tb-hero__lead">
@@ -34,6 +34,9 @@ description: >-
       <a class="tb-btn tb-btn--primary tb-btn--lg" href="{{ repo }}/generate" rel="noopener">
         {%- include icon.html name="sparkle" %}Use this template
       </a>
+      <a class="tb-btn tb-btn--soft tb-btn--lg" href="{{ '/home/' | relative_url }}">
+        {%- include icon.html name="play" %}Preview as a personal site
+      </a>
       <a class="tb-btn tb-btn--ghost tb-btn--lg" href="{{ repo }}" rel="noopener">
         {%- include icon.html name="github" %}Star on GitHub
       </a>
@@ -43,6 +46,25 @@ description: >-
       <span>{% include icon.html name="check" %} No Node, no toolchain</span>
       <span>{% include icon.html name="check" %} Light + dark</span>
     </p>
+
+    {%- comment -%}
+      The trail: a dashed path that draws itself once on load, two clouds
+      drifting above it. The theme's one animated illustration — decoration
+      with a pulse, stilled entirely under reduced motion.
+    {%- endcomment -%}
+    <svg class="tb-illus" viewBox="0 0 480 120" width="480" height="120" aria-hidden="true">
+      <path class="tb-illus__trail" d="M10 100 C 90 100, 110 40, 180 52 S 300 96, 360 60 S 450 22, 470 30"
+            fill="none" stroke="var(--tb-accent-300)" stroke-width="2.5"
+            stroke-linecap="round" stroke-dasharray="7 9" style="--tb-dash: 620"/>
+      <g class="tb-illus__cloud" fill="var(--tb-accent-soft)" stroke="var(--tb-accent-300)" stroke-width="1.5">
+        <path d="M140 34h-32a10 10 0 0 1-1.2-19.9A13 13 0 0 1 131.5 6a13 13 0 0 1 8.7 16A9.7 9.7 0 0 1 140 34Z"/>
+      </g>
+      <g class="tb-illus__cloud tb-illus__cloud--slow" fill="var(--tb-craft-soft)" stroke="var(--tb-craft)" stroke-width="1.5" opacity="0.9">
+        <path d="M395 96h-26a8 8 0 0 1-1-15.9 10.5 10.5 0 0 1 20-2.4A7.9 7.9 0 0 1 395 96Z"/>
+      </g>
+      <circle cx="10" cy="100" r="4" fill="var(--tb-accent)"/>
+      <circle cx="470" cy="30" r="4" fill="var(--tb-craft)"/>
+    </svg>
   </section>
 </div>
 

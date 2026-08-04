@@ -25,7 +25,7 @@ layout: default
       opacity — which is the "hero image" a resume can carry without
       pretending to be a landing page.
     {%- endcomment -%}
-    <div class="tb-resume__hero tb-pattern tb-pattern-dots">
+    <div class="tb-resume__hero tb-pattern tb-pattern-grid-fade">
     <header class="tb-resume__header">
       <div class="tb-resume__identity">
         {%- if site.author.avatar %}
@@ -76,17 +76,6 @@ layout: default
     </div>
     </div>{%- comment -%} /hero — name, summary and actions share the band {%- endcomment -%}
 
-    {%- if r.stats %}
-    <div class="tb-stats">
-      {%- for s in r.stats %}
-      <div class="tb-stat">
-        <span class="tb-stat__label">{{ s.label }}</span>
-        <span class="tb-stat__value">{{ s.value }}{% if s.suffix %}<small>{{ s.suffix }}</small>{% endif %}</span>
-      </div>
-      {%- endfor %}
-    </div>
-    {%- endif %}
-
     <div class="tb-resume__cols">
     <div class="tb-resume__main">
 
@@ -102,7 +91,8 @@ layout: default
           <span class="tb-timeline__node" aria-hidden="true">{% include icon.html name="briefcase" %}</span>
           <div class="tb-timeline__body">
             <span class="tb-timeline__time">
-              {{ job.from }}–{{ job.to }}{% if job.location %} · {{ job.location }}{% endif %}
+              <span>{% include icon.html name="calendar" %}{{ job.from }}–{{ job.to }}</span>
+              {%- if job.location %}<span>{% include icon.html name="map-pin" %}{{ job.location }}</span>{% endif %}
             </span>
             <span class="tb-timeline__title">{{ job.role }}</span>
             <span class="tb-timeline__org">
@@ -123,6 +113,29 @@ layout: default
               {%- for t in job.stack %}<span class="tb-badge">{{ t }}</span>{% endfor -%}
             </p>
             {%- endif %}
+          </div>
+        </li>
+        {%- endfor %}
+      </ol>
+    </section>
+    {%- endif %}
+
+    {%- comment -%} ── Education, on the same rail grammar as the jobs ───── {%- endcomment -%}
+    {%- if r.education %}
+    <section class="tb-resume__section">
+      <h2 class="tb-resume__section-title">{% include icon.html name="graduation" %}Education</h2>
+      <ol class="tb-timeline">
+        {%- for e in r.education %}
+        <li class="tb-timeline__item" data-done>
+          <span class="tb-timeline__node" aria-hidden="true">{% include icon.html name="graduation" %}</span>
+          <div class="tb-timeline__body">
+            <span class="tb-timeline__time">
+              <span>{% include icon.html name="calendar" %}{{ e.from }}{% if e.to %}–{{ e.to }}{% endif %}</span>
+              {%- if e.gpa %}<span>{% include icon.html name="badge" %}GPA {{ e.gpa }}</span>{% endif %}
+            </span>
+            <span class="tb-timeline__title">{{ e.title }}</span>
+            <span class="tb-timeline__org">{{ e.org }}</span>
+            {%- if e.note %}<p class="tb-timeline__note">{{ e.note }}</p>{% endif %}
           </div>
         </li>
         {%- endfor %}
@@ -183,14 +196,22 @@ layout: default
           <ul class="tb-skills__list">
             {%- for skill in group.items %}
             <li class="tb-skills__item">
-              {{ skill.name }}
+              <span class="tb-skills__name">{{ skill.name }}</span>
               {%- if skill.level %}
               {%- comment -%}
-                The meter is decorative; the level is spelled out for
-                assistive tech, because a half-filled bar is not information.
+                The bar is decorative and the word beside it is the truth —
+                spelled out again for assistive tech, because a half-filled
+                bar is not information.
               {%- endcomment -%}
               <span class="tb-skills__meter" aria-hidden="true" style="--tb-lvl: {{ skill.level }}"><i></i></span>
-              <span class="tb-sr-only">— level {{ skill.level }} of 4</span>
+              {%- case skill.level %}
+                {%- when 4 %}{% assign lvl_word = 'Expert' %}
+                {%- when 3 %}{% assign lvl_word = 'Strong' %}
+                {%- when 2 %}{% assign lvl_word = 'Working' %}
+                {%- else %}{% assign lvl_word = 'Familiar' %}
+              {%- endcase %}
+              <span class="tb-skills__word" aria-hidden="true">{{ lvl_word }}</span>
+              <span class="tb-sr-only">— {{ lvl_word }}, level {{ skill.level }} of 4</span>
               {%- endif %}
             </li>
             {%- endfor %}
@@ -198,26 +219,6 @@ layout: default
         </div>
         {%- endfor %}
       </div>
-    </section>
-    {%- endif %}
-
-    {%- comment -%} ── Education, on the same rail grammar as the jobs ───── {%- endcomment -%}
-    {%- if r.education %}
-    <section class="tb-resume__section">
-      <h2 class="tb-resume__section-title">{% include icon.html name="graduation" %}Education</h2>
-      <ol class="tb-timeline">
-        {%- for e in r.education %}
-        <li class="tb-timeline__item" data-done>
-          <span class="tb-timeline__node" aria-hidden="true">{% include icon.html name="graduation" %}</span>
-          <div class="tb-timeline__body">
-            <span class="tb-timeline__time">{{ e.from }}{% if e.to %}–{{ e.to }}{% endif %}{% if e.gpa %} · GPA {{ e.gpa }}{% endif %}</span>
-            <span class="tb-timeline__title">{{ e.title }}</span>
-            <span class="tb-timeline__org">{{ e.org }}</span>
-            {%- if e.note %}<p class="tb-timeline__note">{{ e.note }}</p>{% endif %}
-          </div>
-        </li>
-        {%- endfor %}
-      </ol>
     </section>
     {%- endif %}
 

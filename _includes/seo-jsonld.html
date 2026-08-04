@@ -65,6 +65,20 @@
     thumbnail is the cover, and the embed is the same no-cookie URL the page
     itself renders.
   {%- endcomment -%}
+  {%- comment -%}
+    A Course carries its level and length, and names the site as provider —
+    the three facts a course-rich result actually surfaces. timeRequired is
+    ISO 8601, derived from the human "1h 12m" the front matter keeps.
+  {%- endcomment -%}
+  {%- if schema_type == 'Course' %},
+  "provider": { "@type": "Organization", "name": {{ site.title | jsonify }}, "url": {{ site.url | jsonify }} }
+  {%- if page.level %},
+  "educationalLevel": {{ page.level | jsonify }}
+  {%- endif %}
+  {%- if page.total_duration %},
+  "timeRequired": {{ page.total_duration | replace: 'h', 'H' | replace: 'm', 'M' | remove: ' ' | prepend: 'PT' | jsonify }}
+  {%- endif %}
+  {%- endif %}
   {%- if schema_type == 'VideoObject' and page.video %},
   "embedUrl": "https://www.youtube-nocookie.com/embed/{{ page.video }}",
   "thumbnailUrl": {{ ld_image | jsonify }},
@@ -155,6 +169,29 @@
     {%- endfor %}
   ]
   {%- endif %}
+}
+</script>
+{%- endif %}
+
+{%- comment -%}
+  A course with FAQs earns a FAQPage graph — the one structured-data type
+  that still draws its own rich result, and the theme has the answers on the
+  page already, which is the honesty requirement.
+{%- endcomment -%}
+{%- if page.faqs %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for f in page.faqs %}
+    {
+      "@type": "Question",
+      "name": {{ f.q | jsonify }},
+      "acceptedAnswer": { "@type": "Answer", "text": {{ f.a | jsonify }} }
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ]
 }
 </script>
 {%- endif %}

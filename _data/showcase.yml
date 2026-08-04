@@ -1,0 +1,16 @@
+# =============================================================================
+# BUILT WITH TRAILBLAZER
+# Sites running the theme, shown on /showcase/. Add yours with a pull request
+# — one entry, three lines, newest first. Placeholder entries below are
+# marked as examples; replace the first real submission over them.
+# =============================================================================
+
+- name: Your site here
+  url: https://github.com/imswarnil/trailblazer-jekyll-theme/blob/main/CONTRIBUTING.md
+  author: Add yours with a PR
+  example: true
+
+- name: The demo you are reading
+  url: https://trailblazer.imswarnil.com
+  author: Trailblazer
+  example: true

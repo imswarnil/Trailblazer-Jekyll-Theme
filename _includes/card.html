@@ -188,6 +188,40 @@
   </div>
 </article>
 
+{%- elsif style == 'snippet' -%}
+
+{%- comment -%}
+  The editor window. Filename derives from the slug plus the language's
+  natural extension, because a snippet's card should look like where a
+  snippet lives.
+{%- endcomment -%}
+{%- assign ext = '.txt' -%}
+{%- case item.language -%}
+  {%- when 'Apex' %}{% assign ext = '.cls' %}
+  {%- when 'JavaScript' %}{% assign ext = '.js' %}
+  {%- when 'SOQL' %}{% assign ext = '.soql' %}
+  {%- when 'HTML' %}{% assign ext = '.html' %}
+  {%- when 'YAML' %}{% assign ext = '.yml' %}
+{%- endcase -%}
+<article class="tb-card tb-card--vscode">
+  <div class="tb-card__chrome" aria-hidden="true">
+    <span class="tb-card__dots"><i></i><i></i><i></i></span>
+    <span class="tb-card__filename">{{ item.title | slugify }}{{ ext }}</span>
+  </div>
+  <div class="tb-card__body">
+    <h3 class="tb-card__title">
+      <a class="tb-card__link" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+    </h3>
+    {%- if item.description %}
+    <p class="tb-card__comment">{{ item.description }}</p>
+    {%- endif %}
+    <p class="tb-card__meta">
+      <span>{{ item.language | default: 'Apex' }}</span>
+      {%- if item.date %}<span>{{ item.date | date: '%b %Y' }}</span>{% endif -%}
+    </p>
+  </div>
+</article>
+
 {%- elsif style == 'row' -%}
 
 <article class="tb-card tb-card--row">

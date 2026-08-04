@@ -126,6 +126,19 @@
   max-width: var(--tb-measure-prose);
 }
 
+// Time rows in the resume timelines carry small glyphs — calendar for the
+// span, pin for the place — set inline-flex so icon and text share a baseline.
+.tb-resume .tb-timeline__time {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tb-space-1) var(--tb-space-3);
+
+  svg { width: 0.8rem; height: 0.8rem; opacity: 0.7; }
+
+  > span { display: inline-flex; align-items: center; gap: var(--tb-space-1); }
+}
+
 // ── Section ─────────────────────────────────────────────────────────────────
 
 .tb-resume__section { break-inside: avoid; }
@@ -180,44 +193,56 @@
 
 .tb-skills__list {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--tb-space-2);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-// A skill is a fact, not a link — so it is a badge, not a chip. The distinction
-// matters: nothing here is clickable, and nothing should look like it is.
+// A skill is a full row: name, a bar that owns the middle, and the level as
+// a word — because a bar without a word is a decoration, and a word without
+// a bar is a list. Quarter steps, not percentages: nobody's Apex is 82%.
 .tb-skills__item {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: var(--tb-space-2);
-  padding: var(--tb-space-1) var(--tb-space-3);
-  border: var(--tb-border-hair) solid var(--tb-line-default);
-  border-radius: var(--tb-radius-pill);
-  background: var(--tb-bg-surface);
-  font-size: var(--tb-text-xs);
-  color: var(--tb-fg-muted);
+  gap: var(--tb-space-3);
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-default);
 }
 
-// Level, when a group declares one: a small meter inside the pill. Quarter
-// steps, not a percentage — nobody's Apex is 82%.
+.tb-skills__name { flex: none; min-width: 11rem; }
+
 .tb-skills__meter {
-  width: 2.4rem;
-  height: 4px;
+  flex: 1;
+  height: 6px;
   border-radius: var(--tb-radius-pill);
   background: var(--tb-line-subtle);
   overflow: hidden;
-  flex: none;
 
   > i {
     display: block;
     height: 100%;
     width: calc(var(--tb-lvl, 0) / 4 * 100%);
-    background: var(--tb-accent);
+    background: linear-gradient(90deg, var(--tb-accent-400), var(--tb-accent));
     border-radius: inherit;
   }
+}
+
+.tb-skills__word {
+  flex: none;
+  width: 4.5rem;
+  text-align: right;
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+}
+
+@include tb-down("xs") {
+  .tb-skills__name { min-width: 8rem; }
+  .tb-skills__word { display: none; }
 }
 
 // ── Education & awards ──────────────────────────────────────────────────────

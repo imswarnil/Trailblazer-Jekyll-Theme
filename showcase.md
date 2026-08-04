@@ -13,6 +13,25 @@ width: prose
 Each entry below is a real page in the demo content whose front matter turns
 one knob. This page is the map; the pages are the territory.
 
+<div class="tb-grid-2 tb-u-mt-6">
+  <a class="tb-card" href="{{ '/home/' | relative_url }}" style="text-decoration:none">
+    <span class="tb-card__media tb-card__media--photo"><img src="{{ '/assets/img/screenshots/home.jpg' | relative_url }}" alt="The personal homepage" loading="lazy"></span>
+    <span class="tb-card__body"><span class="tb-card__title">Personal homepage</span></span>
+  </a>
+  <a class="tb-card" href="{{ '/courses/apex-for-admins/02-reading-apex-before-writing-it/' | relative_url }}" style="text-decoration:none">
+    <span class="tb-card__media tb-card__media--photo"><img src="{{ '/assets/img/screenshots/lesson.jpg' | relative_url }}" alt="The lesson player" loading="lazy"></span>
+    <span class="tb-card__body"><span class="tb-card__title">Lesson player</span></span>
+  </a>
+  <a class="tb-card" href="{{ '/resume/' | relative_url }}" style="text-decoration:none">
+    <span class="tb-card__media tb-card__media--photo"><img src="{{ '/assets/img/screenshots/resume.jpg' | relative_url }}" alt="The resume" loading="lazy"></span>
+    <span class="tb-card__body"><span class="tb-card__title">Printable resume</span></span>
+  </a>
+  <a class="tb-card" href="{{ '/docs/' | relative_url }}" style="text-decoration:none">
+    <span class="tb-card__media tb-card__media--photo"><img src="{{ '/assets/img/screenshots/docs.jpg' | relative_url }}" alt="The documentation" loading="lazy"></span>
+    <span class="tb-card__body"><span class="tb-card__title">Three-column docs</span></span>
+  </a>
+</div>
+
 ## Article shells
 
 <ul class="tb-rule-list">
@@ -100,4 +119,25 @@ one knob. This page is the map; the pages are the territory.
       <span class="tb-rule-list__meta">Every component, with the markup that produces it</span>
     </span>
   </li>
+</ul>
+
+
+## Built with Trailblazer
+
+Sites running this theme in the wild. Yours belongs here — add it with
+[one three-line pull request](https://github.com/imswarnil/trailblazer-jekyll-theme/blob/main/CONTRIBUTING.md)
+to `_data/showcase.yml`.
+
+<ul class="tb-rule-list">
+{% for site_entry in site.data.showcase %}
+  <li>
+    <span class="tb-rule-list__main">
+      <a class="tb-rule-list__title" href="{{ site_entry.url }}" rel="noopener" target="_blank">
+        {{ site_entry.name }}<span class="tb-sr-only"> (opens in a new tab)</span>
+      </a>
+      <span class="tb-rule-list__meta">{{ site_entry.author }}{% if site_entry.example %} · example entry{% endif %}</span>
+    </span>
+    {% include icon.html name="external" class="tb-u-fg-faint" %}
+  </li>
+{% endfor %}
 </ul>

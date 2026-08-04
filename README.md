@@ -23,12 +23,28 @@ command-palette search · dark mode · no JavaScript build step.
 
 <table>
 <tr>
-<td width="50%"><img src="assets/img/covers/projects.svg" alt="Projects cover"></td>
-<td width="50%"><img src="assets/img/covers/blog.svg" alt="Blog cover"></td>
+<td width="50%"><img src="assets/img/screenshots/landing.jpg" alt="The theme landing page"></td>
+<td width="50%"><img src="assets/img/screenshots/home.jpg" alt="The personal homepage layout"></td>
 </tr>
 <tr>
-<td><strong>Projects</strong> — GitHub-style repo cards, with live-preview and source buttons</td>
-<td><strong>Blog</strong> — a numbered index, not another card deck</td>
+<td><strong>The landing page</strong> — what the template opens on</td>
+<td><strong>The personal homepage</strong> — what your site opens on (<a href="https://trailblazer.imswarnil.com/home/">live preview</a>)</td>
+</tr>
+<tr>
+<td><img src="assets/img/screenshots/lesson.jpg" alt="The course lesson player"></td>
+<td><img src="assets/img/screenshots/resume.jpg" alt="The printable resume"></td>
+</tr>
+<tr>
+<td><strong>The lesson player</strong> — course content rail, per-lesson TOC</td>
+<td><strong>The resume</strong> — generated from YAML, prints to A4</td>
+</tr>
+<tr>
+<td><img src="assets/img/screenshots/docs.jpg" alt="The three-column documentation"></td>
+<td><img src="assets/img/screenshots/snippets.jpg" alt="Snippet cards styled as editor windows"></td>
+</tr>
+<tr>
+<td><strong>The docs</strong> — three columns, grouped nav, search, TOC</td>
+<td><strong>Snippets</strong> — cards that look like where snippets live</td>
 </tr>
 </table>
 

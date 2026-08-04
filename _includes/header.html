@@ -33,7 +33,11 @@
 {%- if h_blur %}{% assign nav_class = nav_class | append: ' tb-navbar--blur' %}{% endif -%}
 
 <header class="{{ nav_class }}" data-tb-navbar>
-  <div class="tb-container">
+  {%- comment -%}
+    The island floats inside the content column; the full bar earns its name
+    and runs the whole viewport, gutter to gutter.
+  {%- endcomment -%}
+  <div class="{% if h_layout == 'full' %}tb-container-full{% else %}tb-container{% endif %}">
     <div class="tb-navbar__inner">
 
       <a class="tb-navbar__brand" href="{{ '/' | relative_url }}">

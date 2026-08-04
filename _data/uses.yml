@@ -1,0 +1,78 @@
+# =============================================================================
+# USES
+# Everything on /uses/ — the desk, the software, the daily Salesforce kit —
+# grouped by category, each with its icon from the sprite.
+#
+#   affiliate: true adds the disclosure marker to that link, and the page
+#   carries one honest disclosure line for all of them. Do not mark a link
+#   affiliate that is not one; do not leave one unmarked that is.
+# =============================================================================
+
+- category: The desk
+  icon: laptop
+  items:
+    - name: MacBook Pro 14" (M4)
+      blurb: >-
+        The whole office. Compiles the site in under a second and survives a
+        day of scratch orgs on battery.
+      url: https://www.amazon.com/example-macbook
+      affiliate: true
+    - name: Dell U2723QE monitor
+      blurb: 27 inches of 4K. Two code panes and a debug log, no squinting.
+      url: https://www.amazon.com/example-monitor
+      affiliate: true
+    - name: Keychron K3 keyboard
+      blurb: Low-profile, hot-swappable, quiet enough for calls.
+      url: https://www.amazon.com/example-keychron
+      affiliate: true
+    - name: A chair I finally paid properly for
+      blurb: Ten years of Salesforce is also ten years of sitting. Buy the chair.
+      url: https://www.amazon.com/example-chair
+      affiliate: true
+
+- category: The software
+  icon: terminal
+  items:
+    - name: VS Code + Salesforce Extension Pack
+      blurb: The org in the editor. The replay debugger alone earns its place.
+      url: https://code.visualstudio.com
+    - name: Salesforce CLI (sf)
+      blurb: >-
+        Scratch orgs, deploys, data seeding — the spine of every pipeline on
+        this site.
+      url: https://developer.salesforce.com/tools/salesforcecli
+    - name: iTerm2
+      blurb: Split panes for the org watcher on the left, work on the right.
+      url: https://iterm2.com
+    - name: Jekyll
+      blurb: This site. Plain files in, plain HTML out, nothing to babysit.
+      url: https://jekyllrb.com
+
+- category: The Salesforce daily kit
+  icon: cloud
+  items:
+    - name: Workbench
+      blurb: Still the fastest "what is actually in this org" tool there is.
+      url: https://workbench.developerforce.com
+    - name: Salesforce Inspector Reloaded
+      blurb: >-
+        The browser extension that shows field API names where the UI shows
+        labels. Non-negotiable.
+      url: https://github.com/tprouvot/Salesforce-Inspector-reloaded
+    - name: Trailhead
+      blurb: Where the certifications on the resume actually came from.
+      url: https://trailhead.salesforce.com
+
+- category: The rest of the loadout
+  icon: headphones
+  items:
+    - name: Sony WH-1000XM5
+      blurb: The open-plan office, cancelled.
+      url: https://www.amazon.com/example-sony
+      affiliate: true
+    - name: A truly ordinary coffee grinder
+      blurb: >-
+        The one purchase everyone expects to be reviewed here. It grinds
+        coffee. It is fine.
+      url: https://www.amazon.com/example-grinder
+      affiliate: true

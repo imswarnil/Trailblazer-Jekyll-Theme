@@ -76,8 +76,21 @@ html.tb-js [data-tb-reveal]:not(.is-revealed) {
 // reduced motion via the global kill-switch below.
 
 main {
-  animation: tb-rise 280ms var(--tb-ease-out) both;
+  animation: tb-fade 160ms var(--tb-ease-out) both;
 }
+
+// The hierarchy: direct children of main rise in DOM order, 45ms apart —
+// which on every layout in this theme means top to bottom. Eight beats,
+// then everything after arrives together; a page is not a slideshow.
+main > * { animation: tb-rise 240ms var(--tb-ease-out) both; }
+main > *:nth-child(1) { animation-delay: 40ms; }
+main > *:nth-child(2) { animation-delay: 85ms; }
+main > *:nth-child(3) { animation-delay: 130ms; }
+main > *:nth-child(4) { animation-delay: 175ms; }
+main > *:nth-child(5) { animation-delay: 220ms; }
+main > *:nth-child(6) { animation-delay: 265ms; }
+main > *:nth-child(7) { animation-delay: 310ms; }
+main > *:nth-child(n+8) { animation-delay: 350ms; }
 
 // ── Micro-interactions ──────────────────────────────────────────────────────
 // Small, honest, one property each. The rule: feedback under 200ms, and the
@@ -195,3 +208,65 @@ main {
   -webkit-mask-size: 72px 48px;
   -webkit-mask-repeat: repeat;
 }
+
+
+// ── PWA install card ────────────────────────────────────────────────────────
+// Created by the script only when the browser says the site is installable
+// and the reader has not said "later" in the past three days.
+
+.tb-install {
+  position: fixed;
+  right: var(--tb-space-4);
+  bottom: var(--tb-space-4);
+  z-index: var(--tb-z-toast);
+  width: min(20rem, calc(100vw - var(--tb-space-8)));
+  padding: var(--tb-space-5);
+  background: var(--tb-bg-raised);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  box-shadow: var(--tb-shadow-4);
+  animation: tb-rise 240ms var(--tb-ease-out) both;
+}
+
+.tb-install__title {
+  font-weight: var(--tb-weight-bold);
+  font-family: var(--tb-font-display);
+}
+
+.tb-install__body {
+  margin-top: var(--tb-space-1);
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-muted);
+}
+
+.tb-install__actions {
+  display: flex;
+  gap: var(--tb-space-2);
+  margin-top: var(--tb-space-4);
+}
+
+// ── Animated illustration ───────────────────────────────────────────────────
+// The landing hero's trail: a dashed path that draws itself once, and two
+// clouds drifting a few pixels. Decoration with a pulse, not a loop of
+// noise — the draw runs once, only the drift repeats, and reduced motion
+// stills all of it via the global kill-switch.
+
+@keyframes tb-draw {
+  from { stroke-dashoffset: var(--tb-dash, 600); }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes tb-drift {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+.tb-illus { display: block; margin-inline: auto; max-width: 30rem; }
+
+.tb-illus__trail {
+  stroke-dasharray: var(--tb-dash, 600);
+  animation: tb-draw 1.6s var(--tb-ease-out) 300ms both;
+}
+
+.tb-illus__cloud { animation: tb-drift 5s var(--tb-ease-inout) infinite; }
+.tb-illus__cloud--slow { animation-duration: 7s; animation-delay: 1s; }

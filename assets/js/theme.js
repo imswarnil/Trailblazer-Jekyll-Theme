@@ -20,6 +20,7 @@ layout: null
   'use strict';
 
   var SEARCH_INDEX = {{ '/search.json' | relative_url | jsonify }};
+  var PWA_ENABLED = {{ site.pwa.enabled | default: false }};
   var root = document.documentElement;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -85,11 +86,10 @@ layout: null
   function onScroll() {
     if (navbar) navbar.classList.toggle('is-scrolled', window.scrollY > 8);
 
-    if (progressEl && article) {
-      var rect = article.getBoundingClientRect();
-      var total = rect.height - window.innerHeight;
-      var seen = -rect.top;
-      var ratio = total > 0 ? Math.min(1, Math.max(0, seen / total)) : 0;
+    if (progressEl) {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      var ratio = total > 48 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0;
       progressEl.style.setProperty('--tb-progress', ratio.toFixed(3));
     }
     ticking = false;
@@ -373,6 +373,63 @@ layout: null
                  '&autoplay=1';
     player.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
+
+  /* ── PWA install prompt ───────────────────────────────────────────────────
+     The browser fires `beforeinstallprompt` once it considers the site
+     installable. We hold that event and offer our own small card — once on
+     the first eligible visit, and again no sooner than three days after a
+     "later". An accepted install, or the app already running standalone,
+     ends the conversation permanently.
+     ------------------------------------------------------------------------ */
+  if (PWA_ENABLED) {
+    var SNOOZE_KEY = 'tb-install-snooze';
+    var SNOOZE_MS = 3 * 24 * 60 * 60 * 1000;
+
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+
+      try {
+        var snooze = localStorage.getItem(SNOOZE_KEY);
+        if (snooze === 'done') return;
+        if (snooze && Date.now() - parseInt(snooze, 10) < SNOOZE_MS) return;
+      } catch (err) { return; }
+
+      if (window.matchMedia('(display-mode: standalone)').matches) return;
+
+      var card = document.createElement('div');
+      card.className = 'tb-install';
+      card.setAttribute('role', 'dialog');
+      card.setAttribute('aria-label', 'Install this site');
+      card.innerHTML =
+        '<p class="tb-install__title">Install this site?</p>' +
+        '<p class="tb-install__body">Works offline, opens like an app, no store involved.</p>' +
+        '<div class="tb-install__actions">' +
+          '<button type="button" class="tb-btn tb-btn--primary tb-btn--sm" data-install>Install</button>' +
+          '<button type="button" class="tb-btn tb-btn--quiet tb-btn--sm" data-later>Maybe later</button>' +
+        '</div>';
+      document.body.appendChild(card);
+
+      card.querySelector('[data-install]').addEventListener('click', function () {
+        card.remove();
+        e.prompt();
+        e.userChoice.then(function (choice) {
+          try {
+            localStorage.setItem(SNOOZE_KEY,
+              choice.outcome === 'accepted' ? 'done' : String(Date.now()));
+          } catch (err) { /* fine */ }
+        });
+      });
+
+      card.querySelector('[data-later]').addEventListener('click', function () {
+        card.remove();
+        try { localStorage.setItem(SNOOZE_KEY, String(Date.now())); } catch (err) { /* fine */ }
+      });
+    });
+
+    window.addEventListener('appinstalled', function () {
+      try { localStorage.setItem(SNOOZE_KEY, 'done'); } catch (err) { /* fine */ }
+    });
+  }
 
   /* ── Search ───────────────────────────────────────────────────────────────
      A <dialog> palette over a JSON index fetched on first open. Scoring is

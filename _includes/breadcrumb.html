@@ -12,8 +12,10 @@
   page you are on is a tab stop that goes nowhere. The whole thing is a <nav>
   with a name, so a screen-reader user can jump past it.
 {%- endcomment -%}
-{%- unless page.url == '/' or page.breadcrumb == false -%}
 {%- assign bc_coll = site.collections | where: 'label', page.collection | first -%}
+{%- assign bc_on = page.breadcrumb -%}
+{%- if bc_on == nil %}{% assign bc_on = bc_coll.breadcrumb %}{% endif -%}
+{%- unless page.url == '/' or bc_on == false -%}
 
 <nav class="tb-breadcrumb" aria-label="Breadcrumb">
   <ol>

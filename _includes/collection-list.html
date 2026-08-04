@@ -43,6 +43,12 @@
   {%- for item in items %}{% include card.html item=item style="compact" %}{% endfor %}
 </div>
 
+{%- elsif style == 'snippet' -%}
+
+<div class="tb-grid-auto">
+  {%- for item in items %}{% include card.html item=item style="snippet" %}{% endfor %}
+</div>
+
 {%- elsif style == 'repo' -%}
 
 <div class="tb-grid-auto">

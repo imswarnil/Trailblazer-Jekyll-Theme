@@ -1,17 +1,16 @@
 {%- comment -%}
   ARTICLE SIDEBAR
-  Desktop only — below 1200px the reading column takes the whole width and the
-  TOC's mobile twin carries the navigation. Everything here is a convenience,
-  never the only route to something.
+  Desktop only — below 1200px the reading column takes the whole width and
+  the collapsible mobile twins carry the navigation.
 
-  The widgets choose themselves from the page: a table of contents when the
-  article has headings, the project's facts when it has facts, a share row
-  when sharing is on, the ad slot when AdSense is configured, and the
-  credentials last — always last, because they are about the author, and the
-  page is about the work.
+  Every collection gets ITS OWN rail. The widgets are chosen by what the page
+  actually is — a project shows its build log, a book its buying question, a
+  video its chapters, a series post its route through the series — and
+  nothing shows that is merely about the author. The page is about the work.
 {%- endcomment -%}
 <aside class="tb-sidebar" aria-label="Article sidebar">
 
+  {%- comment -%} Every article gets its map. {%- endcomment -%}
   {%- if site.reading.show_toc != false and page.toc != false %}
   <div class="tb-widget" data-tb-toc-widget hidden>
     <h2 class="tb-widget__head">On this page</h2>
@@ -20,9 +19,44 @@
   {%- endif %}
 
   {%- comment -%}
-    The build log: a project's facts repeated where they stay visible while
-    the case study scrolls. The same data as the header list — one source.
+    ── A series post: the route, vertical, current stop marked ──
+    The lessons list wears the series here — same numbered rows, same
+    aria-current convention, top to bottom the way a journey reads in a rail.
   {%- endcomment -%}
+  {%- if page.series %}
+  {%- assign series_posts = site.posts | where: 'series', page.series | sort: 'series_part' -%}
+  {%- if series_posts.size > 1 %}
+  <div class="tb-widget">
+    <h2 class="tb-widget__head">{{ page.series }} · series</h2>
+    {%- include lesson-list.html lessons=series_posts compact=true bare=true -%}
+  </div>
+  {%- endif %}
+  {%- endif %}
+
+  {%- comment -%} ── A video post: chapters that seek the player ── {%- endcomment -%}
+  {%- if page.video and page.chapters %}
+  <div class="tb-widget">
+    <h2 class="tb-widget__head">Chapters</h2>
+    <ol class="tb-chapters">
+      {%- for c in page.chapters %}
+      <li>
+        <button type="button" data-tb-chapter="{{ c.t }}">
+          <span class="tb-chapters__time">{{ c.t }}</span>
+          <span>{{ c.label }}</span>
+        </button>
+      </li>
+      {%- endfor %}
+    </ol>
+    {%- if site.author.youtube %}
+    <a class="tb-btn tb-btn--primary tb-btn--sm tb-btn--block tb-u-mt-4"
+       href="{{ site.author.youtube }}" rel="noopener" target="_blank">
+      {%- include icon.html name="youtube" %}Subscribe on YouTube<span class="tb-sr-only"> (opens in a new tab)</span>
+    </a>
+    {%- endif %}
+  </div>
+  {%- endif %}
+
+  {%- comment -%} ── A project or talk: the build log, always in view ── {%- endcomment -%}
   {%- if page.facts %}
   <div class="tb-widget">
     <h2 class="tb-widget__head">At a glance</h2>
@@ -49,6 +83,54 @@
   </div>
   {%- endif %}
 
+  {%- comment -%} ── A book: the buying question, answered where it is asked ── {%- endcomment -%}
+  {%- if page.collection == 'books' %}
+  <div class="tb-widget">
+    <h2 class="tb-widget__head">This book</h2>
+    <dl class="tb-dl">
+      {%- if page.book_author %}<dt>Author</dt><dd>{{ page.book_author }}</dd>{% endif %}
+      {%- if page.rating %}<dt>Rating</dt><dd>{{ page.rating }}/5</dd>{% endif %}
+      {%- if page.status %}<dt>Status</dt><dd>{{ page.status }}</dd>{% endif %}
+    </dl>
+    {%- if page.amazon or page.pdf %}
+    <div class="tb-stack-sm tb-u-mt-4">
+      {%- if page.amazon %}
+      <a class="tb-btn tb-btn--primary tb-btn--sm tb-btn--block" href="{{ page.amazon }}" rel="noopener" target="_blank">
+        {%- include icon.html name="external" %}Buy on Amazon
+      </a>
+      {%- endif %}
+      {%- if page.pdf %}
+      <a class="tb-btn tb-btn--ghost tb-btn--sm tb-btn--block" href="{{ page.pdf | relative_url }}" download>
+        {%- include icon.html name="download" %}Notes as PDF
+      </a>
+      {%- endif %}
+    </div>
+    {%- endif %}
+  </div>
+  {%- endif %}
+
+  {%- comment -%} ── More from the same shelf ── {%- endcomment -%}
+  {%- assign more = site[page.collection]
+        | where_exp: 'i', 'i.url != page.url'
+        | where_exp: 'i', 'i.type != "lesson"' -%}
+  {%- if more.size > 0 and page.collection != 'posts' %}
+  {%- assign coll_meta = site.collections | where: 'label', page.collection | first -%}
+  <div class="tb-widget">
+    <h2 class="tb-widget__head">More {{ page.collection }}</h2>
+    <div class="tb-stack-sm">
+      {%- assign more_sorted = more | sort: 'date' | reverse -%}
+      {%- for item in more_sorted limit: 3 %}
+      <a class="tb-rule-list__title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+      {%- endfor %}
+    </div>
+    {%- if coll_meta.index_url %}
+    <p class="tb-u-mt-4">
+      <a class="tb-link tb-u-text-sm" href="{{ coll_meta.index_url | relative_url }}">All {{ page.collection }} →</a>
+    </p>
+    {%- endif %}
+  </div>
+  {%- endif %}
+
   {%- if page.share %}
   <div class="tb-widget">
     <h2 class="tb-widget__head">Share this</h2>
@@ -56,56 +138,9 @@
   </div>
   {%- endif %}
 
-  {%- comment -%}
-    Video chapters: each row seeks the player on the page; the subscribe CTA
-    closes the widget. Only when the post is a YouTube video with `chapters:`
-    front matter — Vimeo and file players get plain timestamps in the prose.
-  {%- endcomment -%}
-  {%- if page.video and page.chapters %}
-  <div class="tb-widget">
-    <h2 class="tb-widget__head">Chapters</h2>
-    <ol class="tb-chapters">
-      {%- for c in page.chapters %}
-      <li>
-        <button type="button" data-tb-chapter="{{ c.t }}">
-          <span class="tb-chapters__time">{{ c.t }}</span>
-          <span>{{ c.label }}</span>
-        </button>
-      </li>
-      {%- endfor %}
-    </ol>
-    {%- if site.author.youtube %}
-    <a class="tb-btn tb-btn--primary tb-btn--sm tb-btn--block tb-u-mt-4"
-       href="{{ site.author.youtube }}" rel="noopener" target="_blank">
-      {%- include icon.html name="youtube" %}Subscribe on YouTube<span class="tb-sr-only"> (opens in a new tab)</span>
-    </a>
-    {%- endif %}
-  </div>
-  {%- endif %}
-
   {%- if site.adsense.client and site.adsense.client != "" %}
   <div class="tb-widget">
     {%- include ad.html slot=site.adsense.slots.sidebar -%}
-  </div>
-  {%- endif %}
-
-  {%- if site.data.certifications and site.data.certifications.size > 0 %}
-  <div class="tb-widget">
-    <h2 class="tb-widget__head">Certified in</h2>
-    <div class="tb-stack-sm">
-      {%- for c in site.data.certifications limit: 4 %}
-      <div class="tb-cert tb-cert--quiet">
-        <span class="tb-cert__seal">{{ c.short }}</span>
-        <span class="tb-cert__body">
-          <span class="tb-cert__name">{{ c.name }}</span>
-          <span class="tb-cert__issuer">{{ c.issuer }}</span>
-        </span>
-      </div>
-      {%- endfor %}
-    </div>
-    <p class="tb-u-mt-4">
-      <a class="tb-link tb-u-text-sm" href="{{ '/resume/' | relative_url }}">See all {{ site.data.certifications.size }} →</a>
-    </p>
   </div>
   {%- endif %}
 

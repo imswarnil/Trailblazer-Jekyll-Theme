@@ -128,6 +128,8 @@ footer:
       url: /now/
     - title: My journey
       url: /my-journey/
+    - title: Uses
+      url: /uses/
   # Shown in the sign-off row.
   legal:
     - title: Privacy
@@ -263,7 +265,7 @@ collections:
     icon: code
     schema: SoftwareSourceCode
     hero_style: minimal
-    card_style: compact
+    card_style: snippet
     image: /assets/img/covers/snippets.svg
 
   talks:
@@ -342,17 +344,17 @@ defaults:
       comments: true
       share: true
   - scope: { path: "", type: projects }
-    values: { layout: post }
+    values: { layout: post, share: true }
   - scope: { path: "", type: snippets }
-    values: { layout: post, comments: false }
+    values: { layout: post, comments: false, share: true }
   - scope: { path: "", type: talks }
-    values: { layout: post }
+    values: { layout: post, share: true }
   - scope: { path: "", type: videos }
-    values: { layout: post }
+    values: { layout: post, share: true }
   - scope: { path: "", type: courses }
     values: { layout: course }
   - scope: { path: "", type: books }
-    values: { layout: post, comments: false }
+    values: { layout: post, comments: false, share: true }
 
 # ── Blog pagination ──────────────────────────────────────────────────────────
 # jekyll-paginate is the version GitHub Pages runs natively, so a site can be
