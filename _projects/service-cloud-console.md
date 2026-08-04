@@ -11,6 +11,15 @@ repo: service-console-lwc
 language: JavaScript
 github: https://github.com/example/service-console-lwc
 demo: https://example.com/demo/console
+# The gallery renders as a keyboard-navigable carousel above the case study.
+# Alt text per shot — screenshots ARE content on a project page.
+gallery:
+  - src: /assets/img/projects/service-console-lwc/01.png
+    alt: The rebuilt case list with queue filters in the left rail
+  - src: /assets/img/projects/service-console-lwc/02.png
+    alt: A case detail page with the interaction timeline and metrics card
+  - src: /assets/img/projects/service-console-lwc/03.png
+    alt: The handle-time dashboard after the migration
 facts:
   - { label: Client, value: Northwind Digital }
   - { label: Year, value: "2025–2026" }

@@ -46,6 +46,9 @@ author:
   # this key is absent, which is why the demo leaves it commented out — a
   # download that 404s is worse than no download.
   # resume_pdf: /assets/files/resume.pdf
+  # The channel behind the video posts — powers the Subscribe button in the
+  # chapters widget. Remove to hide it.
+  youtube: https://youtube.com/@example
 
 # ── Style ────────────────────────────────────────────────────────────────────
 # Compiled into the stylesheet at build time (see assets/css/main.scss).
@@ -135,8 +138,8 @@ footer:
 # ── Navigation ───────────────────────────────────────────────────────────────
 # `children` turns an item into a dropdown. `icon` is the name of a symbol in
 # assets/img/icons.svg — see docs/customising.md for the full set.
-# Flat by default. An item with `children:` still becomes a dropdown — the
-# machinery is there when a site outgrows one row.
+# Mostly flat, with one dropdown — partly because the long tail belongs
+# folded, partly so the theme demos its own dropdown.
 navigation:
   - title: Home
     url: /
@@ -150,15 +153,51 @@ navigation:
   - title: Courses
     url: /courses/
     icon: graduation
-  - title: Books
-    url: /books/
-    icon: book
+  - title: More
+    icon: sparkle
+    children:
+      - title: Videos
+        url: /videos/
+        icon: play
+        blurb: Screencasts, with chapter navigation.
+      - title: Talks
+        url: /talks/
+        icon: mic
+        blurb: Slides, recordings and the audio player.
+      - title: Books
+        url: /books/
+        icon: book
+        blurb: The reading list, honestly rated.
+      - title: Snippets
+        url: /snippets/
+        icon: code
+        blurb: Apex and LWC worth keeping.
+      - title: Docs
+        url: /docs/
+        icon: book
+        blurb: How to set the theme up, end to end.
+      - title: Showcase
+        url: /showcase/
+        icon: layers
+        blurb: Every layout the theme can render.
   - title: Resume
     url: /resume/
     icon: badge
   - title: About
     url: /about/
     icon: user
+
+# ── Sharing ──────────────────────────────────────────────────────────────────
+# Which share targets appear, in this order, on the share row and the sidebar
+# share widget. Remove a line and it disappears everywhere. Available:
+# bluesky · x · linkedin · whatsapp · email · copy
+sharing:
+  - bluesky
+  - x
+  - linkedin
+  - whatsapp
+  - email
+  - copy
 
 # ── Social ───────────────────────────────────────────────────────────────────
 # Rendered in the footer and emitted as `sameAs` in the Person JSON-LD, which

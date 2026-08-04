@@ -335,6 +335,57 @@ cta:
 
 ---
 
+## Making the homepage yours
+
+The theme ships with its homepage set up as a **theme landing page** —
+features, previews, install buttons — because that is what a template
+repository should open on. Your site should not. Swap `index.md` for the
+personal layout, which is the same `layout: home` machinery the landing page
+deliberately does not use:
+
+```yaml
+---
+layout: home
+title: Home
+description: One or two sentences for search results.
+hero_style: split
+hero_eyebrow: Salesforce developer
+hero_title: I build on the platform, then <em>write down how it went</em>.
+hero_lead: One supporting sentence about you.
+hero_image: /assets/img/avatar.svg
+hero_tag: Open to work
+hero_actions:
+  - { label: Read the blog, url: /blog/, style: primary, icon: arrow-right }
+  - { label: See the resume, url: /resume/, style: ghost }
+
+show_stats: true              # the band from _data/resume.yml
+show_certifications: true
+
+home_sections:                # each renders in its collection's own style
+  - collection: posts
+    eyebrow: Writing
+    title: Latest posts
+    limit: 4
+  - collection: projects
+    limit: 3
+  - collection: courses
+    limit: 2
+
+cta:
+  kicker: Newsletter
+  title: One email a month, when there is something worth sending.
+  body: New posts, and the occasional thing I learned the expensive way.
+---
+
+A paragraph of Markdown here renders between the hero and the sections.
+```
+
+Reorder, add or delete `home_sections` freely — every collection can appear,
+each in its own card style, and nothing else in the theme depends on the
+list.
+
+---
+
 ## Images
 
 Put them in `assets/img/`. Reference them from the site root:

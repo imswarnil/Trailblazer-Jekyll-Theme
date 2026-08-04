@@ -324,20 +324,30 @@
 .tb-cert {
   display: flex;
   align-items: center;
-  gap: var(--tb-space-4);
+  gap: var(--tb-space-3);
+  padding: var(--tb-space-3);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-md);
+  background: var(--tb-bg-surface);
+  transition: var(--tb-t-colors), var(--tb-t-shadow);
+
+  @include tb-hover {
+    &:hover { border-color: var(--tb-line-strong); box-shadow: var(--tb-shadow-1); }
+  }
 }
 
 .tb-cert__seal {
   --tb-cert-color: var(--tb-accent-600);
+  font-size: 0.5rem;
   flex: none;
-  width: 3.1rem;
-  height: 3.4rem;
+  width: 2.15rem;
+  height: 2.35rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.28rem;
-  padding-bottom: 0.45rem; // optical centre: a shield's point steals height
+  gap: 0.16rem;
+  padding-bottom: 0.3rem; // optical centre: a shield's point steals height
   clip-path: polygon(50% 0%, 92% 10%, 100% 30%, 100% 58%, 50% 100%, 0% 58%, 0% 30%, 8% 10%);
   background:
     // A top-edge sheen, so the badge reads as enamel rather than as a flat chip.
@@ -359,8 +369,8 @@
   // The peak motif — two overlapping summits, in the badge's own light.
   &::before {
     content: "";
-    width: 1.35rem;
-    height: 0.6rem;
+    width: 0.95rem;
+    height: 0.42rem;
     background: rgb(255 255 255 / 0.85);
     clip-path: polygon(0% 100%, 30% 18%, 46% 62%, 58% 34%, 72% 0%, 100% 100%);
   }
@@ -368,6 +378,14 @@
 
 // The quiet variant, for a shelf of many — a row of full-colour shields is a
 // row of things shouting. Quiet keeps the shape and drops the enamel.
+.tb-cert--quiet {
+  border: 0;
+  padding: var(--tb-space-1) 0;
+  background: none;
+
+  @include tb-hover { &:hover { box-shadow: none; } }
+}
+
 .tb-cert--quiet .tb-cert__seal {
   background: var(--tb-bg-muted);
   color: var(--tb-fg-subtle);
@@ -386,7 +404,7 @@
 }
 
 .tb-cert__name {
-  font-size: var(--tb-text-sm);
+  font-size: var(--tb-text-xs);
   font-weight: var(--tb-weight-semibold);
   line-height: var(--tb-leading-snug);
 }
@@ -401,8 +419,8 @@
 
 .tb-cert-grid {
   display: grid;
-  gap: var(--tb-space-5);
-  grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+  gap: var(--tb-space-3);
+  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
 }
 
 // A credential that links out to its verification page is still a credential,

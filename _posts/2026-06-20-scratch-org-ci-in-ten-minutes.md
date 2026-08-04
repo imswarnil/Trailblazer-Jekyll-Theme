@@ -8,6 +8,14 @@ type: video
 video: dQw4w9WgXcQ
 duration: "12:41"
 tags: [DevOps, SFDX]
+# Chapters power the timestamp rail in the sidebar — click one and the
+# player seeks there.
+chapters:
+  - { t: "0:00", label: "What we are building, and why the shared sandbox had to go" }
+  - { t: "1:12", label: "The Dev Hub auth URL, and where the newline hides" }
+  - { t: "3:45", label: "The workflow file, line by line" }
+  - { t: "7:30", label: "First red run, and reading the Actions log" }
+  - { t: "9:58", label: "Green, and what it costs per PR" }
 ---
 
 The screen recording of

@@ -52,27 +52,34 @@
   {%- if page.share %}
   <div class="tb-widget">
     <h2 class="tb-widget__head">Share this</h2>
-    <div class="tb-footer__social">
-      <a class="tb-social-link" rel="noopener" target="_blank"
-         href="https://bsky.app/intent/compose?text={{ page.title | uri_escape }}%20{{ page.url | absolute_url | uri_escape }}"
-         aria-label="Share on Bluesky (opens in a new tab)">
-        {%- include icon.html name="bluesky" %}
-      </a>
-      <a class="tb-social-link" rel="noopener" target="_blank"
-         href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | uri_escape }}"
-         aria-label="Share on LinkedIn (opens in a new tab)">
-        {%- include icon.html name="linkedin" %}
-      </a>
-      <a class="tb-social-link"
-         href="mailto:?subject={{ page.title | uri_escape }}&amp;body={{ page.url | absolute_url | uri_escape }}"
-         aria-label="Share by email">
-        {%- include icon.html name="mail" %}
-      </a>
-      <button class="tb-social-link" type="button" data-tb-copy="{{ page.url | absolute_url }}"
-              aria-label="Copy link">
-        {%- include icon.html name="link" %}<span class="tb-sr-only" data-tb-copy-label>Copy link</span>
-      </button>
-    </div>
+    {%- include share-icons.html -%}
+  </div>
+  {%- endif %}
+
+  {%- comment -%}
+    Video chapters: each row seeks the player on the page; the subscribe CTA
+    closes the widget. Only when the post is a YouTube video with `chapters:`
+    front matter — Vimeo and file players get plain timestamps in the prose.
+  {%- endcomment -%}
+  {%- if page.video and page.chapters %}
+  <div class="tb-widget">
+    <h2 class="tb-widget__head">Chapters</h2>
+    <ol class="tb-chapters">
+      {%- for c in page.chapters %}
+      <li>
+        <button type="button" data-tb-chapter="{{ c.t }}">
+          <span class="tb-chapters__time">{{ c.t }}</span>
+          <span>{{ c.label }}</span>
+        </button>
+      </li>
+      {%- endfor %}
+    </ol>
+    {%- if site.author.youtube %}
+    <a class="tb-btn tb-btn--primary tb-btn--sm tb-btn--block tb-u-mt-4"
+       href="{{ site.author.youtube }}" rel="noopener" target="_blank">
+      {%- include icon.html name="youtube" %}Subscribe on YouTube<span class="tb-sr-only"> (opens in a new tab)</span>
+    </a>
+    {%- endif %}
   </div>
   {%- endif %}
 

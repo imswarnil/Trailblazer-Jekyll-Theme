@@ -370,12 +370,16 @@
 .tb-navbar--island .tb-progress {
   inset: 0;
   border-radius: var(--tb-radius-pill);
-  padding: var(--tb-border-2);
+  padding: 1.5px;
   background: conic-gradient(
     from 270deg,
-    var(--tb-accent-300) calc(var(--tb-progress, 0) * 360deg),
+    var(--tb-accent-200) calc(var(--tb-progress, 0) * 360deg),
     transparent 0
   );
+  // The gradient runs clockwise from the brand (left edge, upward). Flipping
+  // the element vertically makes the same fill READ as left → bottom → right
+  // → top — the trace descends past the brand first, the way a page does.
+  transform: scaleY(-1);
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);

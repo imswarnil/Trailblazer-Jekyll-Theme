@@ -1,5 +1,6 @@
 ---
 layout: docs
+header_layout: full
 title: Customising
 permalink: /docs/customising/
 description: Colours, tokens, overrides — and where the design system comes from.

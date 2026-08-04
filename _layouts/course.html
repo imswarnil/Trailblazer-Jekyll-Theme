@@ -58,10 +58,10 @@ layout: default
 {%- if next_i < lessons.size %}{% assign next_lesson = lessons[next_i] %}{% endif -%}
 
 <div class="tb-container tb-section">
-  {%- include breadcrumb.html parent_url=course.url parent_title=course.title parent_icon='graduation' -%}
-
   <div class="tb-shell tb-shell--sidebar">
     <article class="tb-shell__main">
+
+      {%- include breadcrumb.html parent_url=course.url parent_title=course.title parent_icon='graduation' -%}
 
       <header class="tb-post__header">
         <p class="tb-mono-sm">
@@ -150,10 +150,10 @@ layout: default
 {%- assign first_lesson = lessons | first -%}
 
 <div class="tb-container tb-section">
-  {%- include breadcrumb.html -%}
-
   <div class="tb-shell tb-shell--sidebar">
     <article class="tb-shell__main">
+
+      {%- include breadcrumb.html -%}
 
       <header class="tb-post__header">
         <p class="tb-cluster-sm">

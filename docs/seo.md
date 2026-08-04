@@ -1,5 +1,6 @@
 ---
 layout: docs
+header_layout: full
 title: SEO
 permalink: /docs/seo/
 description: Structured data, sitemaps and canonical URLs.

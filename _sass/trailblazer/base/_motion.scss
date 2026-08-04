@@ -70,6 +70,38 @@ html.tb-js [data-tb-reveal]:not(.is-revealed) {
   transition-delay: calc(var(--tb-i, 0) * var(--tb-stagger));
 }
 
+// ── Page entrance ───────────────────────────────────────────────────────────
+// One short rise for the whole main region on load — fast enough (280ms) that
+// it reads as "settled" rather than "loading", and gone entirely under
+// reduced motion via the global kill-switch below.
+
+main {
+  animation: tb-rise 280ms var(--tb-ease-out) both;
+}
+
+// ── Micro-interactions ──────────────────────────────────────────────────────
+// Small, honest, one property each. The rule: feedback under 200ms, and the
+// resting state is always reachable without any of it.
+
+// Icon buttons acknowledge the pointer.
+.tb-navbar__icon-btn svg,
+.tb-social-link svg {
+  transition: var(--tb-t-transform);
+}
+
+@include tb-hover {
+  .tb-navbar__icon-btn:hover svg,
+  .tb-social-link:hover svg { transform: scale(1.12); }
+
+  // A button whose icon is an arrow nudges it the way it points.
+  .tb-btn:hover > svg:last-child { transform: translateX(2px); }
+  .tb-btn > svg { transition: var(--tb-t-transform); }
+
+  // Chips lift a hair.
+  .tb-chip { transition: var(--tb-t-colors), var(--tb-t-transform); }
+  .tb-chip:hover { transform: translateY(-1px); }
+}
+
 // ── Hover behaviours ────────────────────────────────────────────────────────
 
 @include tb-hover {

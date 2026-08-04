@@ -1,0 +1,35 @@
+{%- comment -%}
+  DOCS NAV
+  The grouped guide list, used by the docs layout's left rail. Grouped the way
+  a reader's journey actually runs — set it up, fill it, make it yours, ship
+  it — rather than alphabetically, because nobody's problem is alphabetical.
+
+  One include, one list: the layout renders it once, so adding a guide is one
+  line here and zero elsewhere.
+{%- endcomment -%}
+<nav class="tb-docs__nav" aria-label="Documentation">
+
+  <form class="tb-field" role="search" action="{{ '/search/' | relative_url }}" method="get">
+    <label class="tb-sr-only" for="tb-docs-q">Search the docs and the site</label>
+    <input class="tb-input" type="search" id="tb-docs-q" name="q" placeholder="Search docs…">
+  </form>
+
+  {%- assign groups = "Start here=Overview,/docs/;Installing,/docs/installing/;Deploying,/docs/deploying/|Build your site=Configuring,/docs/configuring/;Content,/docs/content/;Components,/docs/components/|Make it yours=Customising,/docs/customising/|Ship it=Integrations,/docs/integrations/;SEO,/docs/seo/;PWA,/docs/pwa/|Help=FAQ,/docs/faq/" | split: '|' -%}
+  {%- for group in groups %}
+    {%- assign head_items = group | split: '=' %}
+  <div class="tb-docs__group">
+    <p class="tb-docs__group-name">{{ head_items[0] }}</p>
+    {%- assign items = head_items[1] | split: ';' %}
+    {%- for item in items %}
+      {%- assign bits = item | split: ',' %}
+    <a href="{{ bits[1] | relative_url }}"{% if page.url == bits[1] %} aria-current="page"{% endif %}>{{ bits[0] }}</a>
+    {%- endfor %}
+  </div>
+  {%- endfor %}
+
+  <div class="tb-docs__group">
+    <p class="tb-docs__group-name">Live references</p>
+    <a href="{{ '/style-guide/' | relative_url }}">Style guide</a>
+    <a href="{{ '/showcase/' | relative_url }}">Layout showcase</a>
+  </div>
+</nav>

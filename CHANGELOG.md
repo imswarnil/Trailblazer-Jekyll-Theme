@@ -79,6 +79,33 @@ First release.
 - /now and /my-journey pages; Home in the navigation; the CTA band's
   invisible-text bug fixed.
 
+### The template era
+
+- The repository is a GitHub template: the homepage is a theme landing page
+  — features linking to their live proof, install tabs, template/star CTAs —
+  and "Making the homepage yours" in the docs is the paste-ready personal
+  layout.
+- Documentation grouped into a numbered path (Start → Build → Make it yours
+  → Ship) and rendered in a full-width three-column workspace: grouped nav
+  with search on the left, prose centre, page TOC right, under the full-bar
+  header layout.
+- Project galleries: a keyboard-navigable, snap-scrolling screenshot
+  carousel with prev/next and a counter; demo shots shipped in
+  assets/img/projects/.
+- Video posts gain a chapters rail that seeks the YouTube player, with a
+  Subscribe CTA; `vimeo:` and `video_file:` front matter render the Vimeo
+  and native players.
+- Share targets are config: the `sharing:` list controls the row and the
+  sidebar icons (Bluesky, X, LinkedIn, WhatsApp, email, copy). The author
+  card carries the author's social icons.
+- Reading progress is a 1.5px light ring travelling left → bottom → right →
+  top; heroes are shorter; breadcrumbs align with the article column and
+  truncate to one line; page and element micro-animations throughout,
+  all off under prefers-reduced-motion.
+- Certifications compress into bordered credential cards; skills carry small
+  level meters; the experience and education timelines use circular icon
+  nodes, education with GPA; the resume summary lives in its hero band.
+
 ### SEO
 
 - Hand-written per-collection JSON-LD: `BlogPosting`, `CreativeWork`,

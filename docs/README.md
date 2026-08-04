@@ -1,22 +1,46 @@
 ---
 layout: docs
+header_layout: full
 title: Documentation
 permalink: /docs/
 description: Every guide, and the fifteen-minute setup.
 ---
 
-| Guide | Read it when |
-| --- | --- |
-| [Installing](/docs/installing/) | Starting out — gem, remote theme, or fork |
-| [Deploying](/docs/deploying/) | Putting it on GitHub Pages and a custom domain |
-| [Configuring](/docs/configuring/) | Looking for what a `_config.yml` key does |
-| [Content](/docs/content/) | Writing posts, adding a collection, choosing a hero |
-| [Components](/docs/components/) | Wanting a callout, tabs, steps or stats in Markdown |
-| [Customising](/docs/customising/) | Changing colours, fonts, spacing or a component |
-| [Integrations](/docs/integrations/) | Adding analytics, comments, a newsletter |
-| [SEO](/docs/seo/) | Checking structured data, sitemap and canonical URLs |
-| [PWA](/docs/pwa/) | Considering offline support |
-| [FAQ](/docs/faq/) | Something is not working |
+The guides are grouped the way the work actually runs — read them in order
+the first time, then use the left rail to jump.
+
+### 1 · Start here
+
+| Step | Guide | You will have |
+| --- | --- | --- |
+| 1.1 | [Installing](/docs/installing/) | The site running at `localhost:4000` |
+| 1.2 | [Deploying](/docs/deploying/) | The site live on GitHub Pages, custom domain optional |
+
+### 2 · Build your site
+
+| Step | Guide | You will have |
+| --- | --- | --- |
+| 2.1 | [Configuring](/docs/configuring/) | Your name, colours, navigation and socials in place |
+| 2.2 | [Content](/docs/content/) | Posts, projects, courses — and the homepage made yours |
+| 2.3 | [Components](/docs/components/) | Callouts, tabs, steps and stats inside your Markdown |
+
+### 3 · Make it yours
+
+| Step | Guide | You will have |
+| --- | --- | --- |
+| 3.1 | [Customising](/docs/customising/) | Your brand on every component, via tokens |
+
+### 4 · Ship it
+
+| Step | Guide | You will have |
+| --- | --- | --- |
+| 4.1 | [Integrations](/docs/integrations/) | Analytics, comments, newsletter, ads — only what you switch on |
+| 4.2 | [SEO](/docs/seo/) | Structured data and one canonical domain |
+| 4.3 | [PWA](/docs/pwa/) | Offline support, if and when you want it |
+
+### Help
+
+[FAQ](/docs/faq/) — the questions that come up, answered plainly.
 
 ## The fifteen-minute version
 

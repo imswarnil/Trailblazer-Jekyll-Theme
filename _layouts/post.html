@@ -31,11 +31,16 @@ layout: default
 {%- unless sb == 'left' or sb == 'right' %}{% assign sb = false %}{% endunless -%}
 
 <div class="tb-container tb-section">
-  {%- include breadcrumb.html -%}
-
   <div class="tb-shell{% if sb %} tb-shell--sidebar{% if sb == 'left' %} tb-shell--sidebar-left{% endif %}{% endif %}">
 
     <article class="tb-shell__main"{% if sb == false %} style="max-width:var(--tb-w-prose);margin-inline:auto"{% endif %}>
+
+      {%- comment -%}
+        The breadcrumb lives inside the article column, so its left edge and
+        the title's left edge are the same line — a trail floating at the
+        container edge reads as part of the chrome, not the page.
+      {%- endcomment -%}
+      {%- include breadcrumb.html -%}
 
       <header class="tb-post__header{% if page.hero_split and page.image %} tb-post__header--split{% endif %}">
         <div>
@@ -97,10 +102,27 @@ layout: default
       {%- endcomment -%}
       {%- if page.video %}
       <div class="tb-media tb-ratio-wide tb-post__cover">
-        <iframe src="https://www.youtube-nocookie.com/embed/{{ page.video }}"
+        <iframe data-tb-player data-tb-video-id="{{ page.video }}"
+                src="https://www.youtube-nocookie.com/embed/{{ page.video }}"
                 title="{{ page.title | escape }}" loading="lazy"
-                allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
                 allowfullscreen></iframe>
+      </div>
+      {%- elsif page.vimeo %}
+      <div class="tb-media tb-ratio-wide tb-post__cover">
+        <iframe src="https://player.vimeo.com/video/{{ page.vimeo }}?dnt=1"
+                title="{{ page.title | escape }}" loading="lazy"
+                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      {%- elsif page.video_file %}
+      {%- comment -%}
+        A self-hosted file gets the native player — controls, keyboard,
+        picture-in-picture, all from the platform, themed by accent-color.
+      {%- endcomment -%}
+      <div class="tb-post__cover">
+        <video controls preload="metadata" style="width:100%;accent-color:var(--tb-accent);border-radius:var(--tb-radius-media)"
+               {% if page.image %}poster="{{ page.image | relative_url }}"{% endif %}
+               src="{{ page.video_file | relative_url }}"></video>
       </div>
       {%- elsif page.image and page.hero_split != true and page.collection != 'snippets' %}
       <figure class="tb-post__cover">
@@ -155,6 +177,34 @@ layout: default
         </a>
         {%- endif %}
       </p>
+      {%- endif %}
+
+      {%- comment -%}
+        The project gallery: `gallery:` front matter lists images, the
+        carousel does the rest — snap scrolling, prev/next, arrow keys, and a
+        counter. Alt text per image, because screenshots ARE content here.
+      {%- endcomment -%}
+      {%- if page.gallery %}
+      <div class="tb-carousel tb-u-mb-8" data-tb-carousel tabindex="0"
+           role="region" aria-roledescription="carousel" aria-label="Project gallery">
+        <div class="tb-carousel__track" data-tb-carousel-track>
+          {%- for shot in page.gallery %}
+          <figure>
+            <img src="{{ shot.src | relative_url }}" alt="{{ shot.alt | escape }}"
+                 loading="{% if forloop.first %}eager{% else %}lazy{% endif %}" decoding="async">
+          </figure>
+          {%- endfor %}
+        </div>
+        <button class="tb-carousel__btn tb-carousel__btn--prev" type="button"
+                data-tb-carousel-prev aria-label="Previous image">
+          {%- include icon.html name="arrow-left" %}
+        </button>
+        <button class="tb-carousel__btn tb-carousel__btn--next" type="button"
+                data-tb-carousel-next aria-label="Next image">
+          {%- include icon.html name="arrow-right" %}
+        </button>
+        <span class="tb-carousel__count" data-tb-carousel-count aria-live="polite">1 / {{ page.gallery | size }}</span>
+      </div>
       {%- endif %}
 
       {%- if page.demo or page.github %}

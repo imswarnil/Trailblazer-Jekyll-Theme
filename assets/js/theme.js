@@ -309,6 +309,71 @@ layout: null
     io.observe(holder);
   });
 
+  /* ── Project carousel ─────────────────────────────────────────────────────
+     A scroll-snap track; this only adds the buttons, the counter and arrow
+     keys. Touch and trackpad already work because the track is a real
+     scroller — which is also the no-JS story.
+     ------------------------------------------------------------------------ */
+  document.querySelectorAll('[data-tb-carousel]').forEach(function (root) {
+    var track = root.querySelector('[data-tb-carousel-track]');
+    var prev = root.querySelector('[data-tb-carousel-prev]');
+    var next = root.querySelector('[data-tb-carousel-next]');
+    var count = root.querySelector('[data-tb-carousel-count]');
+    var slides = track.children.length;
+
+    function index() {
+      return Math.round(track.scrollLeft / track.clientWidth);
+    }
+
+    function update() {
+      var i = index();
+      if (count) count.textContent = (i + 1) + ' / ' + slides;
+      if (prev) prev.toggleAttribute('disabled', i === 0);
+      if (next) next.toggleAttribute('disabled', i === slides - 1);
+    }
+
+    function go(delta) {
+      track.scrollTo({ left: (index() + delta) * track.clientWidth, behavior: 'smooth' });
+    }
+
+    if (prev) prev.addEventListener('click', function () { go(-1); });
+    if (next) next.addEventListener('click', function () { go(1); });
+
+    // Arrow keys while the carousel region has focus.
+    root.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+    });
+
+    track.addEventListener('scroll', function () {
+      window.requestAnimationFrame(update);
+    }, { passive: true });
+    update();
+  });
+
+  /* ── Video chapters ───────────────────────────────────────────────────────
+     A chapter button seeks the YouTube player by swapping the embed src with
+     a start offset — no player API, no extra script. Autoplay is added only
+     here, because the reader just asked to jump somewhere.
+     ------------------------------------------------------------------------ */
+  function toSeconds(stamp) {
+    return stamp.split(':').reduce(function (total, part) {
+      return total * 60 + parseInt(part, 10);
+    }, 0);
+  }
+
+  document.addEventListener('click', function (e) {
+    var chapter = e.target.closest('[data-tb-chapter]');
+    if (!chapter) return;
+    var player = document.querySelector('[data-tb-player]');
+    if (!player) return;
+    var id = player.getAttribute('data-tb-video-id');
+    player.src = 'https://www.youtube-nocookie.com/embed/' + id +
+                 '?start=' + toSeconds(chapter.getAttribute('data-tb-chapter')) +
+                 '&autoplay=1';
+    player.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
   /* ── Search ───────────────────────────────────────────────────────────────
      A <dialog> palette over a JSON index fetched on first open. Scoring is
      deliberately simple — title matches beat tag matches beat body matches —

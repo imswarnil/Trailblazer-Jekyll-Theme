@@ -1,11 +1,9 @@
 {%- comment -%}
-  SHARE
-  Plain links to each network's intent URL — no third-party buttons, which
-  means no tracking scripts loaded on every article just so someone can post a
-  link once.
-
-  The copy-link button uses the async clipboard API where it exists and falls
-  back to selecting the URL where it does not.
+  SHARE ROW
+  Driven by the `sharing:` list in _config.yml — the networks appear in that
+  order, and removing a line removes the target everywhere (here and in the
+  sidebar widget). Plain intent URLs: no third-party buttons, no tracking
+  script loaded on every article so someone can post a link once.
 {%- endcomment -%}
 {%- assign share_url = page.url | absolute_url | uri_escape -%}
 {%- assign share_title = page.title | uri_escape -%}
@@ -13,23 +11,38 @@
 <div class="tb-share">
   <span class="tb-share__label">Share</span>
 
+  {%- for network in site.sharing %}
+    {%- case network %}
+    {%- when 'bluesky' %}
   <a class="tb-btn tb-btn--ghost tb-btn--sm" rel="noopener" target="_blank"
      href="https://bsky.app/intent/compose?text={{ share_title }}%20{{ share_url }}">
     {%- include icon.html name="bluesky" %}Bluesky
   </a>
-
+    {%- when 'x' %}
+  <a class="tb-btn tb-btn--ghost tb-btn--sm" rel="noopener" target="_blank"
+     href="https://twitter.com/intent/tweet?text={{ share_title }}&amp;url={{ share_url }}">
+    {%- include icon.html name="x-social" %}Post
+  </a>
+    {%- when 'linkedin' %}
   <a class="tb-btn tb-btn--ghost tb-btn--sm" rel="noopener" target="_blank"
      href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url }}">
     {%- include icon.html name="linkedin" %}LinkedIn
   </a>
-
+    {%- when 'whatsapp' %}
   <a class="tb-btn tb-btn--ghost tb-btn--sm" rel="noopener" target="_blank"
+     href="https://wa.me/?text={{ share_title }}%20{{ share_url }}">
+    {%- include icon.html name="whatsapp" %}WhatsApp
+  </a>
+    {%- when 'email' %}
+  <a class="tb-btn tb-btn--ghost tb-btn--sm"
      href="mailto:?subject={{ share_title }}&amp;body={{ share_url }}">
     {%- include icon.html name="mail" %}Email
   </a>
-
+    {%- when 'copy' %}
   <button class="tb-btn tb-btn--ghost tb-btn--sm" type="button"
           data-tb-copy="{{ page.url | absolute_url }}">
     {%- include icon.html name="link" %}<span data-tb-copy-label>Copy link</span>
   </button>
+    {%- endcase %}
+  {%- endfor %}
 </div>

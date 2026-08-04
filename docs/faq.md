@@ -1,5 +1,6 @@
 ---
 layout: docs
+header_layout: full
 title: FAQ
 permalink: /docs/faq/
 description: The questions that come up, answered plainly.

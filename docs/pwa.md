@@ -1,5 +1,6 @@
 ---
 layout: docs
+header_layout: full
 title: PWA
 permalink: /docs/pwa/
 description: The service worker, and when not to turn it on.

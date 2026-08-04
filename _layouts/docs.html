@@ -3,44 +3,52 @@ layout: default
 ---
 {%- comment -%}
   DOCS
-  The documentation, rendered on the site itself — a theme whose manual lives
-  only in the repository is a theme whose users read the CSS instead.
+  The documentation workspace: three columns at full width — the grouped
+  guide nav with its search box on the left, the prose in the middle, the
+  page's own table of contents on the right. The TOC folds first, then the
+  nav becomes a stacked strip; the prose never pays for the rails.
 
-  The nav strip lists every guide with the current one marked; the pages
-  themselves are the same Markdown files a contributor edits in docs/, so
-  there is exactly one copy of the truth and it ships with the theme.
+  Docs pages run the FULL navbar rather than the island — partly because a
+  manual reads better under a workbench bar, partly so the theme demos its
+  own second header layout on pages every buyer will visit.
+
+  The content is the same Markdown a contributor edits in docs/ — one copy of
+  the truth, shipped with the theme, rendered by it.
 {%- endcomment -%}
 
-<div class="tb-container-prose">
-  {%- include breadcrumb.html -%}
+<div class="tb-container-wide tb-section">
+  <div class="tb-docs">
 
-  <section class="tb-hero tb-hero--minimal">
-    <p class="tb-hero__eyebrow">Theme docs</p>
-    <h1 class="tb-hero__title">{{ page.title }}</h1>
-    {%- if page.description %}
-    <p class="tb-hero__lead">{{ page.description }}</p>
-    {%- endif %}
-  </section>
-</div>
+    {%- include docs-nav.html -%}
 
-<div class="tb-container-prose tb-section">
+    <article class="tb-docs__main" style="min-width:0">
+      {%- include breadcrumb.html -%}
 
-  <nav class="tb-cluster-sm tb-u-mb-8" aria-label="Documentation">
-    {%- assign guides = "Documentation,/docs/|Installing,/docs/installing/|Deploying,/docs/deploying/|Configuring,/docs/configuring/|Content,/docs/content/|Components,/docs/components/|Customising,/docs/customising/|Integrations,/docs/integrations/|SEO,/docs/seo/|PWA,/docs/pwa/|FAQ,/docs/faq/" | split: '|' -%}
-    {%- for g in guides %}
-      {%- assign bits = g | split: ',' %}
-    <a class="tb-chip" href="{{ bits[1] | relative_url }}"
-       {%- if page.url == bits[1] %} aria-current="page"{% endif %}>{{ bits[0] }}</a>
-    {%- endfor %}
-  </nav>
+      <header class="tb-post__header">
+        <p class="tb-eyebrow">Theme docs</p>
+        <h1 class="tb-post__title" style="font-size:var(--tb-text-3xl)">{{ page.title }}</h1>
+        {%- if page.description %}
+        <p class="tb-post__lead" style="font-size:var(--tb-text-base)">{{ page.description }}</p>
+        {%- endif %}
+      </header>
 
-  <div class="tb-prose" data-tb-article>
-    {{ content }}
+      <div class="tb-prose" data-tb-article>
+        {{ content }}
+      </div>
+
+      <p class="tb-u-mt-12 tb-u-text-sm tb-u-fg-subtle">
+        Found something wrong on this page? The source lives in
+        <code>docs/</code> — corrections welcome, see the
+        <a class="tb-link" href="https://github.com/imswarnil/trailblazer-jekyll-theme/blob/main/CONTRIBUTING.md">contribution guide</a>.
+      </p>
+    </article>
+
+    <aside class="tb-docs__toc" aria-label="On this page">
+      <div data-tb-toc-widget hidden>
+        <p class="tb-docs__group-name">On this page</p>
+        <ul class="tb-toc"></ul>
+      </div>
+    </aside>
+
   </div>
-
-  <p class="tb-u-mt-12 tb-u-text-sm tb-u-fg-subtle">
-    Found something wrong on this page? The source lives at
-    <code>docs/{{ page.title | slugify }}.md</code> — corrections welcome, see the
-    <a class="tb-link" href="https://github.com/imswarnil/trailblazer-jekyll-theme/blob/main/CONTRIBUTING.md">contribution guide</a>.
-  </p>
 </div>

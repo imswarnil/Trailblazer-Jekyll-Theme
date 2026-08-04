@@ -10,8 +10,9 @@ A printable resume driven from YAML · a certification wall · typed collections
 posts, projects, snippets, talks, videos, courses and books · per-collection structured data ·
 command-palette search · dark mode · no JavaScript build step.
 
+[**Use this template**](https://github.com/imswarnil/trailblazer-jekyll-theme/generate) ·
 [Live demo](https://trailblazer.imswarnil.com) ·
-[Documentation](docs/) ·
+[Documentation](https://trailblazer.imswarnil.com/docs/) ·
 [Style guide](https://trailblazer.imswarnil.com/style-guide/)
 
 </div>
@@ -57,6 +58,11 @@ what a Salesforce developer's site actually has to do:
   and YAML, with a language label and a copy button on every block.
 
 ## Quick start
+
+The fastest route: click **Use this template** above, then set
+**Settings → Pages → Source → GitHub Actions**. Live in about a minute.
+
+Locally:
 
 ```bash
 git clone https://github.com/imswarnil/trailblazer-jekyll-theme.git my-site

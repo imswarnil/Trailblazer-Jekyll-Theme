@@ -80,6 +80,7 @@ education:
     org: University of Pune
     from: 2012
     to: 2016
+    gpa: "8.6/10"
     note: Final-year project on distributed job scheduling.
 
   - title: Trailhead Ranger

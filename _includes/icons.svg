@@ -280,6 +280,16 @@
     <path d="m10.4 9.6 4.6 2.4-4.6 2.4V9.6Z"/>
   </symbol>
 
+  <symbol id="tb-x-social" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4l16 16M20 4 4 20"/>
+    <path d="M4 4h3.4L20 20h-3.4L4 4Z" fill="currentColor" stroke="none" opacity="0.15"/>
+  </symbol>
+
+  <symbol id="tb-whatsapp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1 0 12 3.5Z"/>
+    <path d="M9 8.8c-.3 2.6 3.1 6.3 5.9 6.3.7 0 1.5-.4 1.6-1.1l.1-.7-2-.9-1 1c-1.2-.5-2.4-1.7-2.9-2.9l1-1-.9-2-.7.1c-.7.1-1 .7-1.1 1.2Z"/>
+  </symbol>
+
   <symbol id="tb-bluesky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 13.2C10.4 9.9 7 5.4 4.7 4.4 2.9 3.6 2 4.5 2 6.2c0 1.6.9 5.5 1.4 6.2.9 1.2 2.6 1.4 4.4 1.1-2.6.4-3.6 1.9-2.2 4 1.6 2.4 4.4.3 6.4-3.3"/>
     <path d="M12 13.2c1.6-3.3 5-7.8 7.3-8.8 1.8-.8 2.7.1 2.7 1.8 0 1.6-.9 5.5-1.4 6.2-.9 1.2-2.6 1.4-4.4 1.1 2.6.4 3.6 1.9 2.2 4-1.6 2.4-4.4.3-6.4-3.3"/>

@@ -1,5 +1,6 @@
 ---
 layout: docs
+header_layout: full
 title: Integrations
 permalink: /docs/integrations/
 description: Analytics, comments, newsletter, ads and push.

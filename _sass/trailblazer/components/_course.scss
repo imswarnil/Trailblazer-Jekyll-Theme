@@ -374,3 +374,187 @@
   letter-spacing: var(--tb-tracking-mono);
   text-transform: uppercase;
 }
+
+
+// ── Project carousel ────────────────────────────────────────────────────────
+// A scroll-snap track with drawn prev/next controls and a counter. The track
+// is a real scroller, so touch, trackpad and keyboard all work before the
+// script adds anything; the buttons and the counter are the enhancement.
+
+.tb-carousel {
+  position: relative;
+  border-radius: var(--tb-radius-media);
+  overflow: hidden;
+  background: var(--tb-bg-media);
+}
+
+.tb-carousel__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar { display: none; }
+
+  > figure {
+    flex: none;
+    width: 100%;
+    margin: 0;
+    scroll-snap-align: start;
+    aspect-ratio: var(--tb-ratio-wide);
+
+    img { width: 100%; height: 100%; object-fit: cover; }
+  }
+}
+
+.tb-carousel__btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--tb-z-raised);
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--tb-radius-full);
+  background: rgb(0 0 0 / 0.55);
+  color: var(--tb-pure-white);
+  backdrop-filter: blur(2px);
+  transition: var(--tb-t-colors), var(--tb-t-transform);
+
+  > svg { width: var(--tb-icon-sm); height: var(--tb-icon-sm); }
+
+  &:hover { background: var(--tb-accent); transform: translateY(-50%) scale(1.06); }
+
+  &[disabled] { opacity: 0.35; pointer-events: none; }
+}
+
+.tb-carousel__btn--prev { left: var(--tb-space-3); }
+.tb-carousel__btn--next { right: var(--tb-space-3); }
+
+.tb-carousel__count {
+  position: absolute;
+  bottom: var(--tb-space-3);
+  right: var(--tb-space-3);
+  z-index: var(--tb-z-raised);
+  padding: 2px var(--tb-space-2);
+  border-radius: var(--tb-radius-sm);
+  background: rgb(0 0 0 / 0.6);
+  color: var(--tb-pure-white);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  font-variant-numeric: tabular-nums;
+}
+
+// ── Video chapters ──────────────────────────────────────────────────────────
+// The timestamp rail beside a video post. Each row seeks the player; the
+// subscribe CTA closes the widget, because the person using chapters is the
+// person who watches to the end.
+
+.tb-chapters {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tb-chapters button {
+  display: flex;
+  align-items: baseline;
+  gap: var(--tb-space-3);
+  width: 100%;
+  padding: var(--tb-space-2) 0;
+  text-align: left;
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-muted);
+  border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle);
+  transition: var(--tb-t-colors);
+
+  &:hover { color: var(--tb-fg-accent); }
+}
+
+.tb-chapters__time {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  color: var(--tb-fg-accent);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+
+// ── Docs shell ──────────────────────────────────────────────────────────────
+// The documentation's three columns: grouped guide nav on the left, the prose
+// in the middle, the page's own TOC on the right. Full width, because a
+// manual is a workspace, not an article. The side rails fold away in order —
+// TOC first, then the nav becomes a top strip — so the prose never pays.
+
+.tb-docs {
+  display: grid;
+  gap: var(--tb-space-10);
+  align-items: start;
+}
+
+@include tb-up("lg") {
+  .tb-docs { grid-template-columns: 15rem minmax(0, 1fr); }
+}
+
+@include tb-up("xl") {
+  .tb-docs { grid-template-columns: 15rem minmax(0, 1fr) 13rem; }
+}
+
+.tb-docs__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-6);
+}
+
+@include tb-up("lg") {
+  .tb-docs__nav {
+    position: sticky;
+    top: calc(var(--tb-nav-h) + var(--tb-space-6));
+    max-height: calc(100vh - var(--tb-nav-h) - var(--tb-space-12));
+    overflow-y: auto;
+  }
+}
+
+.tb-docs__group-name {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+  margin-bottom: var(--tb-space-2);
+}
+
+.tb-docs__group a {
+  display: block;
+  padding: var(--tb-space-1) var(--tb-space-2);
+  border-left: var(--tb-border-2) solid transparent;
+  border-radius: 0 var(--tb-radius-sm) var(--tb-radius-sm) 0;
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-muted);
+  text-decoration: none;
+  transition: var(--tb-t-colors);
+
+  &:hover { color: var(--tb-fg-default); background: var(--tb-hover-wash); }
+
+  &[aria-current] {
+    color: var(--tb-fg-accent);
+    border-left-color: var(--tb-accent);
+    font-weight: var(--tb-weight-semibold);
+    background: var(--tb-accent-soft);
+  }
+}
+
+.tb-docs__toc {
+  display: none;
+}
+
+@include tb-up("xl") {
+  .tb-docs__toc {
+    display: block;
+    position: sticky;
+    top: calc(var(--tb-nav-h) + var(--tb-space-6));
+  }
+}

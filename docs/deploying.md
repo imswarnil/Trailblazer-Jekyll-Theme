@@ -1,5 +1,6 @@
 ---
 layout: docs
+header_layout: full
 title: Deploying
 permalink: /docs/deploying/
 description: GitHub Pages end to end, custom domain included.

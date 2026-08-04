@@ -201,22 +201,24 @@
   color: var(--tb-fg-muted);
 }
 
-// Level, when a group declares one. A meter of four ticks rather than a
-// percentage: nobody's Apex is 82%.
-.tb-skills__level {
-  display: inline-flex;
-  gap: 2px;
-  margin-left: var(--tb-space-1);
-}
-
-.tb-skills__tick {
-  width: 4px;
+// Level, when a group declares one: a small meter inside the pill. Quarter
+// steps, not a percentage — nobody's Apex is 82%.
+.tb-skills__meter {
+  width: 2.4rem;
   height: 4px;
-  border-radius: var(--tb-radius-full);
-  background: var(--tb-line-strong);
-}
+  border-radius: var(--tb-radius-pill);
+  background: var(--tb-line-subtle);
+  overflow: hidden;
+  flex: none;
 
-.tb-skills__tick[data-on] { background: var(--tb-accent); }
+  > i {
+    display: block;
+    height: 100%;
+    width: calc(var(--tb-lvl, 0) / 4 * 100%);
+    background: var(--tb-accent);
+    border-radius: inherit;
+  }
+}
 
 // ── Education & awards ──────────────────────────────────────────────────────
 

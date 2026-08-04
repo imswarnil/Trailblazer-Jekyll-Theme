@@ -1,5 +1,6 @@
 ---
 layout: docs
+header_layout: full
 title: Installing
 permalink: /docs/installing/
 description: Fork, gem or remote theme — and which to pick.

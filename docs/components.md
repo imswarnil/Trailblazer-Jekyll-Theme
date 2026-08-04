@@ -1,5 +1,6 @@
 ---
 layout: docs
+header_layout: full
 title: Components
 permalink: /docs/components/
 description: The Markdown shortcodes, with copyable examples.

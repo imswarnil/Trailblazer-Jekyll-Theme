@@ -16,6 +16,7 @@
     {%- if site.author.bio %}
     <p class="tb-author__bio">{{ site.author.bio }}</p>
     {%- endif %}
+    <div class="tb-footer__social tb-u-mt-3">{% include footer-social.html %}</div>
     <p class="tb-cluster-sm tb-u-mt-3">
       <a class="tb-btn tb-btn--soft tb-btn--sm" href="{{ '/about/' | relative_url }}">More about {{ site.author.first_name | default: site.author.name }}</a>
       {%- if site.author.email and site.author.email != "" %}
