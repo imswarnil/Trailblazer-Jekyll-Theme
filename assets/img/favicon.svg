@@ -1,0 +1,20 @@
+<!--
+  FAVICON
+  The logo with the detail taken out. At 16px the person inside the cloud
+  becomes noise, so it is dropped and the cloud carries the mark alone.
+
+  The media query flips the cloud to the accent on a dark tab strip, where a
+  white-on-blue tile reads as a bright rectangle rather than as a shape.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <style>
+    .bg { fill: #0176d3; }
+    .fg { fill: #fff; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0e131a; }
+      .fg { fill: #4fa9f0; }
+    }
+  </style>
+  <rect class="bg" width="64" height="64" rx="15"/>
+  <path class="fg" d="M20 43h25a8.8 8.8 0 0 0 1.1-17.5 12.4 12.4 0 0 0-23.2-2.9A7.9 7.9 0 0 0 20 43Z"/>
+</svg>

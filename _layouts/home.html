@@ -1,0 +1,108 @@
+---
+layout: default
+---
+{%- comment -%}
+  HOME
+  A hero, then one section per collection, then the ask.
+
+  The sections are declared in the home page's own front matter rather than
+  hard-coded here, so the order of the page — and which collections appear on
+  it at all — is content, not template:
+
+    home_sections:
+      - collection: posts
+        eyebrow: Writing
+        title: Latest posts
+        limit: 4
+      - collection: projects
+        style: bento          # optional override of the collection's own
+        limit: 5
+
+  Each section renders in that collection's signature style, which is what
+  keeps the page from reading as four identical grids.
+{%- endcomment -%}
+
+<div class="tb-container">
+  {%- include hero.html -%}
+</div>
+
+{%- comment -%} The credential strip. Facts, stated once, near the top. {%- endcomment -%}
+{%- if page.show_stats and site.data.resume.stats %}
+<div class="tb-container tb-section-sm">
+  <div class="tb-stats" data-tb-reveal>
+    {%- for s in site.data.resume.stats %}
+    <div class="tb-stat">
+      <span class="tb-stat__label">{{ s.label }}</span>
+      <span class="tb-stat__value">{{ s.value }}{% if s.suffix %}<small>{{ s.suffix }}</small>{% endif %}</span>
+    </div>
+    {%- endfor %}
+  </div>
+</div>
+{%- endif %}
+
+{%- if page.content and page.content != "" %}
+<div class="tb-container-prose tb-section">
+  <div class="tb-prose">{{ content }}</div>
+</div>
+{%- endif %}
+
+{%- for section in page.home_sections -%}
+  {%- assign coll = site.collections | where: 'label', section.collection | first -%}
+  {%- assign items = site[section.collection] | where_exp: 'i', 'i.type != "lesson"' -%}
+  {%- assign first = items | first -%}
+  {%- if first.date %}{% assign items = items | sort: 'date' | reverse %}{% endif -%}
+
+  {%- if items.size > 0 %}
+<section class="tb-container tb-section" data-tb-reveal>
+  <div class="tb-section__head">
+    <div>
+      <p class="tb-eyebrow">{{ section.eyebrow | default: coll.singular }}</p>
+      <h2 class="tb-section__title">{{ section.title | default: section.collection | capitalize }}</h2>
+      {%- if section.lead %}<p class="tb-section__lead">{{ section.lead }}</p>{% endif %}
+    </div>
+    <a class="tb-btn tb-btn--ghost tb-btn--sm" href="{{ coll.index_url | relative_url }}">
+      {{ section.link_label | default: 'View all' }}{% include icon.html name="arrow-right" %}
+    </a>
+  </div>
+
+  {%- include collection-list.html items=items style=section.style limit=section.limit -%}
+</section>
+  {%- endif %}
+{%- endfor -%}
+
+{%- comment -%} Certifications, if there are any to show. {%- endcomment -%}
+{%- if page.show_certifications and site.data.certifications.size > 0 %}
+<section class="tb-container tb-section" data-tb-reveal>
+  <div class="tb-section__head">
+    <div>
+      <p class="tb-eyebrow">Credentials</p>
+      <h2 class="tb-section__title">Certified in</h2>
+    </div>
+    <a class="tb-btn tb-btn--ghost tb-btn--sm" href="{{ '/resume/' | relative_url }}">
+      Full resume{% include icon.html name="arrow-right" %}
+    </a>
+  </div>
+  {%- include cert-wall.html limit=6 -%}
+</section>
+{%- endif %}
+
+{%- comment -%}
+  The ask. One per page, near the end, and it earns its contrast by being the
+  only inverse band in view.
+{%- endcomment -%}
+{%- if page.cta %}
+<div class="tb-container tb-section">
+  <section class="tb-cta">
+    <p class="tb-cta__kicker">{{ page.cta.kicker | default: 'Newsletter' }}</p>
+    <h2 class="tb-cta__title">{{ page.cta.title }}</h2>
+    {%- if page.cta.body %}<p class="tb-cta__body">{{ page.cta.body }}</p>{% endif %}
+    {%- if site.footer.newsletter %}
+      {%- include newsletter.html -%}
+    {%- elsif page.cta.button_url %}
+    <div class="tb-cta__actions">
+      <a class="tb-btn tb-btn--primary tb-btn--lg" href="{{ page.cta.button_url | relative_url }}">{{ page.cta.button_label }}</a>
+    </div>
+    {%- endif %}
+  </section>
+</div>
+{%- endif -%}

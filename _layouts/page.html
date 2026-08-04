@@ -1,0 +1,55 @@
+---
+layout: default
+---
+{%- comment -%}
+  PAGE
+  A plain content page, and — when front matter sets `list_collection` — the
+  index for a collection.
+
+  That double duty is deliberate: /projects/ is a page with an introduction
+  that happens to end in a grid. Making it a separate layout would mean the
+  introduction could not be written in Markdown, which is where it belongs.
+
+    ---
+    title: Projects
+    hero_style: split
+    list_collection: projects
+    list_style: bento          # optional; defaults to the collection's own
+    list_limit: 12             # optional
+    ---
+{%- endcomment -%}
+
+<div class="tb-container{% if page.width == 'prose' %}-prose{% elsif page.width == 'wide' %}-wide{% endif %}">
+  {%- include breadcrumb.html -%}
+  {%- include hero.html -%}
+</div>
+
+<div class="tb-container{% if page.list_collection %}{% elsif page.width != 'wide' %}-prose{% endif %} tb-section">
+
+  {%- if page.content and page.content != "" %}
+  <div class="tb-prose{% if page.list_collection %} tb-u-max-w-prose tb-u-mb-8{% endif %}">
+    {{ content }}
+  </div>
+  {%- endif %}
+
+  {%- if page.list_collection %}
+    {%- comment -%}
+      Lessons never appear in a collection listing — they are chapters of a
+      course, and the course card carries their count.
+    {%- endcomment -%}
+    {%- assign items = site[page.list_collection] | where_exp: 'i', 'i.type != "lesson"' -%}
+    {%- comment -%}
+      Sort newest first when the collection is dated. An undated collection —
+      snippets, say — keeps its file order, which is the author's own.
+    {%- endcomment -%}
+    {%- assign first = items | first -%}
+    {%- if first.date %}{% assign items = items | sort: 'date' | reverse %}{% endif -%}
+
+    {%- include collection-list.html
+        items=items
+        style=page.list_style
+        limit=page.list_limit
+        empty_message=page.list_empty_message -%}
+  {%- endif %}
+
+</div>

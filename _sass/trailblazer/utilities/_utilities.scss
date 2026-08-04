@@ -1,0 +1,147 @@
+// =============================================================================
+// UTILITIES
+// Single-purpose classes, imported last so they win. Every value comes off a
+// token ladder — a utility is a token with a class name, nothing more.
+//
+// This is deliberately small. A theme that ships four hundred utilities has
+// moved its design decisions into the templates, which is exactly what the
+// two-tier token system exists to prevent.
+// =============================================================================
+
+// ── Display ─────────────────────────────────────────────────────────────────
+.tb-u-block { display: block; }
+.tb-u-inline-block { display: inline-block; }
+.tb-u-flex { display: flex; }
+.tb-u-inline-flex { display: inline-flex; }
+.tb-u-grid { display: grid; }
+.tb-u-hidden { display: none; }
+
+// ── Flex & grid placement ───────────────────────────────────────────────────
+.tb-u-items-start { align-items: flex-start; }
+.tb-u-items-center { align-items: center; }
+.tb-u-items-end { align-items: flex-end; }
+.tb-u-justify-center { justify-content: center; }
+.tb-u-justify-between { justify-content: space-between; }
+.tb-u-justify-end { justify-content: flex-end; }
+.tb-u-wrap { flex-wrap: wrap; }
+.tb-u-grow { flex-grow: 1; }
+.tb-u-shrink-0 { flex-shrink: 0; }
+.tb-u-ms-auto { margin-inline-start: auto; }
+.tb-u-mx-auto { margin-inline: auto; }
+
+// ── Spacing ─────────────────────────────────────────────────────────────────
+// Only the steps a template legitimately reaches for. Anything finer belongs
+// inside a component.
+.tb-u-mt-0 { margin-top: 0; }
+.tb-u-mt-2 { margin-top: var(--tb-space-2); }
+.tb-u-mt-3 { margin-top: var(--tb-space-3); }
+.tb-u-mt-4 { margin-top: var(--tb-space-4); }
+.tb-u-mt-6 { margin-top: var(--tb-space-6); }
+.tb-u-mt-8 { margin-top: var(--tb-space-8); }
+.tb-u-mt-12 { margin-top: var(--tb-space-12); }
+.tb-u-mb-0 { margin-bottom: 0; }
+.tb-u-mb-2 { margin-bottom: var(--tb-space-2); }
+.tb-u-mb-4 { margin-bottom: var(--tb-space-4); }
+.tb-u-mb-6 { margin-bottom: var(--tb-space-6); }
+.tb-u-mb-8 { margin-bottom: var(--tb-space-8); }
+
+.tb-u-gap-1 { gap: var(--tb-space-1); }
+.tb-u-gap-2 { gap: var(--tb-space-2); }
+.tb-u-gap-3 { gap: var(--tb-space-3); }
+.tb-u-gap-4 { gap: var(--tb-space-4); }
+.tb-u-gap-6 { gap: var(--tb-space-6); }
+
+// ── Sizing ──────────────────────────────────────────────────────────────────
+.tb-u-w-full { width: 100%; }
+.tb-u-max-w-prose { max-width: var(--tb-measure-prose); }
+.tb-u-max-w-lead { max-width: var(--tb-measure-lead); }
+.tb-u-min-w-0 { min-width: 0; }
+
+// ── Text ────────────────────────────────────────────────────────────────────
+.tb-u-text-center { text-align: center; }
+.tb-u-text-end { text-align: end; }
+.tb-u-uppercase { text-transform: uppercase; }
+.tb-u-nowrap { white-space: nowrap; }
+.tb-u-balance { text-wrap: balance; }
+.tb-u-tabular { font-variant-numeric: tabular-nums; }
+.tb-u-mono { font-family: var(--tb-font-mono); }
+.tb-u-display { font-family: var(--tb-font-display); }
+
+.tb-u-text-2xs { font-size: var(--tb-text-2xs); }
+.tb-u-text-xs { font-size: var(--tb-text-xs); }
+.tb-u-text-sm { font-size: var(--tb-text-sm); }
+.tb-u-text-lg { font-size: var(--tb-text-lg); }
+
+.tb-u-weight-medium { font-weight: var(--tb-weight-medium); }
+.tb-u-weight-semibold { font-weight: var(--tb-weight-semibold); }
+.tb-u-weight-bold { font-weight: var(--tb-weight-bold); }
+
+// ── Colour — semantic names only, never a ramp step ─────────────────────────
+.tb-u-fg-default { color: var(--tb-fg-default); }
+.tb-u-fg-muted { color: var(--tb-fg-muted); }
+.tb-u-fg-subtle { color: var(--tb-fg-subtle); }
+.tb-u-fg-faint { color: var(--tb-fg-faint); }
+.tb-u-fg-accent { color: var(--tb-fg-accent); }
+
+.tb-u-bg-surface { background: var(--tb-bg-surface); }
+.tb-u-bg-sunken { background: var(--tb-bg-sunken); }
+.tb-u-bg-inverse { background: var(--tb-bg-inverse); color: var(--tb-fg-on-inverse); }
+.tb-u-bg-accent { background: var(--tb-accent); color: var(--tb-fg-on-accent); }
+
+// ── Borders & radius ────────────────────────────────────────────────────────
+.tb-u-border { border: var(--tb-border-hair) solid var(--tb-line-default); }
+.tb-u-border-top { border-top: var(--tb-border-hair) solid var(--tb-line-default); }
+.tb-u-border-bottom { border-bottom: var(--tb-border-hair) solid var(--tb-line-default); }
+.tb-u-rounded { border-radius: var(--tb-radius-md); }
+.tb-u-rounded-lg { border-radius: var(--tb-radius-lg); }
+.tb-u-rounded-card { border-radius: var(--tb-radius-card); }
+.tb-u-rounded-pill { border-radius: var(--tb-radius-pill); }
+.tb-u-rounded-full { border-radius: var(--tb-radius-full); }
+
+// ── Elevation ───────────────────────────────────────────────────────────────
+.tb-u-shadow-1 { box-shadow: var(--tb-shadow-1); }
+.tb-u-shadow-2 { box-shadow: var(--tb-shadow-2); }
+.tb-u-shadow-3 { box-shadow: var(--tb-shadow-3); }
+
+// ── Misc ────────────────────────────────────────────────────────────────────
+.tb-u-relative { position: relative; }
+.tb-u-overflow-hidden { overflow: hidden; }
+.tb-u-object-cover { width: 100%; height: 100%; object-fit: cover; }
+.tb-u-pointer { cursor: pointer; }
+.tb-u-select-none { user-select: none; }
+
+// A horizontal scroller: snap, momentum, no visible bar. Used by tag rows and
+// anything that must not wrap onto a second line.
+.tb-u-scroller {
+  display: flex;
+  gap: var(--tb-space-3);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  padding-block: var(--tb-space-1);
+
+  &::-webkit-scrollbar { display: none; }
+  > * { scroll-snap-align: start; flex: none; }
+}
+
+// ── Responsive display ──────────────────────────────────────────────────────
+// The one breakpoint pair that earns a utility: showing a thing on desktop and
+// a different thing on a phone, where a single component genuinely cannot be
+// both. Everything else belongs in a component's own media query.
+
+@include tb-down("md") {
+  .tb-u-md-down-hidden { display: none !important; }
+}
+
+@include tb-up("md") {
+  .tb-u-md-up-hidden { display: none !important; }
+}
+
+@include tb-down("lg") {
+  .tb-u-lg-down-hidden { display: none !important; }
+}
+
+@include tb-up("lg") {
+  .tb-u-lg-up-hidden { display: none !important; }
+}

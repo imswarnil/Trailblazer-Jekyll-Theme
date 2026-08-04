@@ -1,0 +1,35 @@
+{%- comment -%}
+  SHARE
+  Plain links to each network's intent URL — no third-party buttons, which
+  means no tracking scripts loaded on every article just so someone can post a
+  link once.
+
+  The copy-link button uses the async clipboard API where it exists and falls
+  back to selecting the URL where it does not.
+{%- endcomment -%}
+{%- assign share_url = page.url | absolute_url | uri_escape -%}
+{%- assign share_title = page.title | uri_escape -%}
+
+<div class="tb-share">
+  <span class="tb-share__label">Share</span>
+
+  <a class="tb-btn tb-btn--ghost tb-btn--sm" rel="noopener" target="_blank"
+     href="https://bsky.app/intent/compose?text={{ share_title }}%20{{ share_url }}">
+    {%- include icon.html name="bluesky" %}Bluesky
+  </a>
+
+  <a class="tb-btn tb-btn--ghost tb-btn--sm" rel="noopener" target="_blank"
+     href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url }}">
+    {%- include icon.html name="linkedin" %}LinkedIn
+  </a>
+
+  <a class="tb-btn tb-btn--ghost tb-btn--sm" rel="noopener" target="_blank"
+     href="mailto:?subject={{ share_title }}&amp;body={{ share_url }}">
+    {%- include icon.html name="mail" %}Email
+  </a>
+
+  <button class="tb-btn tb-btn--ghost tb-btn--sm" type="button"
+          data-tb-copy="{{ page.url | absolute_url }}">
+    {%- include icon.html name="link" %}<span data-tb-copy-label>Copy link</span>
+  </button>
+</div>

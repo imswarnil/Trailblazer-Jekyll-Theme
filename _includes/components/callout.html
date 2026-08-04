@@ -1,0 +1,35 @@
+{%- comment -%}
+  CALLOUT
+
+    {% include components/callout.html type="warning"
+       title="Governor limits apply"
+       text="This runs inside a trigger, so the SOQL is inside a loop you cannot see." %}
+
+  type: note (default) · info · success · warning · danger
+
+  Each type is a promise about what is inside it. A warning that turns out to
+  be a tip teaches readers to skip the next one, so pick the type that matches
+  the consequence of ignoring it, not the one that looks best.
+
+  For anything longer than a sentence or two, wrap Markdown instead:
+
+    <div class="tb-callout tb-callout--info" markdown="1">
+    Multiple paragraphs, lists and code all work in here.
+    </div>
+{%- endcomment -%}
+{%- assign type = include.type | default: 'note' -%}
+{%- case type -%}
+  {%- when 'info' -%}{% assign glyph = 'info' %}
+  {%- when 'success' -%}{% assign glyph = 'check-circle' %}
+  {%- when 'warning' -%}{% assign glyph = 'alert' %}
+  {%- when 'danger' -%}{% assign glyph = 'x-circle' %}
+  {%- else -%}{% assign glyph = 'lightbulb' %}
+{%- endcase -%}
+
+<div class="tb-callout{% unless type == 'note' %} tb-callout--{{ type }}{% endunless %}">
+  {%- include icon.html name=glyph class="tb-icon--md" %}
+  <div class="tb-callout__body">
+    {%- if include.title %}<strong class="tb-callout__title">{{ include.title }}</strong>{% endif %}
+    <p>{{ include.text | markdownify | remove: '<p>' | remove: '</p>' }}</p>
+  </div>
+</div>

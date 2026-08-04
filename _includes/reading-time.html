@@ -1,0 +1,21 @@
+{%- comment -%}
+  READING TIME
+
+    {% include reading-time.html content=page.content %}
+
+  Words divided by a reading speed, rounded up, floor of one minute. Deliberately
+  crude: a precise-looking "7.4 min" implies a measurement nobody made, and the
+  only thing a reader wants from this number is "can I read it now or not".
+
+  Set `reading.words_per_minute` in _config.yml, or `reading.show_reading_time:
+  false` to drop it everywhere.
+{%- endcomment -%}
+{%- if site.reading.show_reading_time != false -%}
+  {%- assign wpm = site.reading.words_per_minute | default: 220 -%}
+  {%- assign words = include.content | strip_html | number_of_words -%}
+  {%- assign minutes = words | divided_by: wpm -%}
+  {%- if words > 0 and minutes < 1 %}{% assign minutes = 1 %}{% endif -%}
+  {%- assign remainder = words | modulo: wpm -%}
+  {%- if remainder > 0 and minutes >= 1 %}{% assign minutes = minutes | plus: 1 %}{% endif -%}
+  {{- minutes }} min read
+{%- endif -%}

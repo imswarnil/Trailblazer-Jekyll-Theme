@@ -1,0 +1,42 @@
+// =============================================================================
+// TRAILBLAZER — the whole framework, in the order it has to load.
+//
+// The order is not cosmetic. `@import` shares one global scope, so:
+//
+//   abstracts   defines the mixins and functions everything else calls
+//   tokens      define the custom properties everything else reads
+//   base        styles bare elements, so a component only adds what it needs
+//   layout      the page furniture
+//   components  the parts
+//   utilities   LAST, so a single-purpose class can win against a component
+//
+// Move a line and something below it loses its variables. Add a partial in the
+// group it belongs to rather than at the end.
+// =============================================================================
+
+@import "abstracts/config";
+
+@import "tokens/primitives";
+@import "tokens/semantic";
+@import "tokens/scale";
+
+@import "base/reset";
+@import "base/typography";
+@import "base/a11y";
+@import "base/motion";
+
+@import "layout/containers";
+@import "layout/navbar";
+@import "layout/shell";
+@import "layout/footer";
+
+@import "components/button";
+@import "components/card";
+@import "components/form";
+@import "components/prose";
+@import "components/syntax";
+@import "components/hero";
+@import "components/resume";
+@import "components/course";
+
+@import "utilities/utilities";

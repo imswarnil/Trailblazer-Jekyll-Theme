@@ -1,0 +1,29 @@
+---
+layout: null
+permalink: /robots.txt
+sitemap: false
+---
+# =============================================================================
+# robots.txt
+#
+# Everything is crawlable except the two paths that would only ever produce
+# duplicate or empty results:
+#
+#   /search/   a client-side search page — its content depends on a query
+#              string, so every crawl of it is a different, thin page
+#   /offline/  the service worker's fallback shell, which is not a real page
+#
+# The Sitemap line is absolute because that is what the specification requires;
+# it is built from `url:` in _config.yml, which is why that value has to be the
+# domain you actually want indexed. If you serve the same build from more than
+# one hostname — a github.io subdomain alongside a custom domain, say — the
+# canonical tag in every page's <head> is what keeps only one of them in the
+# index. See docs/deploying.md.
+# =============================================================================
+
+User-agent: *
+Allow: /
+Disallow: /search/
+Disallow: /offline/
+
+Sitemap: {{ '/sitemap.xml' | absolute_url }}

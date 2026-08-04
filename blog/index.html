@@ -1,0 +1,31 @@
+---
+layout: default
+title: Blog
+description: >-
+  Notes on Apex, Lightning Web Components, integrations and the parts of
+  Salesforce development nobody puts in a release note.
+hero_style: statement
+hero_eyebrow: Writing
+hero_lead: Notes on Apex, LWC, integrations, and the parts of the job that only show up at 2 a.m.
+---
+{%- comment -%}
+  BLOG INDEX
+  This is the paginated page, which is why it is `blog/index.html` and not
+  `blog.md`: jekyll-paginate only ever paginates a file named index.html, and
+  jekyll-paginate is the pagination plugin GitHub Pages runs natively — so a
+  buyer can deploy this without a build workflow if they want to.
+
+  Pages past the first are marked noindex in <head>, since page 3 of an archive
+  is a list of links, not a page anybody should land on from a search.
+{%- endcomment -%}
+
+<div class="tb-container">
+  {%- include hero.html -%}
+</div>
+
+<div class="tb-container tb-section">
+  {%- assign items = paginator.posts | default: site.posts -%}
+  {%- include collection-list.html items=items style="numbered"
+      empty_message="Write your first post in _posts/ and it will appear here." -%}
+  {%- include pagination.html -%}
+</div>

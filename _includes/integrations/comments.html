@@ -1,0 +1,75 @@
+{%- comment -%}
+  COMMENTS
+  Giscus first, then Disqus — giscus stores threads as GitHub Discussions,
+  which for a developer audience means the comments live somewhere the author
+  actually owns.
+
+  Rendered only when the page asks for it (`comments: true`, the default for
+  posts) AND a provider is configured. A page that opts out gets no third-party
+  script at all rather than an empty comment box.
+
+  Both are loaded lazily: the embed only fetches once the reader has scrolled
+  near it, so a comment widget never competes with the article for bandwidth.
+{%- endcomment -%}
+{%- assign i = site.integrations -%}
+{%- comment -%}
+  Deliberately NOT gated on production, unlike analytics: a configured
+  comment thread should be visible in local preview, or "did I wire Disqus
+  correctly" costs a deploy to answer. An unconfigured one still renders
+  nothing.
+{%- endcomment -%}
+{%- if page.comments -%}
+
+  {%- if i.giscus.repo and i.giscus.repo != "" and i.giscus.repo_id and i.giscus.repo_id != "" -%}
+<section class="tb-comments" aria-label="Comments">
+  <h2 class="tb-widget__head">Comments</h2>
+  <div data-tb-lazy-embed>
+    <script src="https://giscus.app/client.js"
+            data-repo="{{ i.giscus.repo }}"
+            data-repo-id="{{ i.giscus.repo_id }}"
+            data-category="{{ i.giscus.category }}"
+            data-category-id="{{ i.giscus.category_id }}"
+            data-mapping="pathname"
+            data-strict="1"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="top"
+            data-theme="preferred_color_scheme"
+            data-lang="{{ site.lang | default: 'en' }}"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async></script>
+  </div>
+</section>
+
+  {%- elsif i.disqus_shortname and i.disqus_shortname != "" -%}
+<section class="tb-comments" aria-label="Comments">
+  <h2 class="tb-widget__head">Comments</h2>
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = {{ page.url | absolute_url | jsonify }};
+      this.page.identifier = {{ page.id | default: page.url | jsonify }};
+    };
+    // Deferred until the thread is near the viewport: Disqus pulls in a lot,
+    // and none of it is needed to read the article.
+    (function () {
+      var target = document.getElementById('disqus_thread');
+      var load = function () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://{{ i.disqus_shortname }}.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      };
+      if (!('IntersectionObserver' in window)) return load();
+      var io = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) { io.disconnect(); load(); }
+      }, { rootMargin: '400px' });
+      io.observe(target);
+    })();
+  </script>
+  <noscript>Comments are powered by Disqus, which needs JavaScript enabled.</noscript>
+</section>
+  {%- endif -%}
+
+{%- endif -%}

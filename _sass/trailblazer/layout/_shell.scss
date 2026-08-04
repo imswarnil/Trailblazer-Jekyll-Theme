@@ -1,0 +1,430 @@
+// =============================================================================
+// LAYOUT · READING SHELL
+// The article page: a reading-width column, an optional right rail, and the
+// table of contents that lives in it. The rail collapses under the content
+// rather than shrinking it — a 44rem measure is the point of the layout, and
+// nothing may take it below that.
+// =============================================================================
+
+.tb-shell {
+  display: grid;
+  gap: var(--tb-space-10);
+  align-items: start;
+}
+
+.tb-shell--sidebar {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@include tb-up("xl") {
+  .tb-shell--sidebar {
+    grid-template-columns: minmax(0, var(--tb-w-prose)) 18rem;
+    justify-content: center;
+  }
+
+  // The mirrored shell. Same columns reversed, and the rail moves before the
+  // article with `order` rather than by reordering the markup — the DOM order
+  // stays content-first, which is the order a screen reader should get.
+  .tb-shell--sidebar-left {
+    grid-template-columns: 18rem minmax(0, var(--tb-w-prose));
+
+    .tb-sidebar { order: -1; }
+  }
+}
+
+.tb-shell__main { min-width: 0; }
+
+.tb-sidebar {
+  position: sticky;
+  top: calc(var(--tb-nav-h) + var(--tb-space-6));
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-6);
+  align-self: start;
+}
+
+@include tb-down("xl") {
+  .tb-sidebar { display: none; }
+}
+
+.tb-widget {
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  background: var(--tb-bg-surface);
+  padding: var(--tb-space-5);
+}
+
+.tb-widget__head {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+  margin-bottom: var(--tb-space-4);
+}
+
+// ── Table of contents ───────────────────────────────────────────────────────
+// Generated from the article's own headings. The active entry is marked with
+// `aria-current`, set by an IntersectionObserver; with no script the list is a
+// perfectly good set of links.
+
+.tb-toc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-1);
+  font-size: var(--tb-text-sm);
+  max-height: calc(100vh - var(--tb-nav-h) - 12rem);
+  overflow-y: auto;
+}
+
+.tb-toc a {
+  display: block;
+  padding: var(--tb-space-1) 0 var(--tb-space-1) var(--tb-space-3);
+  border-left: var(--tb-border-2) solid var(--tb-line-subtle);
+  color: var(--tb-fg-subtle);
+  text-decoration: none;
+  line-height: var(--tb-leading-snug);
+  transition: var(--tb-t-colors);
+
+  &:hover { color: var(--tb-fg-default); border-left-color: var(--tb-line-strong); }
+}
+
+.tb-toc a[aria-current] {
+  color: var(--tb-fg-default);
+  border-left-color: var(--tb-accent);
+  font-weight: var(--tb-weight-medium);
+}
+
+.tb-toc__h3 a { padding-left: var(--tb-space-6); font-size: var(--tb-text-xs); }
+
+// The mobile twin: the same list inside a <details>, above the article.
+.tb-toc-mobile {
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-lg);
+  background: var(--tb-bg-sunken);
+  padding: var(--tb-space-3) var(--tb-space-4);
+  margin-bottom: var(--tb-space-8);
+
+  > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--tb-font-mono);
+    font-size: var(--tb-text-2xs);
+    letter-spacing: var(--tb-tracking-mono);
+    text-transform: uppercase;
+    color: var(--tb-fg-subtle);
+  }
+
+  > summary::after {
+    content: "";
+    width: 0.45em;
+    height: 0.45em;
+    border-right: var(--tb-border-2) solid currentcolor;
+    border-bottom: var(--tb-border-2) solid currentcolor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: var(--tb-t-transform);
+  }
+
+  &[open] > summary::after { transform: translateY(1px) rotate(-135deg); }
+
+  .tb-toc { margin-top: var(--tb-space-4); max-height: none; }
+}
+
+@include tb-up("xl") {
+  .tb-toc-mobile { display: none; }
+}
+
+// ── Article header ──────────────────────────────────────────────────────────
+
+.tb-post__header { margin-bottom: var(--tb-space-8); }
+
+.tb-post__title {
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-4xl);
+  font-weight: var(--tb-weight-bold);
+  letter-spacing: var(--tb-tracking-tighter);
+  line-height: var(--tb-leading-tight);
+  text-wrap: balance;
+  margin-top: var(--tb-space-4);
+}
+
+.tb-post__lead {
+  margin-top: var(--tb-space-5);
+  font-size: var(--tb-text-lg);
+  line-height: var(--tb-leading-relaxed);
+  color: var(--tb-fg-muted);
+  max-width: var(--tb-measure-lead);
+  text-wrap: pretty;
+}
+
+.tb-post__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tb-space-3);
+
+  > span,
+  > a,
+  > time {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tb-space-1);
+  }
+
+  svg { width: var(--tb-icon-xs); height: var(--tb-icon-xs); opacity: 0.75; }
+  margin-top: var(--tb-space-6);
+  padding-top: var(--tb-space-5);
+  border-top: var(--tb-border-hair) solid var(--tb-line-subtle);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+}
+
+.tb-post__meta-sep { color: var(--tb-fg-faint); }
+
+.tb-post__cover {
+  margin-bottom: var(--tb-space-8);
+  border-radius: var(--tb-radius-media);
+  overflow: hidden;
+}
+
+// The split header — text beside the image instead of a banner under the
+// title. The image column keeps a fixed ratio so the header's height is set
+// by the copy, not by whatever crop the image arrived in.
+.tb-post__header--split {
+  display: grid;
+  gap: var(--tb-space-8);
+  align-items: center;
+}
+
+@include tb-up("md") {
+  .tb-post__header--split { grid-template-columns: 1.15fr 1fr; }
+}
+
+.tb-post__header-media {
+  border-radius: var(--tb-radius-media);
+  overflow: hidden;
+  aspect-ratio: var(--tb-ratio-photo);
+  background: var(--tb-bg-media);
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+// ── Series stepper ──────────────────────────────────────────────────────────
+// A series is a journey, so it navigates like one: numbered nodes on a rail,
+// the parts behind you filled, the one you are on ringed in the accent, the
+// ones ahead hollow. Scrolls sideways rather than wrapping — a stepper that
+// wraps has stopped being one line of travel.
+
+.tb-series {
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-lg);
+  background: var(--tb-bg-sunken);
+  padding: var(--tb-space-5);
+}
+
+.tb-series__head {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+  margin-bottom: var(--tb-space-4);
+
+  > svg { width: var(--tb-icon-xs); height: var(--tb-icon-xs); }
+}
+
+.tb-series__list {
+  list-style: none;
+  margin: 0;
+  padding: var(--tb-space-1) 0;
+  display: flex;
+  counter-reset: tb-part;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+
+  > li {
+    counter-increment: tb-part;
+    position: relative;
+    flex: 1 0 8.5rem;
+    min-width: 0;
+
+    // The rail between nodes: from this node's centre to the next one's.
+    &:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 0.875rem;
+      left: calc(50% + 1.2rem);
+      right: calc(-50% + 1.2rem);
+      height: var(--tb-border-2);
+      background: var(--tb-line-default);
+    }
+  }
+
+  a,
+  span[aria-current] {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--tb-space-2);
+    text-decoration: none;
+    text-align: center;
+    padding-inline: var(--tb-space-2);
+    font-size: var(--tb-text-xs);
+    line-height: var(--tb-leading-snug);
+    color: var(--tb-fg-subtle);
+
+    // The node, numbered by counter.
+    &::before {
+      content: counter(tb-part);
+      display: grid;
+      place-items: center;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: var(--tb-radius-full);
+      border: var(--tb-border-2) solid var(--tb-line-strong);
+      background: var(--tb-bg-canvas);
+      font-family: var(--tb-font-mono);
+      font-size: var(--tb-text-2xs);
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  a:hover { color: var(--tb-fg-default); }
+  a:hover::before { border-color: var(--tb-accent); color: var(--tb-fg-accent); }
+
+  // Behind you: filled quietly.
+  li[data-done] a::before {
+    background: var(--tb-fg-default);
+    border-color: var(--tb-fg-default);
+    color: var(--tb-bg-canvas);
+  }
+
+  // You are here.
+  span[aria-current] {
+    color: var(--tb-fg-default);
+    font-weight: var(--tb-weight-semibold);
+
+    &::before {
+      border-color: var(--tb-accent);
+      background: var(--tb-accent);
+      color: var(--tb-fg-on-accent);
+      box-shadow: 0 0 0 3px var(--tb-accent-ring);
+    }
+  }
+}
+
+// ── Article footer ──────────────────────────────────────────────────────────
+
+.tb-post__footer {
+  margin-top: var(--tb-space-12);
+  padding-top: var(--tb-space-8);
+  border-top: var(--tb-border-hair) solid var(--tb-line-default);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-8);
+}
+
+// Previous / next, as two halves of one row.
+.tb-post__nav {
+  display: grid;
+  gap: var(--tb-space-4);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@include tb-down("sm") {
+  .tb-post__nav { grid-template-columns: minmax(0, 1fr); }
+}
+
+.tb-post__nav-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-2);
+  padding: var(--tb-space-5);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  text-decoration: none;
+  color: inherit;
+  transition: var(--tb-t-colors);
+
+  &:hover { border-color: var(--tb-line-strong); background: var(--tb-hover-wash); }
+}
+
+.tb-post__nav-item--next { text-align: right; }
+
+.tb-post__nav-dir {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+}
+
+.tb-post__nav-title {
+  font-weight: var(--tb-weight-semibold);
+  line-height: var(--tb-leading-snug);
+}
+
+// ── Author card ─────────────────────────────────────────────────────────────
+
+.tb-author {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tb-space-4);
+  padding: var(--tb-space-5);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  background: var(--tb-bg-sunken);
+}
+
+.tb-author__avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  flex: none;
+  border-radius: var(--tb-radius-full);
+  object-fit: cover;
+  background: var(--tb-bg-muted);
+}
+
+.tb-author__name {
+  font-weight: var(--tb-weight-semibold);
+  font-size: var(--tb-text-base);
+}
+
+.tb-author__bio {
+  margin-top: var(--tb-space-1);
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-muted);
+  line-height: var(--tb-leading-relaxed);
+}
+
+// ── Share row ───────────────────────────────────────────────────────────────
+
+.tb-share {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--tb-space-2);
+}
+
+.tb-share__label {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+  margin-right: var(--tb-space-2);
+}

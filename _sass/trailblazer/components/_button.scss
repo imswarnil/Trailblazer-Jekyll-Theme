@@ -1,0 +1,419 @@
+// =============================================================================
+// COMPONENTS · BUTTON
+// One skeleton, six intents, three sizes. Every state is defined here so no
+// template ever writes a hover rule.
+//
+// The intent picks itself: primary = the one thing this page is for ·
+// secondary = the other real action · ghost/quiet = navigation-ish ·
+// soft = accent without weight · danger = destructive, always confirmed.
+// =============================================================================
+
+.tb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tb-space-2);
+  height: var(--tb-control-md);
+  padding-inline: var(--tb-space-5);
+  border: var(--tb-border-hair) solid transparent;
+  border-radius: var(--tb-radius-control);
+  background: transparent;
+  color: var(--tb-fg-default);
+  font-family: var(--tb-font-body-effective);
+  font-size: var(--tb-text-sm);
+  font-weight: var(--tb-weight-semibold);
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: var(--tb-t-colors), var(--tb-t-transform), var(--tb-t-shadow);
+
+  // Press is a 1px settle, not a scale — a button is a physical key.
+  &:active:not(:disabled, [aria-disabled="true"]) {
+    transform: translate3d(0, 1px, 0);
+  }
+
+  &:disabled,
+  &[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  > svg {
+    width: var(--tb-icon-sm);
+    height: var(--tb-icon-sm);
+    flex: none;
+  }
+}
+
+// ── Intents ─────────────────────────────────────────────────────────────────
+
+.tb-btn--primary {
+  background: var(--tb-accent);
+  color: var(--tb-fg-on-accent);
+  border-color: var(--tb-accent);
+
+  &:hover { background: var(--tb-accent-hover); border-color: var(--tb-accent-hover); }
+  &:active { background: var(--tb-accent-press); border-color: var(--tb-accent-press); }
+}
+
+.tb-btn--secondary {
+  background: var(--tb-bg-inverse);
+  color: var(--tb-fg-on-inverse);
+  border-color: var(--tb-bg-inverse);
+
+  &:hover { opacity: 0.88; }
+}
+
+.tb-btn--ghost {
+  background: var(--tb-bg-surface);
+  border-color: var(--tb-line-default);
+  color: var(--tb-fg-default);
+
+  &:hover { border-color: var(--tb-line-strong); background: var(--tb-bg-sunken); }
+}
+
+.tb-btn--soft {
+  background: var(--tb-accent-soft);
+  color: var(--tb-accent-soft-fg);
+
+  &:hover { border-color: var(--tb-line-accent); }
+}
+
+// Quiet reads as text until you touch it. Toolbars, card footers, "more".
+.tb-btn--quiet {
+  color: var(--tb-fg-muted);
+  padding-inline: var(--tb-space-3);
+
+  &:hover { background: var(--tb-hover-wash); color: var(--tb-fg-default); }
+}
+
+.tb-btn--danger {
+  background: var(--tb-danger-line);
+  color: var(--tb-pure-white);
+  border-color: var(--tb-danger-line);
+
+  &:hover { filter: brightness(0.92); }
+}
+
+// ── Sizes ───────────────────────────────────────────────────────────────────
+
+.tb-btn--sm {
+  height: var(--tb-control-sm);
+  padding-inline: var(--tb-space-3);
+  font-size: var(--tb-text-xs);
+  gap: var(--tb-space-1);
+}
+
+.tb-btn--lg {
+  height: var(--tb-control-lg);
+  padding-inline: var(--tb-space-6);
+  font-size: var(--tb-text-base);
+}
+
+.tb-btn--block { display: flex; width: 100%; }
+.tb-btn--pill  { border-radius: var(--tb-radius-pill); }
+
+// Icon-only. Needs an aria-label — there is no visible text to name it.
+.tb-btn--icon {
+  width: var(--tb-control-md);
+  padding-inline: 0;
+
+  &.tb-btn--sm { width: var(--tb-control-sm); }
+  &.tb-btn--lg { width: var(--tb-control-lg); }
+}
+
+// ── Group ───────────────────────────────────────────────────────────────────
+// A segmented control: shared edges, exactly one pressed.
+
+.tb-btn-group {
+  display: inline-flex;
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-control);
+  background: var(--tb-bg-sunken);
+  padding: 3px;
+  gap: 3px;
+
+  > .tb-btn {
+    height: calc(var(--tb-control-md) - 8px);
+    border-radius: calc(var(--tb-radius-control) - 3px);
+    font-size: var(--tb-text-xs);
+    color: var(--tb-fg-muted);
+    padding-inline: var(--tb-space-3);
+  }
+
+  > .tb-btn:hover { color: var(--tb-fg-default); }
+
+  > .tb-btn[aria-pressed="true"],
+  > .tb-btn[aria-current="true"] {
+    background: var(--tb-bg-canvas);
+    color: var(--tb-fg-default);
+    box-shadow: var(--tb-shadow-1);
+  }
+}
+
+// =============================================================================
+// COMPONENTS · BADGE, CHIP, EYEBROW, AVATAR, CERT
+// The small stuff that labels things. All of it speaks in the mono voice, so
+// metadata never competes with content.
+// =============================================================================
+
+.tb-badge {
+  display: inline-flex;
+  text-decoration: none;
+  align-items: center;
+  gap: var(--tb-space-2);
+  height: 1.5rem;
+  padding-inline: var(--tb-space-2);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-pill);
+  background: var(--tb-bg-surface);
+  color: var(--tb-fg-muted);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  font-weight: var(--tb-weight-medium);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tb-badge--accent  { background: var(--tb-accent-soft); color: var(--tb-accent-soft-fg); border-color: transparent; }
+.tb-badge--craft   { background: var(--tb-craft-soft); color: var(--tb-craft-fg); border-color: transparent; }
+.tb-badge--success { background: var(--tb-success-bg); color: var(--tb-success-fg); border-color: transparent; }
+.tb-badge--warning { background: var(--tb-warning-bg); color: var(--tb-warning-fg); border-color: transparent; }
+.tb-badge--danger  { background: var(--tb-danger-bg); color: var(--tb-danger-fg); border-color: transparent; }
+.tb-badge--info    { background: var(--tb-info-bg); color: var(--tb-info-fg); border-color: transparent; }
+.tb-badge--inverse { background: var(--tb-bg-inverse); color: var(--tb-fg-on-inverse); border-color: transparent; }
+
+// The loudest label allowed, and only ever one per surface.
+.tb-badge--live {
+  background: var(--tb-accent);
+  color: var(--tb-fg-on-accent);
+  border-color: var(--tb-accent);
+
+  &::before {
+    content: "";
+    width: var(--tb-dot-sm);
+    height: var(--tb-dot-sm);
+    border-radius: var(--tb-radius-full);
+    background: currentcolor;
+    animation: tb-pulse 1.6s var(--tb-ease-inout) infinite;
+  }
+}
+
+// ── Eyebrow — the line above a heading ──────────────────────────────────────
+
+.tb-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-xs);
+  font-weight: var(--tb-weight-medium);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+
+  &::before {
+    content: "";
+    width: var(--tb-dot-sm);
+    height: var(--tb-dot-sm);
+    border-radius: var(--tb-radius-full);
+    background: var(--tb-accent);
+    flex: none;
+  }
+}
+
+.tb-eyebrow--plain::before { display: none; }
+
+// ── Chip — a badge you can act on (tags, filters) ───────────────────────────
+
+.tb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  height: var(--tb-control-sm);
+  padding-inline: var(--tb-space-3);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-pill);
+  background: var(--tb-bg-surface);
+  color: var(--tb-fg-muted);
+  font-size: var(--tb-text-xs);
+  font-weight: var(--tb-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--tb-t-colors);
+
+  &:hover {
+    border-color: var(--tb-line-strong);
+    color: var(--tb-fg-default);
+    background: var(--tb-bg-sunken);
+  }
+
+  &[aria-pressed="true"],
+  &[aria-current] {
+    background: var(--tb-bg-inverse);
+    border-color: var(--tb-bg-inverse);
+    color: var(--tb-fg-on-inverse);
+  }
+}
+
+.tb-chip__count {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  color: var(--tb-fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+// ── Avatar ──────────────────────────────────────────────────────────────────
+
+.tb-avatar {
+  display: inline-grid;
+  place-items: center;
+  width: var(--tb-control-md);
+  height: var(--tb-control-md);
+  border-radius: var(--tb-radius-full);
+  background: var(--tb-bg-inverse);
+  color: var(--tb-fg-on-inverse);
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-xs);
+  font-weight: var(--tb-weight-semibold);
+  overflow: hidden;
+  flex: none;
+  user-select: none;
+
+  > img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+.tb-avatar--lg { width: var(--tb-control-lg); height: var(--tb-control-lg); font-size: var(--tb-text-sm); }
+.tb-avatar--xl { width: 4rem; height: 4rem; font-size: var(--tb-text-lg); }
+
+// ── Kbd ─────────────────────────────────────────────────────────────────────
+
+.tb-kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding-inline: var(--tb-space-2);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-bottom-width: var(--tb-border-2);
+  border-radius: var(--tb-radius-sm);
+  background: var(--tb-bg-sunken);
+  color: var(--tb-fg-muted);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  line-height: 1;
+}
+
+// ── Certification badge ─────────────────────────────────────────────────────
+// A credential drawn the way certification programmes draw them: a shield with
+// a peak motif above the acronym, coloured by track. The colour comes from a
+// `color:` key on the entry in _data/certifications.yml, so a wall of badges
+// reads the way a real credential wall does — the track is visible before the
+// name is.
+//
+// Everything is CSS: the shield is a clip-path, the peaks are a second
+// clip-path on a pseudo-element, the depth is a gradient plus a drop-shadow
+// (which, unlike box-shadow, follows the clipped outline). No image, nothing
+// to re-export when a buyer changes their colours, and nothing borrowed from
+// anyone's actual badge artwork.
+
+.tb-cert {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-4);
+}
+
+.tb-cert__seal {
+  --tb-cert-color: var(--tb-accent-600);
+  flex: none;
+  width: 3.1rem;
+  height: 3.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  padding-bottom: 0.45rem; // optical centre: a shield's point steals height
+  clip-path: polygon(50% 0%, 92% 10%, 100% 30%, 100% 58%, 50% 100%, 0% 58%, 0% 30%, 8% 10%);
+  background:
+    // A top-edge sheen, so the badge reads as enamel rather than as a flat chip.
+    linear-gradient(rgb(255 255 255 / 0.22), rgb(255 255 255 / 0) 38%),
+    linear-gradient(165deg,
+      color-mix(in srgb, var(--tb-cert-color) 72%, #fff) -30%,
+      var(--tb-cert-color) 45%,
+      color-mix(in srgb, var(--tb-cert-color) 74%, #000) 115%);
+  color: var(--tb-pure-white);
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-2xs);
+  font-weight: var(--tb-weight-bold);
+  letter-spacing: var(--tb-tracking-wide);
+  text-transform: uppercase;
+  line-height: 1;
+  text-align: center;
+  filter: drop-shadow(0 1px 1.5px hsl(var(--tb-shadow-color) / 0.35));
+
+  // The peak motif — two overlapping summits, in the badge's own light.
+  &::before {
+    content: "";
+    width: 1.35rem;
+    height: 0.6rem;
+    background: rgb(255 255 255 / 0.85);
+    clip-path: polygon(0% 100%, 30% 18%, 46% 62%, 58% 34%, 72% 0%, 100% 100%);
+  }
+}
+
+// The quiet variant, for a shelf of many — a row of full-colour shields is a
+// row of things shouting. Quiet keeps the shape and drops the enamel.
+.tb-cert--quiet .tb-cert__seal {
+  background: var(--tb-bg-muted);
+  color: var(--tb-fg-subtle);
+  filter: none;
+
+  &::before { background: var(--tb-fg-faint); }
+}
+
+.tb-cert--craft .tb-cert__seal { --tb-cert-color: var(--tb-craft-500); }
+
+.tb-cert__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tb-cert__name {
+  font-size: var(--tb-text-sm);
+  font-weight: var(--tb-weight-semibold);
+  line-height: var(--tb-leading-snug);
+}
+
+.tb-cert__issuer {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+}
+
+.tb-cert-grid {
+  display: grid;
+  gap: var(--tb-space-5);
+  grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+}
+
+// A credential that links out to its verification page is still a credential,
+// not a button: the card gets the affordance, the words keep their weight.
+a.tb-cert {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--tb-t-transform);
+
+  @include tb-hover {
+    &:hover { transform: translate3d(0, -2px, 0); }
+    &:hover .tb-cert__name { color: var(--tb-fg-accent); }
+  }
+}

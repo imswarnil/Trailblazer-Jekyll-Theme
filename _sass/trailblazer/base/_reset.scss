@@ -1,0 +1,137 @@
+// =============================================================================
+// BASE · RESET
+// Small and opinionated. Tuned so Markdown coming out of Jekyll looks right
+// without a wrapper class doing the work.
+// =============================================================================
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  scroll-behavior: smooth;
+  // Anchors land below the sticky nav rather than under it.
+  scroll-padding-top: calc(var(--tb-nav-h) + var(--tb-space-6));
+  tab-size: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  min-height: 100svh;
+  background: var(--tb-bg-canvas);
+  color: var(--tb-fg-default);
+  overflow-wrap: break-word;
+  // A page must never scroll sideways. Wide things scroll inside themselves.
+  overflow-x: clip;
+}
+
+img,
+picture,
+video,
+canvas,
+svg,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video { height: auto; }
+
+// Forms inherit type instead of falling back to the browser's 13px Arial.
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: max(1px, 0.06em);
+  text-underline-offset: 0.16em;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  padding: 0;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+// Long strings (URLs, class names, Apex signatures) break instead of blowing
+// out the layout.
+p, li, dd, dt, figcaption, blockquote,
+h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+
+pre {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+hr { border: 0; }
+
+// `hidden` means hidden. The browser's rule for it comes from the UA sheet, so
+// any component that sets a display — every button, every card — silently wins
+// against it. This is the one place `!important` is right: the attribute is an
+// assertion about the document, not a style.
+[hidden] { display: none !important; }
+
+// The native marker is replaced by a drawn chevron in the disclosure component.
+summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+summary::-webkit-details-marker { display: none; }
+
+::selection {
+  background: var(--tb-selection-bg);
+  color: var(--tb-selection-fg);
+}
+
+// Scrollbars: thin, ink-coloured, theme-aware.
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--tb-line-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track { background: transparent; }
+
+::-webkit-scrollbar-thumb {
+  background: var(--tb-line-strong);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: var(--tb-radius-pill);
+}

@@ -1,0 +1,34 @@
+{%- comment -%}
+  SERIES BOX
+  Rendered on any post that declares itself part of a series:
+
+    series: "Org hygiene"
+    series_part: 2
+
+  Every post sharing the same `series:` string is a part, ordered by
+  `series_part`. The box lists them all with the current one marked — the
+  same aria-current convention as everywhere else — so a reader landing on
+  part three from a search result can see what they skipped without leaving.
+{%- endcomment -%}
+{%- assign series_posts = site.posts
+      | where: 'series', page.series
+      | sort: 'series_part' -%}
+{%- if series_posts.size > 1 -%}
+<aside class="tb-series tb-u-mb-8" aria-label="This series">
+  <p class="tb-series__head">
+    {%- include icon.html name="list" -%}
+    {{ page.series }} · a {{ series_posts.size }}-part series
+  </p>
+  <ol class="tb-series__list">
+    {%- for p in series_posts %}
+    <li>
+      {%- if p.url == page.url %}
+      <span aria-current="page">{{ p.title }}</span>
+      {%- else %}
+      <a href="{{ p.url | relative_url }}">{{ p.title }}</a>
+      {%- endif %}
+    </li>
+    {%- endfor %}
+  </ol>
+</aside>
+{%- endif -%}

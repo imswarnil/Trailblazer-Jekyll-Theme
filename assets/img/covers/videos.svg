@@ -1,0 +1,39 @@
+<!--
+  COVER · Videos
+  The fallback cover for the videos collection, used when an entry sets no
+  `image:` of its own.
+
+  Deliberately wordless. These get cropped to whatever shape the card they land
+  in happens to be — a tall bento tile, a 16:9 deck card, a square thumbnail —
+  and any text baked in would be sliced in half by the first crop that is not
+  the ratio it was drawn at. The glyph is centred so it survives all of them.
+
+  Regenerate with scripts/gen-covers.py after changing the brand colour.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630"
+     role="img" aria-label="Videos">
+  <defs>
+    <linearGradient id="g-videos" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c2503a"/>
+      <stop offset="1" stop-color="#6e2418"/>
+    </linearGradient>
+    <pattern id="p-videos" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#fff" opacity="0.14"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#g-videos)"/>
+  <rect width="1200" height="630" fill="url(#p-videos)"/>
+
+  <!-- A light source top-right and a shadow bottom-left, so the field reads as
+       lit rather than as a flat rectangle. -->
+  <ellipse cx="940" cy="70" rx="460" ry="240" fill="#fff" opacity="0.13"/>
+  <ellipse cx="180" cy="600" rx="360" ry="200" fill="#000" opacity="0.08"/>
+
+  <g transform="translate(600 315)" fill="none" stroke="#fff"
+     stroke-linecap="round" stroke-linejoin="round" opacity="0.92">
+    <g transform="scale(7) translate(-12 -12)" stroke-width="1.4">
+      <circle cx="12" cy="12" r="8.5"/><path d="m10 8.5 6 3.5-6 3.5v-7Z"/>
+    </g>
+  </g>
+</svg>

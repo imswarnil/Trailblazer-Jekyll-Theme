@@ -1,0 +1,33 @@
+---
+title: Page not found
+permalink: /404.html
+noindex: true
+search: false
+sitemap: false
+hero_style: statement
+hero_eyebrow: 404
+hero_title: That page has moved on.
+hero_lead: >-
+  The link was probably right once. Here is everything that definitely exists.
+hero_actions:
+  - { label: Go to the blog, url: /blog/, style: primary }
+  - { label: Browse the archive, url: /archive/, style: ghost }
+---
+{%- comment -%}
+  Served by GitHub Pages for any unmatched path. It has to be a real page at
+  /404.html — the permalink above is not optional.
+
+  Rather than apologising, it offers the three routes someone who mistyped a
+  URL actually wants: the newest posts, the full archive, and search.
+{%- endcomment -%}
+
+<div class="tb-container tb-section">
+  <div class="tb-section__head">
+    <div>
+      <p class="tb-eyebrow">Recent</p>
+      <h2 class="tb-section__title">Maybe you wanted one of these</h2>
+    </div>
+  </div>
+  {%- assign recent = site.posts | slice: 0, 3 -%}
+  {%- include collection-list.html items=recent style="deck" -%}
+</div>

@@ -1,0 +1,22 @@
+{%- comment -%}
+  STEPS
+
+    {% include components/steps.html items="Create a scratch org|sfdx force:org:create -f config/project-scratch-def.json,Push the source|sfdx force:source:push,Assign the permset|sfdx force:user:permset:assign -n Trailblazer" %}
+
+  Each item is `title|body`, items separated by commas. The numbers are drawn
+  by CSS from a counter, so inserting a step in the middle does not mean
+  renumbering the rest.
+
+  For a sequence with real code in it, write an ordered list in Markdown with
+  fenced blocks instead — this component is for short, scannable procedures.
+{%- endcomment -%}
+<ol class="tb-steps">
+  {%- assign items = include.items | split: ',' -%}
+  {%- for raw in items -%}
+    {%- assign parts = raw | split: '|' -%}
+  <li>
+    <span class="tb-steps__title">{{ parts[0] | strip | url_decode }}</span>
+    {%- if parts[1] %}<span class="tb-u-fg-muted tb-u-text-sm">{{ parts[1] | strip | url_decode | markdownify | remove: '<p>' | remove: '</p>' }}</span>{% endif %}
+  </li>
+  {%- endfor -%}
+</ol>

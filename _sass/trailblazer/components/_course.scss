@@ -1,0 +1,376 @@
+// =============================================================================
+// COMPONENTS · COURSE, LESSONS, BREADCRUMB
+// The learning surfaces: the curriculum on a course page, the player rail
+// beside a lesson, and the breadcrumb trail every page wears.
+// =============================================================================
+
+// ── Lesson list ─────────────────────────────────────────────────────────────
+// One component, two densities. The full version is the curriculum — numbers,
+// summaries, durations. The compact version is the player rail, where the
+// reader already knows what course they are in and only needs "where am I".
+
+.tb-lessons {
+  counter-reset: tb-lesson;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  background: var(--tb-bg-surface);
+  overflow: hidden;
+
+  > li { border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle); }
+  > li:last-child { border-bottom: 0; }
+}
+
+.tb-lessons__row {
+  counter-increment: tb-lesson;
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-4);
+  padding: var(--tb-space-4) var(--tb-space-5);
+  text-decoration: none;
+  color: inherit;
+  transition: var(--tb-t-colors);
+
+  // The number comes from the counter, so the list and the `order:` keys can
+  // never disagree — the rendered order IS the numbering.
+  &::before {
+    content: counter(tb-lesson, decimal-leading-zero);
+    font-family: var(--tb-font-mono);
+    font-size: var(--tb-text-2xs);
+    color: var(--tb-fg-faint);
+    font-variant-numeric: tabular-nums;
+    flex: none;
+    width: 2ch;
+  }
+
+  &:hover { background: var(--tb-hover-wash); }
+
+  // You are here. The same 3px inset edge the theme uses everywhere current
+  // lives — never a fill.
+  &[aria-current] {
+    background: var(--tb-accent-soft);
+    box-shadow: inset var(--tb-border-3) 0 0 0 var(--tb-accent);
+
+    .tb-lessons__title { color: var(--tb-fg-accent); }
+    &::before { color: var(--tb-fg-accent); }
+  }
+}
+
+.tb-lessons__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tb-lessons__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  font-size: var(--tb-text-sm);
+  font-weight: var(--tb-weight-semibold);
+  line-height: var(--tb-leading-snug);
+
+  > svg { width: var(--tb-icon-xs); height: var(--tb-icon-xs); color: var(--tb-fg-faint); flex: none; }
+}
+
+.tb-lessons__summary {
+  font-size: var(--tb-text-xs);
+  color: var(--tb-fg-muted);
+  line-height: var(--tb-leading-normal);
+}
+
+.tb-lessons__dur {
+  flex: none;
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  color: var(--tb-fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.tb-lessons--compact .tb-lessons__row {
+  padding: var(--tb-space-3) var(--tb-space-4);
+
+  .tb-lessons__title { font-weight: var(--tb-weight-medium); }
+}
+
+// Inside a widget the widget already draws the box — a second border around
+// the list reads as a frame in a frame. Bare keeps the rows and hairlines,
+// drops the chrome, and lets the current-lesson edge reach the widget's own
+// padding.
+.tb-lessons--bare {
+  border: 0;
+  border-radius: 0;
+  background: none;
+  margin-inline: calc(-1 * var(--tb-space-5));
+
+  .tb-lessons__row { padding-inline: var(--tb-space-5); }
+}
+
+// ── Breadcrumb ──────────────────────────────────────────────────────────────
+// The trail every page wears. Mono voice, glyph per crumb, a drawn chevron
+// between them — and the current page is text, not a link, because a link to
+// where you already are is a tab stop that goes nowhere.
+
+.tb-breadcrumb {
+  margin-bottom: var(--tb-space-4);
+
+  // One line, always. Middle crumbs truncate before the trail is allowed to
+  // wrap — a two-line breadcrumb is a paragraph wearing a costume.
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--tb-space-2);
+    overflow: hidden;
+  }
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tb-space-2);
+    min-width: 0;
+    flex: none;
+
+    // Middle crumbs (a course title, a long section) give way first.
+    &:not(:first-child):not(:last-child) { flex: 0 1 auto; }
+    a { max-width: 18ch; }
+  }
+
+  li:last-child { flex: 0 1 auto; span[aria-current] { max-width: 32ch; } }
+
+  // The separator lives on the element AFTER it, so the first crumb has none.
+  li + li::before {
+    content: "";
+    width: 0.32em;
+    height: 0.32em;
+    border-right: var(--tb-border-hair) solid var(--tb-fg-faint);
+    border-top: var(--tb-border-hair) solid var(--tb-fg-faint);
+    transform: rotate(45deg);
+    flex: none;
+  }
+
+  a,
+  span[aria-current] {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tb-space-1);
+    font-family: var(--tb-font-mono);
+    font-size: var(--tb-text-2xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--tb-fg-subtle);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: var(--tb-t-colors);
+
+    > svg { width: var(--tb-icon-xs); height: var(--tb-icon-xs); flex: none; opacity: 0.7; }
+  }
+
+  a:hover { color: var(--tb-fg-accent); }
+
+  span[aria-current] { color: var(--tb-fg-default); }
+}
+
+
+// ── Course extras ───────────────────────────────────────────────────────────
+// What you'll learn, prerequisites, testimonials, FAQs — each a front-matter
+// list on the course, each drawn as its own thing rather than as four
+// identical grey boxes.
+
+// Outcomes: a two-up grid of drawn ticks. The tick is the same check the
+// pricing card uses — one glyph vocabulary across the theme.
+.tb-outcomes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--tb-space-3) var(--tb-space-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+
+  > li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--tb-space-3);
+    font-size: var(--tb-text-sm);
+    line-height: var(--tb-leading-relaxed);
+    color: var(--tb-fg-muted);
+
+    &::before {
+      content: "✓";
+      display: grid;
+      place-items: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      flex: none;
+      border-radius: var(--tb-radius-full);
+      background: var(--tb-accent-soft);
+      color: var(--tb-accent-soft-fg);
+      font-size: var(--tb-text-2xs);
+      font-weight: var(--tb-weight-bold);
+      margin-top: 2px;
+    }
+  }
+}
+
+// Prerequisites: quieter — a dashed edge, because these are conditions, not
+// content.
+.tb-prereqs {
+  list-style: none;
+  margin: 0;
+  padding: var(--tb-space-4) var(--tb-space-5);
+  border: var(--tb-border-hair) dashed var(--tb-line-strong);
+  border-radius: var(--tb-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-2);
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-muted);
+
+  > li {
+    display: flex;
+    gap: var(--tb-space-3);
+
+    &::before { content: "→"; color: var(--tb-fg-faint); flex: none; }
+  }
+}
+
+// A testimonial: the display-face quote with the speaker under it. Two per
+// row at most — social proof in a wall stops being social.
+.tb-testimonials {
+  display: grid;
+  gap: var(--tb-space-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr));
+}
+
+.tb-testimonial {
+  padding: var(--tb-space-5);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  background: var(--tb-bg-surface);
+
+  blockquote {
+    margin: 0;
+    font-family: var(--tb-font-display);
+    font-size: var(--tb-text-lg);
+    font-weight: var(--tb-weight-medium);
+    line-height: var(--tb-leading-snug);
+    letter-spacing: var(--tb-tracking-tight);
+    text-wrap: pretty;
+
+    &::before { content: "\201C"; color: var(--tb-accent); margin-right: 2px; }
+  }
+
+  figcaption {
+    margin-top: var(--tb-space-4);
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+}
+
+.tb-testimonial__name {
+  font-size: var(--tb-text-sm);
+  font-weight: var(--tb-weight-semibold);
+}
+
+.tb-testimonial__role {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+}
+
+// ── Audio player ────────────────────────────────────────────────────────────
+// The talk-recording player: a styled shell around the NATIVE audio element.
+// The controls stay the platform's — scrubbing, keyboard support and the
+// media-session integration all come free — and `accent-color` is what makes
+// them wear the theme.
+
+.tb-audio {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-4);
+  padding: var(--tb-space-4) var(--tb-space-5);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  background: var(--tb-bg-sunken);
+}
+
+.tb-audio__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--tb-radius-full);
+  background: var(--tb-accent);
+  color: var(--tb-fg-on-accent);
+
+  > svg { width: var(--tb-icon-md); height: var(--tb-icon-md); }
+}
+
+.tb-audio__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-2);
+}
+
+.tb-audio__label {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+}
+
+.tb-audio audio {
+  width: 100%;
+  height: 2.25rem;
+  accent-color: var(--tb-accent);
+}
+
+// ── Ad slot ─────────────────────────────────────────────────────────────────
+// The responsive AdSense unit, labelled — an ad pretending to be content is
+// the one dark pattern this theme refuses. In development the slot renders as
+// a dashed placeholder, so layouts can be judged with the ad's cost visible.
+
+.tb-ad {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-2);
+
+  ins { display: block; min-height: 4rem; }
+}
+
+.tb-ad__label {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+}
+
+.tb-ad__placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 8rem;
+  border: var(--tb-border-hair) dashed var(--tb-line-strong);
+  border-radius: var(--tb-radius-md);
+  color: var(--tb-fg-faint);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+}

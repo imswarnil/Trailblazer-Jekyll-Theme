@@ -1,0 +1,57 @@
+{%- comment -%}
+  NEWSLETTER
+
+    {% include newsletter.html %}                  full block, for a CTA band
+    {% include newsletter.html compact=true %}     one row, for the footer
+
+  Supports Mailchimp, Buttondown and ConvertKit. All three are plain HTML form
+  posts — no vendor script, no tracking pixel, and the form still works with
+  JavaScript disabled.
+
+  With none configured the block renders a mail link instead of a dead form.
+  A subscribe box that silently discards addresses is worse than no box.
+{%- endcomment -%}
+{%- assign i = site.integrations -%}
+{%- assign compact = include.compact -%}
+
+{%- if i.mailchimp_action and i.mailchimp_action != "" -%}
+  {%- assign action = i.mailchimp_action -%}
+  {%- assign field = 'EMAIL' -%}
+{%- elsif i.buttondown_user and i.buttondown_user != "" -%}
+  {%- assign action = 'https://buttondown.email/api/emails/embed-subscribe/' | append: i.buttondown_user -%}
+  {%- assign field = 'email' -%}
+{%- elsif i.convertkit_form and i.convertkit_form != "" -%}
+  {%- assign action = 'https://app.convertkit.com/forms/' | append: i.convertkit_form | append: '/subscriptions' -%}
+  {%- assign field = 'email_address' -%}
+{%- endif -%}
+
+{%- if action -%}
+<form class="{% if compact %}tb-input-group{% else %}tb-cta__form{% endif %}"
+      action="{{ action }}" method="post" target="_blank">
+  <label class="tb-sr-only" for="tb-newsletter-{% if compact %}footer{% else %}main{% endif %}">Email address</label>
+  <input class="tb-input" type="email" name="{{ field }}" required
+         id="tb-newsletter-{% if compact %}footer{% else %}main{% endif %}"
+         placeholder="you@example.com" autocomplete="email">
+  {%- comment -%}
+    Mailchimp's honeypot. The field is hidden from humans and from assistive
+    tech; a bot fills it in and the submission is dropped. `tabindex="-1"` keeps
+    a keyboard user from ever landing in it.
+  {%- endcomment -%}
+  {%- if i.mailchimp_action and i.mailchimp_action != "" %}
+  <div style="position:absolute;left:-5000px" aria-hidden="true">
+    <input type="text" name="b_honeypot" tabindex="-1" value="">
+  </div>
+  {%- endif %}
+  <button class="tb-btn tb-btn--primary{% if compact %} tb-btn--sm{% endif %}" type="submit">Subscribe</button>
+</form>
+{%- unless compact %}
+<p class="tb-cta__fine">No more than one email a month. Unsubscribe in one click.</p>
+{%- endunless %}
+
+{%- else -%}
+{%- comment -%} Nothing configured — offer the thing that always works. {%- endcomment -%}
+<p class="{% if compact %}tb-footer__tag{% else %}tb-cta__body{% endif %}">
+  New posts land in the <a class="tb-link" href="{{ '/feed.xml' | relative_url }}">RSS feed</a>{% if site.author.email and site.author.email != "" %},
+  or say hello at <a class="tb-link" href="mailto:{{ site.author.email }}">{{ site.author.email }}</a>{% endif %}.
+</p>
+{%- endif -%}

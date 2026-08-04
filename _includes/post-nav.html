@@ -1,0 +1,27 @@
+{%- comment -%}
+  PREVIOUS / NEXT
+  Only for `posts`, which is the one collection with a meaningful order. A
+  "next project" link implies a sequence that does not exist.
+
+  Each half renders only if there is something on that side, so the last post
+  does not get a dead tile.
+{%- endcomment -%}
+{%- if page.collection == 'posts' and page.previous or page.next -%}
+<nav class="tb-post__nav" aria-label="More posts">
+  {%- if page.previous %}
+  <a class="tb-post__nav-item" href="{{ page.previous.url | relative_url }}" rel="prev">
+    <span class="tb-post__nav-dir">← Previous</span>
+    <span class="tb-post__nav-title">{{ page.previous.title }}</span>
+  </a>
+  {%- else %}
+  <span></span>
+  {%- endif %}
+
+  {%- if page.next %}
+  <a class="tb-post__nav-item tb-post__nav-item--next" href="{{ page.next.url | relative_url }}" rel="next">
+    <span class="tb-post__nav-dir">Next →</span>
+    <span class="tb-post__nav-title">{{ page.next.title }}</span>
+  </a>
+  {%- endif %}
+</nav>
+{%- endif -%}

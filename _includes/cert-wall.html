@@ -1,0 +1,25 @@
+{%- comment -%}
+  CERTIFICATION WALL
+  The badges, from _data/certifications.yml, featured entries first.
+
+  Every badge keeps its track colour here — on a credential wall the colours
+  ARE the information, the way they are on a real certification profile. The
+  quiet variant exists for the article sidebar, where a rail of enamel shields
+  would compete with the article; that include passes quiet=true itself.
+
+  An entry with a `url` links to its verification page. One without stays
+  plain text — a credential you cannot check is still a credential, just not
+  a claim anyone else can act on.
+{%- endcomment -%}
+{%- assign certs = site.data.certifications -%}
+{%- if include.limit %}{% assign certs = certs | slice: 0, include.limit %}{% endif -%}
+
+{%- if certs and certs.size > 0 -%}
+<div class="tb-cert-grid">
+  {%- assign featured = certs | where: 'featured', true -%}
+  {%- assign rest = certs | where_exp: 'c', 'c.featured != true' -%}
+
+  {%- for c in featured -%}{% include cert.html cert=c %}{% endfor -%}
+  {%- for c in rest -%}{% include cert.html cert=c %}{% endfor -%}
+</div>
+{%- endif -%}

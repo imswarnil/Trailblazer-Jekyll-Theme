@@ -1,0 +1,45 @@
+{%- comment -%}
+  SEARCH PALETTE
+  A native <dialog>, so Escape, the backdrop, focus trapping and returning
+  focus to the trigger all come from the browser rather than from 200 lines of
+  script trying to reproduce them.
+
+  The index is /search.json, fetched once on first open — a reader who never
+  searches never pays for it.
+
+  Progressive enhancement: with JavaScript off, the trigger in the header does
+  nothing, so the footer and the /search/ page both link to the full-page
+  search as the always-works path.
+{%- endcomment -%}
+<dialog class="tb-search-dialog" id="tb-search-palette" aria-label="Search this site">
+  <form method="dialog">
+    <div class="tb-search__head">
+      {%- include icon.html name="search" class="tb-icon--md" %}
+      <label class="tb-sr-only" for="tb-search-input">Search</label>
+      <input class="tb-search__input" id="tb-search-input" type="search"
+             placeholder="Search posts, projects and snippets…"
+             autocomplete="off" spellcheck="false" data-tb-search-input>
+      <button class="tb-navbar__icon-btn" type="submit" aria-label="Close search">
+        {%- include icon.html name="x" %}
+      </button>
+    </div>
+  </form>
+
+  {%- comment -%}
+    Results are announced politely: a screen-reader user typing a query should
+    hear the count change without being interrupted mid-word.
+  {%- endcomment -%}
+  <ul class="tb-search__results" data-tb-search-results role="listbox"
+      aria-label="Search results"></ul>
+
+  <p class="tb-search__empty" data-tb-search-empty hidden>
+    Nothing matched. Try a shorter word.
+  </p>
+
+  <div class="tb-search__foot">
+    <span><kbd class="tb-kbd">↑</kbd> <kbd class="tb-kbd">↓</kbd> to move</span>
+    <span><kbd class="tb-kbd">↵</kbd> to open</span>
+    <span><kbd class="tb-kbd">esc</kbd> to close</span>
+    <a class="tb-link tb-u-ms-auto" href="{{ '/search/' | relative_url }}">Full search</a>
+  </div>
+</dialog>

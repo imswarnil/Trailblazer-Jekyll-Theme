@@ -1,0 +1,58 @@
+{%- comment -%}
+  TABS
+
+    {% include components/tabs.html id="install"
+       items="Bundler|Add `gem \"trailblazer-jekyll-theme\"` to your Gemfile.,Remote theme|Set `remote_theme:` in _config.yml." %}
+
+  Each item is `label|body`, items separated by commas. `id` must be unique on
+  the page — it namespaces the radio group, and two tab sets sharing an id
+  will fight each other.
+
+  Built from real radio inputs: arrow keys, tab order and the browser's own
+  focus ring all come free, and the first panel is visible before any script
+  runs. A tab set built from divs and click handlers is one of the easiest
+  components to get wrong for keyboard users, so this one does not try.
+
+  Use tabs only for genuine alternatives — three ways to install the same
+  thing. Sequential content in tabs is content most readers will only see a
+  third of.
+{%- endcomment -%}
+{%- assign id = include.id | default: 'tabs' -%}
+<div class="tb-tabs">
+  {%- assign items = include.items | split: ',' -%}
+  <div class="tb-tabs__list" role="tablist">
+    {%- for raw in items -%}
+      {%- assign parts = raw | split: '|' -%}
+    <input class="tb-tabs__radio" type="radio" name="tb-tabs-{{ id }}"
+           id="tb-tab-{{ id }}-{{ forloop.index }}"{% if forloop.first %} checked{% endif %}>
+    <label class="tb-tabs__tab" for="tb-tab-{{ id }}-{{ forloop.index }}">{{ parts[0] | strip | url_decode }}</label>
+    {%- endfor -%}
+  </div>
+
+  {%- for raw in items -%}
+    {%- assign parts = raw | split: '|' -%}
+  <div class="tb-tabs__panel" data-tb-panel="{{ forloop.index }}">
+    {{ parts[1] | strip | url_decode | markdownify }}
+  </div>
+  {%- endfor -%}
+</div>
+
+{%- comment -%}
+  The panel-visibility rules have to be generated: CSS cannot express "the nth
+  checked radio reveals the nth panel" without knowing n, and the radios are
+  not siblings of the panels — they live inside the tab list, where the label
+  needs them.
+
+  So the container is queried with :has() instead. Each rule hides every panel
+  and then shows one, which keeps the set consistent no matter which tab is
+  checked. Where :has() is unavailable the whole block simply does not apply
+  and the stylesheet's default — panel one visible — stands.
+
+  Scoped by id, so two tab sets on the same page cannot fight.
+{%- endcomment -%}
+<style>
+  {%- for raw in items %}
+  .tb-tabs:has(#tb-tab-{{ id }}-{{ forloop.index }}:checked) .tb-tabs__panel { display: none; }
+  .tb-tabs:has(#tb-tab-{{ id }}-{{ forloop.index }}:checked) .tb-tabs__panel[data-tb-panel="{{ forloop.index }}"] { display: block; }
+  {%- endfor %}
+</style>

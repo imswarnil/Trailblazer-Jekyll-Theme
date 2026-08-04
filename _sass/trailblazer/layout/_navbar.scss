@@ -1,0 +1,399 @@
+// =============================================================================
+// LAYOUT · NAVBAR
+// Two shapes, one skeleton: `--full` is a bar welded to the top of the page,
+// `--island` floats a rounded card inside the gutter. Both are driven from the
+// `header:` block in `_config.yml`.
+//
+// House rule: the active state is a dot or a 2px rule, never a filled pill —
+// and it is read from `aria-current`, never from an invented `.active` class,
+// so the styling and the accessibility tree can never disagree.
+// =============================================================================
+
+.tb-navbar {
+  --tb-navbar-bg: var(--tb-bg-canvas);
+  position: relative;
+  z-index: var(--tb-z-nav);
+  padding-block: var(--tb-space-2);
+}
+
+.tb-navbar--sticky {
+  position: sticky;
+  top: 0;
+}
+
+.tb-navbar__inner {
+  position: relative; // anchors the progress ring
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-4);
+  min-height: var(--tb-nav-h);
+  background: var(--tb-navbar-bg);
+  transition: var(--tb-t-colors), var(--tb-t-shadow);
+}
+
+// The island: a floating card. Its radius and border only make sense once it
+// is inset from the page edge, which is why the padding lives on the wrapper.
+.tb-navbar--island .tb-navbar__inner {
+  padding-inline: var(--tb-space-4);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-pill);
+  box-shadow: var(--tb-shadow-1);
+}
+
+.tb-navbar--full {
+  padding-block: 0;
+
+  .tb-navbar__inner {
+    border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle);
+  }
+}
+
+// Frosted glass, opt-in. Falls back to the solid surface where the browser has
+// no backdrop-filter — a translucent bar with no blur is unreadable over text.
+@supports (backdrop-filter: blur(1px)) {
+  .tb-navbar--blur .tb-navbar__inner {
+    background: color-mix(in srgb, var(--tb-bg-canvas) 78%, transparent);
+    backdrop-filter: saturate(180%) blur(14px);
+  }
+}
+
+// `is-scrolled` is set by the theme script once the page has moved. Without
+// the script the bar simply never gains the shadow, which costs nothing.
+.tb-navbar.is-scrolled .tb-navbar__inner {
+  box-shadow: var(--tb-shadow-2);
+  border-color: var(--tb-line-default);
+}
+
+// ── Brand ───────────────────────────────────────────────────────────────────
+
+.tb-navbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-3);
+  text-decoration: none;
+  color: var(--tb-fg-default);
+  margin-right: auto;
+  min-width: 0;
+}
+
+.tb-navbar__logo {
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: none;
+  border-radius: var(--tb-radius-md);
+}
+
+.tb-navbar__title {
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-base);
+  font-weight: var(--tb-weight-bold);
+  letter-spacing: var(--tb-tracking-tight);
+  white-space: nowrap;
+}
+
+// ── Links ───────────────────────────────────────────────────────────────────
+
+.tb-navbar__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tb-navbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  height: var(--tb-nav-control);
+  padding-inline: var(--tb-space-3);
+  border-radius: var(--tb-radius-control);
+  color: var(--tb-fg-muted);
+  font-size: var(--tb-text-sm);
+  font-weight: var(--tb-weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: var(--tb-t-colors);
+
+  &:hover { color: var(--tb-fg-default); background: var(--tb-hover-wash); }
+
+  > svg { width: var(--tb-icon-xs); height: var(--tb-icon-xs); flex: none; opacity: 0.75; }
+}
+
+// The current page wears a small cloud — the theme\'s own mark, doing the job
+// the accent dot used to. Drawn as a data-URI mask so it stays in CSS,
+// recolours with the accent, and costs no request.
+.tb-navbar__link[aria-current] {
+  color: var(--tb-fg-default);
+  font-weight: var(--tb-weight-semibold);
+
+  &::before {
+    content: "";
+    width: 0.85rem;
+    height: 0.6rem;
+    flex: none;
+    background: var(--tb-accent);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16'%3E%3Cpath d='M18.5 15.5H6.2a5.2 5.2 0 0 1-.6-10.36A6.8 6.8 0 0 1 18.6 3.9a5.3 5.3 0 0 1-.1 11.6Z'/%3E%3C/svg%3E") center / contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16'%3E%3Cpath d='M18.5 15.5H6.2a5.2 5.2 0 0 1-.6-10.36A6.8 6.8 0 0 1 18.6 3.9a5.3 5.3 0 0 1-.1 11.6Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+}
+
+// ── Dropdown ────────────────────────────────────────────────────────────────
+// Built on <details>, so Escape, click-outside and keyboard traversal come from
+// the platform rather than being rebuilt in script.
+
+.tb-dropdown {
+  position: relative;
+
+  > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tb-space-2);
+    height: var(--tb-nav-control);
+    padding-inline: var(--tb-space-3);
+    border-radius: var(--tb-radius-control);
+    color: var(--tb-fg-muted);
+    font-size: var(--tb-text-sm);
+    font-weight: var(--tb-weight-medium);
+    white-space: nowrap;
+    transition: var(--tb-t-colors);
+  }
+
+  > summary:hover { color: var(--tb-fg-default); background: var(--tb-hover-wash); }
+
+  // The chevron is drawn, so a menu item needs no icon markup.
+  > summary::after {
+    content: "";
+    width: 0.4em;
+    height: 0.4em;
+    border-right: var(--tb-border-2) solid currentcolor;
+    border-bottom: var(--tb-border-2) solid currentcolor;
+    transform: translateY(-2px) rotate(45deg);
+    opacity: 0.6;
+    transition: var(--tb-t-transform);
+  }
+
+  &[open] > summary::after { transform: translateY(1px) rotate(-135deg); }
+}
+
+.tb-dropdown__panel {
+  position: absolute;
+  top: calc(100% + var(--tb-space-2));
+  left: 0;
+  z-index: var(--tb-z-dropdown);
+  min-width: 14rem;
+  padding: var(--tb-space-2);
+  background: var(--tb-bg-raised);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-lg);
+  box-shadow: var(--tb-shadow-3);
+  animation: tb-slide-down var(--tb-dur-2) var(--tb-ease-out) both;
+}
+
+.tb-dropdown__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tb-space-3);
+  padding: var(--tb-space-2) var(--tb-space-3);
+  border-radius: var(--tb-radius-md);
+  color: var(--tb-fg-default);
+  font-size: var(--tb-text-sm);
+  text-decoration: none;
+  transition: var(--tb-t-colors);
+
+  &:hover { background: var(--tb-hover-wash); }
+
+  > svg {
+    width: var(--tb-icon-md);
+    height: var(--tb-icon-md);
+    flex: none;
+    color: var(--tb-fg-faint);
+    margin-top: 1px;
+  }
+}
+
+.tb-dropdown__label { display: block; font-weight: var(--tb-weight-medium); }
+
+.tb-dropdown__blurb {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--tb-text-xs);
+  color: var(--tb-fg-subtle);
+  line-height: var(--tb-leading-normal);
+}
+
+// ── Actions ─────────────────────────────────────────────────────────────────
+
+.tb-navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  flex: none;
+}
+
+.tb-navbar__icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: var(--tb-nav-control);
+  height: var(--tb-nav-control);
+  border-radius: var(--tb-radius-control);
+  color: var(--tb-fg-muted);
+  border: var(--tb-border-hair) solid transparent;
+  transition: var(--tb-t-colors);
+
+  &:hover {
+    color: var(--tb-fg-default);
+    background: var(--tb-hover-wash);
+    border-color: var(--tb-line-default);
+  }
+
+  > svg { width: var(--tb-icon-md); height: var(--tb-icon-md); }
+}
+
+// The theme toggle shows exactly one glyph: whichever theme you would get by
+// pressing it. The other is removed from the accessibility tree too, not just
+// hidden visually.
+.tb-theme-toggle__sun { display: none; }
+
+:root[data-theme="dark"] .tb-theme-toggle__sun { display: block; }
+:root[data-theme="dark"] .tb-theme-toggle__moon { display: none; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tb-theme-toggle__sun { display: block; }
+  :root:not([data-theme="light"]) .tb-theme-toggle__moon { display: none; }
+}
+
+// ── Mobile drawer ───────────────────────────────────────────────────────────
+// The toggle is a real <button> with `aria-expanded`; the drawer is the same
+// list of links, re-flowed. No second navigation to keep in sync.
+
+.tb-navbar__burger { display: none; }
+
+.tb-navbar__burger-bars {
+  position: relative;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentcolor;
+  transition: background-color var(--tb-dur-1) var(--tb-ease-out);
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentcolor;
+    transition: var(--tb-t-transform);
+  }
+
+  &::before { top: -6px; }
+  &::after  { top: 6px; }
+}
+
+[aria-expanded="true"] .tb-navbar__burger-bars {
+  background: transparent;
+
+  &::before { transform: translateY(6px) rotate(45deg); }
+  &::after  { transform: translateY(-6px) rotate(-45deg); }
+}
+
+@include tb-down("lg") {
+  .tb-navbar__burger { display: inline-grid; }
+
+  .tb-navbar__menu {
+    position: absolute;
+    inset-inline: 0;
+    top: calc(100% + var(--tb-space-2));
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--tb-space-1);
+    padding: var(--tb-space-3);
+    background: var(--tb-bg-raised);
+    border: var(--tb-border-hair) solid var(--tb-line-default);
+    border-radius: var(--tb-radius-lg);
+    box-shadow: var(--tb-shadow-3);
+    max-height: min(70vh, 32rem);
+    overflow-y: auto;
+  }
+
+  .tb-navbar.is-open .tb-navbar__menu {
+    display: flex;
+    animation: tb-slide-down var(--tb-dur-2) var(--tb-ease-out) both;
+  }
+
+  .tb-navbar__nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--tb-space-1);
+  }
+
+  .tb-navbar__link { height: 2.75rem; }
+
+  // Inside the drawer a dropdown is just an indented list — a floating panel
+  // inside a panel is a menu nobody can dismiss.
+  .tb-dropdown__panel {
+    position: static;
+    box-shadow: none;
+    border: 0;
+    background: transparent;
+    padding: 0 0 0 var(--tb-space-4);
+    animation: none;
+    min-width: 0;
+  }
+
+  .tb-dropdown > summary { height: 2.75rem; }
+}
+
+// ── Reading progress ────────────────────────────────────────────────────────
+// Driven by `--tb-progress` (0–1), set by the theme script. At 0 nothing is
+// visible, so a page with no article — or no script — shows no chrome.
+//
+// On the ISLAND it is a ring: a fine border in the light accent that starts
+// at the brand (the pill\'s left edge, 270° in conic terms) and travels
+// clockwise around the whole outline as the reader travels the article. The
+// ring is a conic gradient masked to its own edge — content-box XOR full box
+// leaves only the padding, and the padding IS the border width.
+//
+// On the FULL bar a ring makes no sense, so it stays a hairline along the
+// bottom edge.
+
+.tb-progress {
+  position: absolute;
+  pointer-events: none;
+}
+
+.tb-navbar--island .tb-progress {
+  inset: 0;
+  border-radius: var(--tb-radius-pill);
+  padding: var(--tb-border-2);
+  background: conic-gradient(
+    from 270deg,
+    var(--tb-accent-300) calc(var(--tb-progress, 0) * 360deg),
+    transparent 0
+  );
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+}
+
+.tb-navbar--full .tb-progress {
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    display: block;
+    height: 100%;
+    width: calc(var(--tb-progress, 0) * 100%);
+    background: var(--tb-accent);
+    transition: width 80ms linear;
+  }
+}

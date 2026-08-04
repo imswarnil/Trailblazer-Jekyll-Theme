@@ -1,0 +1,161 @@
+// =============================================================================
+// TOKENS · SCALE
+// Space, radius, size, z-index, ratio, motion, elevation. Closed ladders: if a
+// value you need is not here, the ladder is wrong — fix the ladder rather than
+// inventing a one-off, or the rhythm of the site quietly comes apart.
+// =============================================================================
+
+:root {
+  --tb-unit: 0.25rem; // 4px base, 8px rhythm
+
+  // ── Spacing ───────────────────────────────────────────────────────────────
+  // 1–3 are optical nudges inside components; layout uses 4 and up.
+  --tb-space-0:  0;
+  --tb-space-px: 1px;
+  --tb-space-1:  0.25rem;
+  --tb-space-2:  0.5rem;
+  --tb-space-3:  0.75rem;
+  --tb-space-4:  1rem;
+  --tb-space-5:  1.25rem;
+  --tb-space-6:  1.5rem;
+  --tb-space-8:  2rem;
+  --tb-space-10: 2.5rem;
+  --tb-space-12: 3rem;
+  --tb-space-16: 4rem;
+  --tb-space-20: 5rem;
+  --tb-space-24: 6rem;
+  --tb-space-32: 8rem;
+
+  // Vertical space between page sections. Fluid, so a phone does not waste a
+  // screen and a desktop still breathes. Three densities, nothing else.
+  --tb-section-sm: clamp(2rem, 1.4rem + 2.6vw, 3.5rem);
+  --tb-section-md: clamp(3rem, 2rem + 4.4vw, 6rem);
+  --tb-section-lg: clamp(4.5rem, 2.8rem + 7.4vw, 9rem);
+
+  // The page's breathing room. Everything that touches a page edge derives
+  // from this — never a hardcoded padding.
+  --tb-gutter: clamp(1rem, 0.55rem + 2vw, 2rem);
+
+  // ── Radius ────────────────────────────────────────────────────────────────
+  --tb-radius-none: 0;
+  --tb-radius-xs:   #{2px * $tb-radius-scale};
+  --tb-radius-sm:   #{4px * $tb-radius-scale};
+  --tb-radius-md:   #{8px * $tb-radius-scale};
+  --tb-radius-lg:   #{12px * $tb-radius-scale};
+  --tb-radius-xl:   #{16px * $tb-radius-scale};
+  --tb-radius-2xl:  #{24px * $tb-radius-scale};
+  --tb-radius-pill: 999px;
+  --tb-radius-full: 50%;
+
+  // Component-level intents, so a card's corner retunes in one place rather
+  // than across forty templates.
+  --tb-radius-control: var(--tb-radius-md);
+  --tb-radius-card:    var(--tb-radius-xl);
+  --tb-radius-media:   var(--tb-radius-lg);
+  --tb-radius-sheet:   var(--tb-radius-2xl);
+
+  // ── Borders ───────────────────────────────────────────────────────────────
+  --tb-border-hair: 1px;
+  --tb-border-2:    2px;
+  --tb-border-3:    3px;
+
+  // ── Widths ────────────────────────────────────────────────────────────────
+  // --tb-w-site is the source of truth for horizontal rhythm; the rest are
+  // named crops of it.
+  --tb-w-prose:  44rem;   // the long-form reading column
+  --tb-w-narrow: 56rem;
+  --tb-w-site:   71rem;
+  --tb-w-wide:   82rem;
+
+  // ── Controls ──────────────────────────────────────────────────────────────
+  // Shared heights, so an input and a submit sit on one line without shimming.
+  --tb-control-sm: 2rem;
+  --tb-control-md: 2.5rem;
+  --tb-control-lg: 3rem;
+  --tb-tap-min:    44px;
+
+  --tb-icon-xs: 0.875rem;
+  --tb-icon-sm: 1rem;
+  --tb-icon-md: 1.25rem;
+  --tb-icon-lg: 1.5rem;
+  --tb-icon-xl: 2rem;
+
+  --tb-dot-sm: 6px;
+  --tb-dot-md: 8px;
+
+  // ── Z-index ───────────────────────────────────────────────────────────────
+  // Closed set. Nothing in this framework uses a bare integer.
+  --tb-z-below:    -1;
+  --tb-z-base:     0;
+  --tb-z-raised:   10;
+  --tb-z-sticky:   100;
+  --tb-z-nav:      200;
+  --tb-z-dropdown: 300;
+  --tb-z-overlay:  400;
+  --tb-z-modal:    500;
+  --tb-z-toast:    600;
+  --tb-z-max:      9999;
+
+  // ── Ratios ────────────────────────────────────────────────────────────────
+  --tb-ratio-wide:   16 / 9;
+  --tb-ratio-photo:  3 / 2;
+  --tb-ratio-square: 1 / 1;
+  --tb-ratio-poster: 2 / 3;
+  --tb-ratio-cinema: 21 / 9;
+
+  // ── Motion ────────────────────────────────────────────────────────────────
+  // Four durations, four easings. No component may invent a fifth.
+  //   1 · 120ms  state flips: hover, press, focus
+  //   2 · 200ms  the default: colour, opacity, small transforms
+  //   3 · 320ms  things that travel: entrances, drawers
+  //   4 · 560ms  the deliberate one: hero reveals
+  --tb-dur-1: 120ms;
+  --tb-dur-2: 200ms;
+  --tb-dur-3: 320ms;
+  --tb-dur-4: 560ms;
+
+  --tb-ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --tb-ease-in:     cubic-bezier(0.55, 0, 1, 0.45);
+  --tb-ease-inout:  cubic-bezier(0.65, 0, 0.35, 1);
+  --tb-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --tb-stagger: 60ms;
+
+  // Named transitions, so components stop re-declaring them.
+  --tb-t-colors: color var(--tb-dur-2) var(--tb-ease-out),
+                 background-color var(--tb-dur-2) var(--tb-ease-out),
+                 border-color var(--tb-dur-2) var(--tb-ease-out);
+  --tb-t-transform: transform var(--tb-dur-2) var(--tb-ease-out);
+  --tb-t-shadow: box-shadow var(--tb-dur-2) var(--tb-ease-out);
+
+  // ── Elevation ─────────────────────────────────────────────────────────────
+  // Depth comes from lines first and shadow second. The rule: if it does not
+  // leave the page, it does not get a shadow. Shadows are tinted with the ink
+  // hue — pure black on a cool-neutral surface reads as dirt.
+  --tb-shadow-color: #{$tb-ink-hue} 22% 8%;
+  --tb-shadow-0: none;
+  --tb-shadow-1: 0 1px 2px hsl(var(--tb-shadow-color) / 0.05),
+                 0 1px 1px hsl(var(--tb-shadow-color) / 0.03);
+  --tb-shadow-2: 0 2px 4px hsl(var(--tb-shadow-color) / 0.06),
+                 0 6px 12px hsl(var(--tb-shadow-color) / 0.05);
+  --tb-shadow-3: 0 4px 8px hsl(var(--tb-shadow-color) / 0.07),
+                 0 12px 24px hsl(var(--tb-shadow-color) / 0.07);
+  --tb-shadow-4: 0 8px 16px hsl(var(--tb-shadow-color) / 0.08),
+                 0 24px 48px hsl(var(--tb-shadow-color) / 0.1);
+  --tb-shadow-5: 0 16px 32px hsl(var(--tb-shadow-color) / 0.1),
+                 0 40px 80px hsl(var(--tb-shadow-color) / 0.14);
+  --tb-shadow-inset: inset 0 1px 2px hsl(var(--tb-shadow-color) / 0.06);
+  --tb-shadow-ring: 0 0 0 4px var(--tb-accent-ring);
+
+  // ── Chrome ────────────────────────────────────────────────────────────────
+  // The navbar's own height, published so anchors, sticky rails and the drawer
+  // can all agree on where the top of the page is. 3.25rem is deliberate: tall
+  // enough for a 36px control plus breathing room, short enough that the bar
+  // reads as furniture rather than as a header section.
+  --tb-nav-h: 3rem;
+
+  // Controls inside the navbar only. The bar runs one size down from the rest
+  // of the page — page controls are for acting on, nav controls are for
+  // leaving, and the height difference is what says so.
+  --tb-nav-control: 2.25rem;
+}

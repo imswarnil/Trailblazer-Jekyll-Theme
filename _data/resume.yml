@@ -1,0 +1,137 @@
+# =============================================================================
+# RESUME
+# Everything /resume/ renders, minus the certifications (those live in their
+# own file, because the sidebar widget and the JSON-LD both read them too).
+#
+# The page is built to print onto A4 without a PDF export, so keep bullets to
+# one line each — three or four per role is the shape that survives the page
+# break.
+# =============================================================================
+
+# The line under the name. One sentence; the reader is skimming.
+summary: >-
+  Salesforce developer with ten years on the platform, most of it spent on
+  large Service Cloud orgs and the integrations hanging off them. I like the
+  unglamorous half of the job: governor limits, deployment pipelines, and
+  making sure the thing still works at 2 a.m. on a Saturday.
+
+# The band under the header. Four is the maximum that reads as a band rather
+# than as a table; a fifth turns it into data.
+stats:
+  - value: "10"
+    suffix: yrs
+    label: On platform
+  - value: "8"
+    label: Certifications
+  - value: "40+"
+    label: Orgs shipped
+  - value: "1.2M"
+    label: Records migrated
+
+experience:
+  - role: Senior Salesforce Developer
+    org: Northwind Digital
+    url: https://example.com
+    from: 2021
+    to: Present
+    current: true
+    location: Bengaluru · Remote
+    note: >-
+      Technical lead on a 400-seat Service Cloud org serving three regions.
+    highlights:
+      - Cut average page-load time on the agent console from 4.1s to 1.3s by
+        moving eleven Aura components to LWC and killing six synchronous calls.
+      - Designed the integration layer between Salesforce and a legacy billing
+        system — Platform Events in, a bulk REST bridge out, no polling.
+      - Introduced a CI pipeline on GitHub Actions with scratch orgs per pull
+        request; deployment failures on release day went from routine to rare.
+    stack: [Apex, LWC, Platform Events, SFDX, GitHub Actions]
+
+  - role: Salesforce Developer
+    org: Marchetti Consulting
+    from: 2018
+    to: 2021
+    location: Pune
+    note: >-
+      Delivery across nine client orgs, mostly Sales Cloud implementations.
+    highlights:
+      - Built a reusable data-migration framework used on six client projects,
+        cutting a typical load from three days to an afternoon.
+      - Rescued a stalled Community Cloud rollout, shipping it eleven weeks late
+        rather than the projected six months.
+    stack: [Apex, Visualforce, SOQL, Data Loader, Flow]
+
+  - role: Salesforce Administrator
+    org: Halden Retail Group
+    from: 2016
+    to: 2018
+    location: Pune
+    note: >-
+      First Salesforce hire. Owned the org end to end.
+    highlights:
+      - Took an unmanaged org with 200 unused fields down to something a new
+        starter could read, without losing a single report.
+      - Automated the quote-approval chain in Flow, removing roughly 30 hours
+        of manual routing a month.
+    stack: [Flow, Reports, Data Loader]
+
+education:
+  - title: B.E. Computer Engineering
+    org: University of Pune
+    from: 2012
+    to: 2016
+    note: Final-year project on distributed job scheduling.
+
+  - title: Trailhead Ranger
+    org: Salesforce
+    from: 2019
+    note: 180 badges, 90k points. Mostly earned on trains.
+
+# Grouped, because "Apex, LWC, SOQL, Flow, Git, Jenkins" as one run of commas
+# tells a reader nothing about what you actually do.
+#
+# `level` is optional and renders as four ticks: 1 = familiar, 4 = this is
+# what people call you about. Leave it off and the skill is just listed.
+skills:
+  - group: Platform
+    icon: cloud
+    items:
+      - { name: Apex, level: 4 }
+      - { name: Lightning Web Components, level: 4 }
+      - { name: SOQL / SOSL, level: 4 }
+      - { name: Flow, level: 3 }
+      - { name: Visualforce, level: 3 }
+
+  - group: Integration
+    icon: link
+    items:
+      - { name: REST / SOAP APIs, level: 4 }
+      - { name: Platform Events, level: 4 }
+      - { name: MuleSoft, level: 2 }
+      - { name: Named Credentials, level: 3 }
+
+  - group: Delivery
+    icon: layers
+    items:
+      - { name: SFDX, level: 4 }
+      - { name: GitHub Actions, level: 3 }
+      - { name: Jest / LWC testing, level: 3 }
+      - { name: Change sets (regrettably), level: 4 }
+
+  - group: Beyond the org
+    icon: code
+    items:
+      - { name: JavaScript, level: 4 }
+      - { name: Node.js, level: 3 }
+      - { name: SQL, level: 3 }
+      - { name: Jekyll, level: 3 }
+
+# Optional. Renders as a plain list at the foot of the page; delete the key to
+# drop the section.
+speaking:
+  - title: "Governor limits are a design tool"
+    event: Bengaluru Developer Group
+    year: 2024
+  - title: "Migrating 40 Aura components without a freeze"
+    event: India Dreamin'
+    year: 2023

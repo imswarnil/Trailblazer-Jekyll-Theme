@@ -1,0 +1,157 @@
+// =============================================================================
+// LAYOUT · FOOTER
+// The end credits. A brand column plus link columns over a hairline, then the
+// sign-off row. The footer is the one place the sitemap gets to be exhaustive.
+// =============================================================================
+
+.tb-footer {
+  border-top: var(--tb-border-hair) solid var(--tb-line-default);
+  margin-top: var(--tb-space-20);
+  padding-block: var(--tb-space-12) var(--tb-space-8);
+}
+
+.tb-footer__grid {
+  display: grid;
+  gap: var(--tb-space-8);
+  grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr));
+}
+
+// The brand column takes double width once there is room for it.
+@include tb-up("md") {
+  .tb-footer__grid {
+    grid-template-columns: 2fr repeat(auto-fit, minmax(8rem, 1fr));
+  }
+}
+
+.tb-footer__brand { max-width: 24rem; }
+
+.tb-footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-3);
+  text-decoration: none;
+  color: var(--tb-fg-default);
+  font-family: var(--tb-font-display);
+  font-weight: var(--tb-weight-bold);
+
+  img { width: 2rem; height: 2rem; border-radius: var(--tb-radius-md); }
+}
+
+.tb-footer__tag {
+  margin-top: var(--tb-space-3);
+  font-size: var(--tb-text-sm);
+  line-height: var(--tb-leading-relaxed);
+  color: var(--tb-fg-subtle);
+}
+
+.tb-footer__social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tb-space-2);
+  margin-top: var(--tb-space-5);
+}
+
+.tb-social-link {
+  display: inline-grid;
+  place-items: center;
+  width: var(--tb-control-md);
+  height: var(--tb-control-md);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-full);
+  color: var(--tb-fg-subtle);
+  transition: var(--tb-t-colors), var(--tb-t-transform);
+
+  &:hover {
+    color: var(--tb-fg-default);
+    border-color: var(--tb-line-strong);
+    background: var(--tb-hover-wash);
+  }
+
+  > svg { width: var(--tb-icon-sm); height: var(--tb-icon-sm); }
+}
+
+.tb-footer__head {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+  margin-bottom: var(--tb-space-4);
+}
+
+.tb-footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tb-space-2);
+    font-size: var(--tb-text-sm);
+    color: var(--tb-fg-subtle);
+    text-decoration: none;
+    width: fit-content;
+    transition: var(--tb-t-colors);
+
+    &:hover { color: var(--tb-fg-default); }
+  }
+}
+
+// ── Newsletter ──────────────────────────────────────────────────────────────
+
+.tb-footer__newsletter {
+  margin-top: var(--tb-space-5);
+  max-width: 22rem;
+}
+
+// ── Sign-off ────────────────────────────────────────────────────────────────
+
+.tb-footer__signoff {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--tb-space-3);
+  margin-top: var(--tb-space-12);
+  padding-top: var(--tb-space-6);
+  border-top: var(--tb-border-hair) solid var(--tb-line-subtle);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: 0.05em;
+  color: var(--tb-fg-faint);
+
+  a { color: inherit; }
+  a:hover { color: var(--tb-fg-default); }
+}
+
+// ── Minimal variant ─────────────────────────────────────────────────────────
+// One centred row. For a site whose footer has nothing to say.
+
+.tb-footer--minimal {
+  text-align: center;
+
+  .tb-footer__signoff {
+    justify-content: center;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .tb-footer__social { justify-content: center; }
+}
+
+// ── Boxed variant ───────────────────────────────────────────────────────────
+// The whole footer as a rounded island, for pages that end on a card rather
+// than on a rule.
+
+.tb-footer--boxed {
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-sheet);
+  background: var(--tb-bg-sunken);
+  padding: var(--tb-space-10) var(--tb-space-8) var(--tb-space-8);
+  margin-bottom: var(--tb-space-8);
+}

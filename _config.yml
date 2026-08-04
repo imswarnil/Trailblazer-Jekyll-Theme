@@ -1,0 +1,448 @@
+# =============================================================================
+# TRAILBLAZER — Jekyll theme for Salesforce developers
+#
+# This file is the control centre. Almost everything visible on the site is
+# driven from here: the brand colour, the navigation, the footer, the social
+# links, the integrations, the collections and how each one opens.
+#
+# Jekyll reads this file ONCE at boot. Restart `bundle exec jekyll serve` after
+# editing it — live reload will not pick these changes up.
+# =============================================================================
+
+# ── Identity ─────────────────────────────────────────────────────────────────
+title: Trailblazer
+tagline: Jekyll theme for Salesforce developers
+description: >-
+  A fast, accessible Jekyll theme for Salesforce developers, architects and
+  consultants — with a resume page, certification wall, project portfolio and
+  a code-first blog.
+
+# The canonical origin. Every absolute URL the theme emits — canonical tags,
+# Open Graph images, the sitemap, JSON-LD — is built from this, so it must be
+# the domain you actually want indexed, with no trailing slash.
+url: https://trailblazer.imswarnil.com
+baseurl: ""
+
+lang: en
+locale: en_US
+timezone: Asia/Kolkata
+
+# ── Author ───────────────────────────────────────────────────────────────────
+# The person the site is about. Read by the header, the footer, the author card
+# under every post, the resume page and the Person JSON-LD.
+author:
+  name: Ava Rodriguez
+  first_name: Ava
+  role: Senior Salesforce Developer
+  headline: I build on the platform, then write down how it went.
+  avatar: /assets/img/avatar.svg
+  bio: >-
+    Salesforce developer working across Apex, LWC and integrations. Ten years
+    of shipping on the platform, and a long-running habit of writing the post
+    I wish had existed when I hit the problem.
+  email: hello@example.com
+  location: Bengaluru, India
+  # Shown as a download button on /resume/. The theme hides the button when
+  # this key is absent, which is why the demo leaves it commented out — a
+  # download that 404s is worse than no download.
+  # resume_pdf: /assets/files/resume.pdf
+
+# ── Style ────────────────────────────────────────────────────────────────────
+# Compiled into the stylesheet at build time (see assets/css/main.scss).
+# Changing `accent` regenerates the entire eleven-step colour ramp, so one hex
+# re-brands the whole site.
+theme_style:
+  accent: "#0176d3"      # the primary — cloud blue
+  craft: "#e8a33d"       # the rationed second hue, used sparingly
+  success: "#2e844a"
+  warning: "#dd7a01"
+  danger: "#ba0517"
+
+  # 0 = sharp corners, 1 = the theme default, 1.5 = generous.
+  radius_scale: 1
+
+  # light · dark · system. `system` follows the reader's OS until they press
+  # the toggle, at which point their choice is remembered.
+  default_scheme: system
+
+  # Set `google: false` to drop the webfont link entirely and fall back to the
+  # system stack — one fewer third-party request and a faster first paint.
+  fonts:
+    google: true
+    display: '"Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif'
+    body: '"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif'
+    mono: '"IBM Plex Mono", ui-monospace, "SF Mono", monospace'
+
+# ── Header ───────────────────────────────────────────────────────────────────
+header:
+  layout: island        # island (floating pill) · full (edge-to-edge bar)
+  sticky: true
+  blur: true
+  brand: both           # both · logo · title
+  search: true          # the ⌘K / "/" command palette
+  dark_toggle: true
+  progress: true        # reading-progress hairline, articles only
+  cta:
+    label: Hire me
+    url: /contact/
+  # Icon-only links beside the theme toggle — GitHub, Mastodon, anywhere.
+  # `label` is required: it is the accessible name of a control with no text.
+  icon_links:
+    - icon: github
+      url: https://github.com/example
+      label: GitHub
+
+# Any of the header settings can be overridden per page from front matter:
+#   header_layout: full · island        header_sticky: false
+#   header_blur: false                  header_progress: false
+#   header_search: false
+# A landing page that wants a welded bar on a site of islands sets one key.
+
+# ── Footer ───────────────────────────────────────────────────────────────────
+footer:
+  layout: columns       # columns · minimal
+  boxed: false          # wrap the footer in a rounded island card
+  tagline: >-
+    Built with Jekyll and a lot of opinions about spacing.
+  show_social: true
+  show_collections: true
+  newsletter: true
+  # Extra column of hand-picked links, beside the generated collection column.
+  links:
+    - title: About
+      url: /about/
+    - title: Contact
+      url: /contact/
+    - title: Archive
+      url: /archive/
+    - title: Style guide
+      url: /style-guide/
+    - title: Layout showcase
+      url: /showcase/
+    - title: Docs
+      url: /docs/
+    - title: Now
+      url: /now/
+    - title: My journey
+      url: /my-journey/
+  # Shown in the sign-off row.
+  legal:
+    - title: Privacy
+      url: /privacy/
+    - title: Licence
+      url: /licence/
+
+# ── Navigation ───────────────────────────────────────────────────────────────
+# `children` turns an item into a dropdown. `icon` is the name of a symbol in
+# assets/img/icons.svg — see docs/customising.md for the full set.
+# Flat by default. An item with `children:` still becomes a dropdown — the
+# machinery is there when a site outgrows one row.
+navigation:
+  - title: Home
+    url: /
+    icon: cloud
+  - title: Blog
+    url: /blog/
+    icon: pen
+  - title: Projects
+    url: /projects/
+    icon: layers
+  - title: Courses
+    url: /courses/
+    icon: graduation
+  - title: Books
+    url: /books/
+    icon: book
+  - title: Resume
+    url: /resume/
+    icon: badge
+  - title: About
+    url: /about/
+    icon: user
+
+# ── Social ───────────────────────────────────────────────────────────────────
+# Rendered in the footer and emitted as `sameAs` in the Person JSON-LD, which
+# is what tells a search engine these profiles are the same person.
+social:
+  - name: GitHub
+    url: https://github.com/example
+    icon: github
+  - name: LinkedIn
+    url: https://linkedin.com/in/example
+    icon: linkedin
+  - name: Trailblazer profile
+    url: https://trailblazer.me/id/example
+    icon: cloud
+  - name: Mastodon
+    url: https://mastodon.social/@example
+    icon: mastodon
+    rel_me: true
+  - name: RSS
+    url: /feed.xml
+    icon: rss
+
+# ── Collections ──────────────────────────────────────────────────────────────
+# The extra keys below are the theme's, not Jekyll's:
+#   index_url   where that collection's index page lives
+#   singular    the label for one entry ("Post")
+#   icon        symbol name from the icon sprite
+#   schema      the schema.org @type used in that collection's JSON-LD
+#   hero_style  how the index opens: statement · split · band · minimal
+#   card_style  how the index lists: deck · numbered · bento · compact
+#   image       the fallback cover for an entry that has none
+collections:
+  posts:
+    output: true
+    permalink: /blog/:title/
+    index_url: /blog/
+    sidebar: right
+    singular: Post
+    icon: pen
+    schema: BlogPosting
+    hero_style: statement
+    card_style: numbered
+    image: /assets/img/covers/blog.svg
+
+  projects:
+    output: true
+    permalink: /projects/:name/
+    index_url: /projects/
+    sidebar: right
+    singular: Project
+    icon: layers
+    schema: CreativeWork
+    hero_style: split
+    card_style: repo
+    image: /assets/img/covers/projects.svg
+
+  snippets:
+    output: true
+    permalink: /snippets/:name/
+    index_url: /snippets/
+    sidebar: right
+    singular: Snippet
+    icon: code
+    schema: SoftwareSourceCode
+    hero_style: minimal
+    card_style: compact
+    image: /assets/img/covers/snippets.svg
+
+  talks:
+    output: true
+    permalink: /talks/:name/
+    index_url: /talks/
+    sidebar: right
+    singular: Talk
+    icon: mic
+    schema: CreativeWork
+    hero_style: band
+    card_style: deck
+    image: /assets/img/covers/talks.svg
+
+  videos:
+    output: true
+    permalink: /videos/:name/
+    index_url: /videos/
+    sidebar: right
+    singular: Video
+    icon: play
+    schema: VideoObject
+    hero_style: band
+    card_style: video
+    image: /assets/img/covers/videos.svg
+
+  # One folder per course, the course itself as index.md and each lesson a
+  # numbered file beside it. `:path` in the permalink is what turns the folder
+  # tree into the URL tree:
+  #
+  #   _courses/apex-for-admins/index.md      → /courses/apex-for-admins/
+  #   _courses/apex-for-admins/01-intro.md   → /courses/apex-for-admins/01-intro/
+  #
+  # Lessons carry `type: lesson` and an `order:` — the order is the syllabus.
+  # The course's own index.md sets `permalink: /courses/<slug>/` explicitly,
+  # because `:path` keeps the filename and would put it at .../index/.
+  courses:
+    output: true
+    permalink: /courses/:path/
+    index_url: /courses/
+    sidebar: false
+    singular: Course
+    icon: graduation
+    schema: Course
+    hero_style: statement
+    card_style: deck
+    image: /assets/img/covers/courses.svg
+
+  books:
+    output: true
+    permalink: /books/:name/
+    index_url: /books/
+    sidebar: right
+    singular: Book
+    icon: book
+    schema: Book
+    hero_style: minimal
+    card_style: book
+    image: /assets/img/covers/books.svg
+
+defaults:
+  - scope: { path: "" }
+    values:
+      layout: page
+  # Assets with front matter are still "pages" as far as Jekyll is concerned,
+  # so without this they inherit `layout: page` and get wrapped in the site's
+  # HTML shell. A stylesheet served as a document fails silently, which is the
+  # worst way for it to fail.
+  - scope: { path: "assets" }
+    values:
+      layout: null
+      sitemap: false
+  - scope: { path: "", type: posts }
+    values:
+      layout: post
+      comments: true
+      share: true
+  - scope: { path: "", type: projects }
+    values: { layout: post }
+  - scope: { path: "", type: snippets }
+    values: { layout: post, comments: false }
+  - scope: { path: "", type: talks }
+    values: { layout: post }
+  - scope: { path: "", type: videos }
+    values: { layout: post }
+  - scope: { path: "", type: courses }
+    values: { layout: course }
+  - scope: { path: "", type: books }
+    values: { layout: post, comments: false }
+
+# ── Blog pagination ──────────────────────────────────────────────────────────
+# jekyll-paginate is the version GitHub Pages runs natively, so a site can be
+# deployed without a build workflow. It paginates blog/index.html.
+paginate: 6
+paginate_path: /blog/page/:num/
+
+# ── SEO ──────────────────────────────────────────────────────────────────────
+seo:
+  # Fallback share image (1200×630). A per-page `image:` wins over it.
+  default_image: /assets/img/og-default.svg
+  twitter: "@example"
+  json_ld: true
+  # Verification meta tags. Leave blank to omit them entirely.
+  google_site_verification: ""
+  bing_site_verification: ""
+
+# ── Integrations ─────────────────────────────────────────────────────────────
+# Every one of these is off until you fill it in. Nothing third-party loads on
+# a page that has not asked for it, and none of it loads during local
+# development — the theme gates analytics on the production environment.
+integrations:
+  google_analytics: ""        # GA4 measurement ID, e.g. G-XXXXXXXXXX
+  google_tag_manager: ""      # GTM-XXXXXXX — use INSTEAD of google_analytics
+  plausible_domain: ""        # e.g. example.com
+
+  # Comments. Configure one; the theme renders the first that is complete.
+  disqus_shortname: ""
+  giscus:
+    repo: ""                  # user/repo
+    repo_id: ""
+    category: ""
+    category_id: ""
+
+  # Newsletter. `mailchimp_action` is the form action URL out of Mailchimp's
+  # embedded-form snippet; the others are that service's equivalent.
+  mailchimp_action: ""
+  buttondown_user: ""
+  convertkit_form: ""
+
+  # Contact form endpoint (Formspree, Basin, Netlify Forms).
+  contact_form_action: ""
+
+  # Web push.
+  onesignal_app_id: ""
+
+# ── Ads ──────────────────────────────────────────────────────────────────────
+# Off until `client` is set, and off outside production either way. Units are
+# responsive; in development every placement renders a labelled placeholder so
+# you can see where money would go before any of it loads.
+adsense:
+  client: ""              # ca-pub-XXXXXXXXXXXXXXXX
+  slots:
+    sidebar: ""           # the widget in the article rail
+    in_article: ""        # after the article body, before the footer
+
+# ── PWA ──────────────────────────────────────────────────────────────────────
+# Off by default: a service worker is a real commitment, and a half-configured
+# one serves stale pages to real readers. Turn it on once your domain settles.
+pwa:
+  enabled: false
+  name: Trailblazer
+  short_name: Trailblazer
+  theme_color: "#0176d3"
+  background_color: "#ffffff"
+  display: standalone
+  # Pages cached for offline reading. Keep /offline/ in the list.
+  precache:
+    - /
+    - /blog/
+    - /offline/
+
+# ── Reading ──────────────────────────────────────────────────────────────────
+reading:
+  words_per_minute: 220
+  show_reading_time: true
+  show_toc: true            # auto table of contents from h2/h3
+  excerpt_words: 34
+
+# ── Build ────────────────────────────────────────────────────────────────────
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  toc_levels: 2..3
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+sass:
+  style: compressed
+  sass_dir: _sass
+  # No source map in the published build — it is larger than the stylesheet it
+  # describes, and nobody debugging a live site has the .scss files anyway.
+  sourcemap: never
+  # The framework uses @import rather than @use so that it also compiles under
+  # the older Sass converter GitHub Pages' classic build ships. Dart Sass warns
+  # about that on every build; the warning is understood and deliberate, so it
+  # is silenced rather than left to bury real errors.
+  quiet_deps: true
+  silence_deprecations:
+    - import
+    - global-builtin
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-paginate
+
+feed:
+  path: /feed.xml
+
+exclude:
+  - AGENTS.md
+  - CLAUDE.md
+  - CHANGELOG.md
+  - CONTRIBUTING.md
+  - Gemfile
+  - Gemfile.lock
+  - "*.gemspec"
+  - vendor
+  - node_modules
+  - bin
+  - CONTRIBUTING.md
+  - CHANGELOG.md
+  - README.md
+  - LICENSE
+  - .jekyll-cache

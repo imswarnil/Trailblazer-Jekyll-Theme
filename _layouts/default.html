@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<head>
+  {%- include head.html -%}
+</head>
+<body>
+
+  {%- comment -%}
+    The skip link is the first focusable thing on the page, which is the only
+    position that makes it useful.
+  {%- endcomment -%}
+  <a class="tb-skip-link" href="#main">Skip to content</a>
+
+  {%- comment -%} The icon sprite. Inlined once; see _includes/icons.svg. {%- endcomment -%}
+  {%- include icons.svg -%}
+
+  {%- if site.integrations.google_tag_manager and site.integrations.google_tag_manager != "" and jekyll.environment == 'production' %}
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ site.integrations.google_tag_manager }}"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  {%- endif %}
+
+  {%- include header.html -%}
+
+  <main id="main" tabindex="-1">
+    {{ content }}
+  </main>
+
+  {%- include footer.html -%}
+
+  {%- if site.header.search %}{% include search-modal.html %}{% endif -%}
+
+  {%- comment -%}
+    One script, deferred, at the end. It enhances what is already there — the
+    theme toggle, the drawer, the table of contents, search, copy buttons — and
+    every one of those degrades to something usable without it.
+  {%- endcomment -%}
+  <script src="{{ '/assets/js/theme.js' | relative_url }}" defer></script>
+
+  {%- include integrations/push.html -%}
+
+  {%- if site.pwa.enabled and jekyll.environment == 'production' %}
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register({{ '/sw.js' | relative_url | jsonify }});
+      });
+    }
+  </script>
+  {%- endif %}
+
+  {%- if page.scripts %}{% for s in page.scripts %}
+  <script src="{{ s | relative_url }}" defer></script>
+  {%- endfor %}{% endif -%}
+</body>
+</html>

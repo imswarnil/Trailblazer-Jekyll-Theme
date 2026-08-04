@@ -1,0 +1,320 @@
+// =============================================================================
+// COMPONENTS · RESUME
+// A page that has two jobs: read well in a browser, and print onto one sheet
+// of A4 without anyone reaching for a PDF export. Everything here is built so
+// the print rules at the bottom have something honest to strip back to.
+// =============================================================================
+
+.tb-resume {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-12);
+}
+
+// ── Header ──────────────────────────────────────────────────────────────────
+
+// The header's band: the cloud tile behind the identity, in a card of its
+// own. This is as much "hero image" as a resume should wear.
+.tb-resume__hero {
+  padding: var(--tb-space-8);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-sheet);
+  background: var(--tb-bg-sunken);
+  overflow: hidden;
+}
+
+// Two columns after the band: the story (experience, speaking) on the left,
+// the credentials (certifications, skills, education) on the right. One
+// column again below the fold point and in print, where a narrow side rail
+// would just ration the reading width.
+.tb-resume__cols {
+  display: grid;
+  gap: var(--tb-space-12);
+  align-items: start;
+}
+
+@include tb-up("lg") {
+  .tb-resume__cols { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+}
+
+.tb-resume__main,
+.tb-resume__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-12);
+  min-width: 0;
+}
+
+// The side column runs its own, tighter grammar.
+.tb-resume__side {
+  .tb-cert-grid { grid-template-columns: 1fr; gap: var(--tb-space-4); }
+  .tb-skills { grid-template-columns: 1fr; }
+}
+
+.tb-resume__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--tb-space-6);
+  padding-bottom: var(--tb-space-8);
+  border-bottom: var(--tb-border-2) solid var(--tb-line-default);
+}
+
+.tb-resume__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-5);
+  min-width: 0;
+}
+
+.tb-resume__avatar {
+  width: 4.5rem;
+  height: 4.5rem;
+  flex: none;
+  border-radius: var(--tb-radius-full);
+  object-fit: cover;
+  border: var(--tb-border-2) solid var(--tb-line-default);
+  background: var(--tb-bg-sunken);
+}
+
+.tb-resume__name {
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-3xl);
+  font-weight: var(--tb-weight-bold);
+  letter-spacing: var(--tb-tracking-tighter);
+  line-height: var(--tb-leading-tight);
+}
+
+.tb-resume__role {
+  margin-top: var(--tb-space-1);
+  font-size: var(--tb-text-base);
+  color: var(--tb-fg-accent);
+  font-weight: var(--tb-weight-medium);
+}
+
+// Contact facts sit on the right, in the mono voice, one per line. A resume
+// header is the one place a list of values beats a paragraph.
+.tb-resume__contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-1);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: 0.04em;
+  color: var(--tb-fg-subtle);
+  text-align: right;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--tb-t-colors);
+
+    &:hover { color: var(--tb-fg-default); }
+  }
+}
+
+@include tb-down("sm") {
+  .tb-resume__contact { text-align: left; }
+}
+
+.tb-resume__summary {
+  margin-top: var(--tb-space-6);
+  font-size: var(--tb-text-md);
+  line-height: var(--tb-leading-relaxed);
+  color: var(--tb-fg-muted);
+  max-width: var(--tb-measure-prose);
+}
+
+// ── Section ─────────────────────────────────────────────────────────────────
+
+.tb-resume__section { break-inside: avoid; }
+
+.tb-resume__section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-3);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  font-weight: var(--tb-weight-semibold);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+  margin-bottom: var(--tb-space-6);
+
+  // The rule runs to the end of the column, so a section title reads as a
+  // divider rather than as another heading in the flow.
+  &::after {
+    content: "";
+    flex: 1;
+    height: var(--tb-border-hair);
+    background: var(--tb-line-default);
+  }
+}
+
+// ── Skills ──────────────────────────────────────────────────────────────────
+// Grouped, because "Apex, LWC, SOQL, Flow, Git, Jenkins" as one run of commas
+// tells a reader nothing about what you actually do.
+
+.tb-skills {
+  display: grid;
+  gap: var(--tb-space-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+}
+
+.tb-skills__group-name {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  font-size: var(--tb-text-sm);
+  font-weight: var(--tb-weight-semibold);
+  margin-bottom: var(--tb-space-3);
+
+  > svg {
+    width: var(--tb-icon-sm);
+    height: var(--tb-icon-sm);
+    color: var(--tb-fg-accent);
+    flex: none;
+  }
+}
+
+.tb-skills__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tb-space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+// A skill is a fact, not a link — so it is a badge, not a chip. The distinction
+// matters: nothing here is clickable, and nothing should look like it is.
+.tb-skills__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  padding: var(--tb-space-1) var(--tb-space-3);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-pill);
+  background: var(--tb-bg-surface);
+  font-size: var(--tb-text-xs);
+  color: var(--tb-fg-muted);
+}
+
+// Level, when a group declares one. A meter of four ticks rather than a
+// percentage: nobody's Apex is 82%.
+.tb-skills__level {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: var(--tb-space-1);
+}
+
+.tb-skills__tick {
+  width: 4px;
+  height: 4px;
+  border-radius: var(--tb-radius-full);
+  background: var(--tb-line-strong);
+}
+
+.tb-skills__tick[data-on] { background: var(--tb-accent); }
+
+// ── Education & awards ──────────────────────────────────────────────────────
+
+.tb-resume__facts {
+  display: grid;
+  gap: var(--tb-space-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+}
+
+.tb-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: var(--tb-space-4);
+  border-left: var(--tb-border-2) solid var(--tb-line-default);
+}
+
+.tb-fact__title {
+  font-weight: var(--tb-weight-semibold);
+  font-size: var(--tb-text-sm);
+}
+
+.tb-fact__meta {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+}
+
+.tb-fact__note {
+  margin-top: var(--tb-space-2);
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-muted);
+  line-height: var(--tb-leading-relaxed);
+}
+
+// ── Print ───────────────────────────────────────────────────────────────────
+// Ink on paper. No chrome, no textures, URLs spelled out — a printed link that
+// says "here" is a dead end.
+
+@media print {
+  :root {
+    --tb-bg-canvas: #fff;
+    --tb-bg-surface: #fff;
+    --tb-bg-sunken: #fff;
+    --tb-fg-default: #000;
+    --tb-fg-muted: #333;
+    --tb-fg-subtle: #444;
+    --tb-fg-faint: #666;
+    --tb-line-default: #999;
+    --tb-line-subtle: #ccc;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  .tb-navbar,
+  .tb-footer,
+  .tb-sidebar,
+  .tb-toc-mobile,
+  .tb-cta,
+  .tb-skip-link,
+  .tb-pagination,
+  .tb-share,
+  [data-tb-no-print] { display: none !important; }
+
+  .tb-pattern::before { display: none !important; }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-family: var(--tb-font-mono);
+    font-size: 0.78em;
+    color: #555;
+    word-break: break-all;
+  }
+
+  // The resume's own links are already spelled out in the contact block.
+  .tb-resume__contact a::after { content: none; }
+
+  .tb-card,
+  .tb-surface,
+  .tb-widget {
+    box-shadow: none;
+    border: 1px solid #999;
+    break-inside: avoid;
+  }
+
+  .tb-resume { gap: var(--tb-space-8); }
+  .tb-resume__cols { grid-template-columns: minmax(0, 1fr); }
+  .tb-resume__hero { border: 0; background: none; padding: 0; }
+  .tb-timeline__item { break-inside: avoid; }
+
+  h1, h2, h3 { break-after: avoid; }
+  img, figure, table { break-inside: avoid; }
+
+  @page { margin: 14mm; }
+}

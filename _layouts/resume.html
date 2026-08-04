@@ -1,0 +1,249 @@
+---
+layout: default
+---
+{%- comment -%}
+  RESUME
+  Every value on this page comes from _data/resume.yml and
+  _data/certifications.yml. Nothing is written into the template, which is what
+  makes the page a buyer can actually use: they edit two YAML files and the
+  page is theirs.
+
+  Built to print. The rules in _sass/trailblazer/components/_resume.scss strip
+  the chrome, spell out link targets, and keep a role from breaking across a
+  page — so "print to PDF" produces the document, and there is no second copy
+  of the truth to keep in sync.
+{%- endcomment -%}
+
+{%- assign r = site.data.resume -%}
+
+<div class="tb-container tb-section">
+  {%- include breadcrumb.html -%}
+  <div class="tb-resume">
+
+    {%- comment -%}
+      The header sits on its own band — the theme's cloud tile at whisper
+      opacity — which is the "hero image" a resume can carry without
+      pretending to be a landing page.
+    {%- endcomment -%}
+    <header class="tb-resume__header tb-resume__hero tb-pattern tb-pattern-clouds">
+      <div class="tb-resume__identity">
+        {%- if site.author.avatar %}
+        <img class="tb-resume__avatar" src="{{ site.author.avatar | relative_url }}"
+             alt="" width="72" height="72">
+        {%- endif %}
+        <div>
+          <h1 class="tb-resume__name">{{ site.author.name }}</h1>
+          <p class="tb-resume__role">{{ site.author.role }}</p>
+        </div>
+      </div>
+
+      <div class="tb-resume__contact">
+        {%- if site.author.location %}<span>{{ site.author.location }}</span>{% endif %}
+        {%- if site.author.email and site.author.email != "" %}
+        <a href="mailto:{{ site.author.email }}">{{ site.author.email }}</a>
+        {%- endif %}
+        {%- for s in site.social %}
+          {%- unless s.icon == 'rss' %}
+        <a href="{{ s.url }}" rel="noopener">{{ s.name }}</a>
+          {%- endunless %}
+        {%- endfor %}
+      </div>
+    </header>
+
+    {%- if r.summary %}
+    <p class="tb-resume__summary">{{ r.summary }}</p>
+    {%- endif %}
+
+    {%- comment -%}
+      The action row. Marked no-print: a printed page with a "Print" button on
+      it is the small kind of embarrassing.
+    {%- endcomment -%}
+    <div class="tb-cluster" data-tb-no-print>
+      {%- if site.author.resume_pdf %}
+      <a class="tb-btn tb-btn--primary" href="{{ site.author.resume_pdf | relative_url }}" download>
+        {%- include icon.html name="download" %}Download PDF
+      </a>
+      {%- endif %}
+      <button class="tb-btn tb-btn--ghost" type="button" data-tb-print>
+        {%- include icon.html name="printer" %}Print this page
+      </button>
+      {%- if site.author.email and site.author.email != "" %}
+      <a class="tb-btn tb-btn--quiet" href="mailto:{{ site.author.email }}">
+        {%- include icon.html name="mail" %}Email me
+      </a>
+      {%- endif %}
+    </div>
+
+    {%- if r.stats %}
+    <div class="tb-stats">
+      {%- for s in r.stats %}
+      <div class="tb-stat">
+        <span class="tb-stat__label">{{ s.label }}</span>
+        <span class="tb-stat__value">{{ s.value }}{% if s.suffix %}<small>{{ s.suffix }}</small>{% endif %}</span>
+      </div>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+
+    <div class="tb-resume__cols">
+    <div class="tb-resume__main">
+
+    {%- comment -%} ── Experience ────────────────────────────────────────── {%- endcomment -%}
+    {%- if r.experience %}
+    <section class="tb-resume__section">
+      <h2 class="tb-resume__section-title">{% include icon.html name="briefcase" %}Experience</h2>
+
+      <ol class="tb-timeline tb-timeline--ranged tb-timeline--lg">
+        {%- for job in r.experience %}
+        <li class="tb-timeline__item"
+            {% if job.current %}aria-current="true"{% else %}data-done{% endif %}>
+          <span class="tb-timeline__node" aria-hidden="true">{% include icon.html name="briefcase" %}</span>
+          <div class="tb-timeline__body">
+            <span class="tb-timeline__time">
+              {{ job.from }}–{{ job.to }}{% if job.location %} · {{ job.location }}{% endif %}
+            </span>
+            <span class="tb-timeline__title">{{ job.role }}</span>
+            <span class="tb-timeline__org">
+              {%- if job.url %}<a class="tb-link" href="{{ job.url }}" rel="noopener">{{ job.org }}</a>
+              {%- else %}{{ job.org }}{% endif -%}
+            </span>
+
+            {%- if job.note %}<p class="tb-timeline__note">{{ job.note }}</p>{% endif %}
+
+            {%- if job.highlights %}
+            <ul class="tb-timeline__list">
+              {%- for h in job.highlights %}<li>{{ h }}</li>{% endfor %}
+            </ul>
+            {%- endif %}
+
+            {%- if job.stack %}
+            <p class="tb-timeline__meta">
+              {%- for t in job.stack %}<span class="tb-badge">{{ t }}</span>{% endfor -%}
+            </p>
+            {%- endif %}
+          </div>
+        </li>
+        {%- endfor %}
+      </ol>
+    </section>
+    {%- endif %}
+
+    {%- comment -%} ── Speaking stays with the story ─────────────────────── {%- endcomment -%}
+    {%- if r.speaking %}
+    <section class="tb-resume__section">
+      <h2 class="tb-resume__section-title">{% include icon.html name="mic" %}Speaking</h2>
+      <ul class="tb-rule-list">
+        {%- for talk in r.speaking %}
+        <li>
+          <span class="tb-rule-list__main">
+            <span class="tb-rule-list__title">{{ talk.title }}</span>
+            <span class="tb-rule-list__meta">{{ talk.event }}</span>
+          </span>
+          <span class="tb-rule-list__meta">{{ talk.year }}</span>
+        </li>
+        {%- endfor %}
+      </ul>
+    </section>
+    {%- endif %}
+
+    {%- if page.content != blank and page.content != "" %}
+    <section class="tb-resume__section">
+      <div class="tb-prose">{{ content }}</div>
+    </section>
+    {%- endif %}
+
+    </div>{%- comment -%} /main {%- endcomment -%}
+
+    <div class="tb-resume__side">
+
+    {%- comment -%} ── Certifications ────────────────────────────────────── {%- endcomment -%}
+    {%- if site.data.certifications.size > 0 %}
+    <section class="tb-resume__section">
+      <h2 class="tb-resume__section-title">
+        {%- include icon.html name="badge" %}Certifications
+        <span class="tb-sr-only">({{ site.data.certifications.size }})</span>
+      </h2>
+      {%- include cert-wall.html -%}
+    </section>
+    {%- endif %}
+
+    {%- comment -%} ── Skills ────────────────────────────────────────────── {%- endcomment -%}
+    {%- if r.skills %}
+    <section class="tb-resume__section">
+      <h2 class="tb-resume__section-title">{% include icon.html name="zap" %}Skills</h2>
+      <div class="tb-skills">
+        {%- for group in r.skills %}
+        <div>
+          <h3 class="tb-skills__group-name">
+            {%- if group.icon %}{% include icon.html name=group.icon %}{% endif -%}
+            {{ group.group }}
+          </h3>
+          <ul class="tb-skills__list">
+            {%- for skill in group.items %}
+            <li class="tb-skills__item">
+              {{ skill.name }}
+              {%- if skill.level %}
+              {%- comment -%}
+                Four ticks, not a percentage bar. The ticks are decorative; the
+                level is spelled out for assistive tech, because "three filled
+                dots" is not information.
+              {%- endcomment -%}
+              <span class="tb-skills__level" aria-hidden="true">
+                {%- for n in (1..4) %}
+                <span class="tb-skills__tick"{% if n <= skill.level %} data-on{% endif %}></span>
+                {%- endfor %}
+              </span>
+              <span class="tb-sr-only">— level {{ skill.level }} of 4</span>
+              {%- endif %}
+            </li>
+            {%- endfor %}
+          </ul>
+        </div>
+        {%- endfor %}
+      </div>
+    </section>
+    {%- endif %}
+
+    {%- comment -%} ── Education ─────────────────────────────────────────── {%- endcomment -%}
+    {%- if r.education %}
+    <section class="tb-resume__section">
+      <h2 class="tb-resume__section-title">{% include icon.html name="graduation" %}Education</h2>
+      <div class="tb-resume__facts">
+        {%- for e in r.education %}
+        <div class="tb-fact">
+          <span class="tb-fact__meta">{{ e.from }}{% if e.to %}–{{ e.to }}{% endif %}</span>
+          <span class="tb-fact__title">{{ e.title }}</span>
+          <span class="tb-fact__meta">{{ e.org }}</span>
+          {%- if e.note %}<p class="tb-fact__note">{{ e.note }}</p>{% endif %}
+        </div>
+        {%- endfor %}
+      </div>
+    </section>
+    {%- endif %}
+
+    {%- comment -%} ── Speaking ──────────────────────────────────────────── {%- endcomment -%}
+    {%- if r.speaking %}
+    <section class="tb-resume__section">
+      <h2 class="tb-resume__section-title">{% include icon.html name="mic" %}Speaking</h2>
+      <ul class="tb-rule-list">
+        {%- for talk in r.speaking %}
+        <li>
+          <span class="tb-rule-list__main">
+            <span class="tb-rule-list__title">{{ talk.title }}</span>
+            <span class="tb-rule-list__meta">{{ talk.event }}</span>
+          </span>
+          <span class="tb-rule-list__meta">{{ talk.year }}</span>
+        </li>
+        {%- endfor %}
+      </ul>
+    </section>
+    {%- endif %}
+
+    {%- if page.content and page.content != "" %}
+    <section class="tb-resume__section">
+      <div class="tb-prose">{{ content }}</div>
+    </section>
+    {%- endif %}
+
+  </div>
+</div>

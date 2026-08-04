@@ -1,0 +1,128 @@
+---
+layout: default
+---
+{%- comment -%}
+  ARCHIVE
+  Everything, on one page, grouped by year — plus a tag index that the tag
+  links elsewhere in the theme point at.
+
+  Deliberately a single page rather than generated per-tag pages: generating
+  one page per tag needs a plugin GitHub Pages will not run, and a reader
+  looking for "the Apex ones" is better served by an in-page anchor than by a
+  page that lists four posts and nothing else.
+{%- endcomment -%}
+
+<div class="tb-container">
+  {%- include breadcrumb.html -%}
+  {%- include hero.html -%}
+</div>
+
+<div class="tb-container tb-section">
+
+  {%- comment -%} ── The corpus ────────────────────────────────────────────
+    Built by walking every collection, so a tag used only on a project still
+    appears. Sorted by name rather than by count: a reader scanning for a word
+    is reading alphabetically whether or not the list is.
+  {%- endcomment -%}
+  {%- assign all = site.posts -%}
+  {%- for c in site.collections -%}
+    {%- if c.label != 'posts' and c.output -%}
+      {%- assign all = all | concat: site[c.label] -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- comment -%}
+    Lessons stay out of the archive: forty rows of chapters would bury the
+    things the archive exists to find, and every lesson is one click inside
+    its course anyway.
+  {%- endcomment -%}
+  {%- assign all = all | where_exp: 'i', 'i.type != "lesson"' -%}
+
+  {%- assign tags = '' | split: '' -%}
+  {%- for item in all -%}
+    {%- for t in item.tags -%}
+      {%- unless tags contains t %}{% assign tags = tags | push: t %}{% endunless -%}
+    {%- endfor -%}
+  {%- endfor -%}
+  {%- assign tags = tags | sort_natural -%}
+
+  <div class="tb-browse">
+
+    {%- comment -%}
+      The rail: every tag with its count, sticky on the left, each linking to
+      its own /tag/ page. This is the archive's index of indexes.
+    {%- endcomment -%}
+    <aside class="tb-browse__rail" aria-label="Browse by tag">
+      <h2 class="tb-widget__head">Browse by tag</h2>
+      <nav class="tb-browse__group">
+        {%- for t in tags %}
+          {%- assign tagged = all | where_exp: 'i', 'i.tags contains t' %}
+        {%- assign t_slug = t | slugify %}
+        <a href="{{ '/tag/' | append: t_slug | append: '/' | relative_url }}">
+          <span>{{ t }}</span>
+          <span class="tb-browse__count">{{ tagged.size }}</span>
+        </a>
+        {%- endfor %}
+      </nav>
+    </aside>
+
+    <div class="tb-browse__main">
+
+  {%- comment -%} ── By year ───────────────────────────────────────────────── {%- endcomment -%}
+  {%- assign dated = all | where_exp: 'i', 'i.date' | sort: 'date' | reverse -%}
+  {%- assign years = '' | split: '' -%}
+  {%- for item in dated -%}
+    {%- assign y = item.date | date: '%Y' -%}
+    {%- unless years contains y %}{% assign years = years | push: y %}{% endunless -%}
+  {%- endfor -%}
+
+  {%- for year in years %}
+  <section class="tb-u-mb-12">
+    <h2 class="tb-section__title" id="y{{ year }}">{{ year }}</h2>
+    <ul class="tb-rule-list">
+      {%- for item in dated %}
+        {%- assign item_year = item.date | date: '%Y' -%}
+        {%- if item_year == year %}
+        {%- assign coll = site.collections | where: 'label', item.collection | first %}
+      <li>
+        <span class="tb-rule-list__main">
+          <a class="tb-rule-list__title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+          <span class="tb-rule-list__meta">
+            {{ coll.singular }}
+            {%- for t in item.tags %} · {{ t }}{% endfor -%}
+          </span>
+        </span>
+        <time class="tb-rule-list__meta" datetime="{{ item.date | date_to_xmlschema }}">
+          {{ item.date | date: '%b %-d' }}
+        </time>
+      </li>
+        {%- endif %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endfor %}
+
+  {%- comment -%}
+    Undated entries — snippets, mostly. They still belong in an archive; they
+    just do not belong under a year heading that would be a guess.
+  {%- endcomment -%}
+  {%- assign undated = all | where_exp: 'i', 'i.date == nil' -%}
+  {%- if undated.size > 0 %}
+  <section>
+    <h2 class="tb-section__title">Undated</h2>
+    <ul class="tb-rule-list">
+      {%- for item in undated %}
+      <li>
+        <span class="tb-rule-list__main">
+          <a class="tb-rule-list__title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+          <span class="tb-rule-list__meta">{{ item.collection }}</span>
+        </span>
+      </li>
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+
+    </div>{%- comment -%} /browse__main {%- endcomment -%}
+  </div>{%- comment -%} /browse {%- endcomment -%}
+
+</div>

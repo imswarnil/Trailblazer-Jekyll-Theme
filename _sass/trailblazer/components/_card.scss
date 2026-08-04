@@ -1,0 +1,583 @@
+// =============================================================================
+// COMPONENTS · CARD
+// The workhorse. Every collection on the site is a deck of these — designed at
+// thumbnail scale first, so a title survives a 260px crop.
+// =============================================================================
+
+.tb-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--tb-bg-surface);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  overflow: hidden;
+  transition: var(--tb-t-colors), var(--tb-t-transform), var(--tb-t-shadow);
+
+  @include tb-hover {
+    &:hover {
+      transform: translate3d(0, -3px, 0);
+      box-shadow: var(--tb-shadow-2);
+      border-color: var(--tb-line-strong);
+    }
+  }
+}
+
+// The whole card is a link, but the <a> stays on the title so the accessible
+// name and the tab stop are both right; its ::after covers the card.
+.tb-card__link {
+  text-decoration: none;
+  color: inherit;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--tb-z-raised);
+  }
+}
+
+// Anything that must stay clickable above that overlay — a tag, a play button.
+.tb-card__above { position: relative; z-index: calc(var(--tb-z-raised) + 1); }
+
+// ── Media ───────────────────────────────────────────────────────────────────
+
+.tb-card__media {
+  position: relative;
+  aspect-ratio: var(--tb-ratio-wide);
+  background: var(--tb-bg-media);
+  overflow: hidden;
+  flex: none;
+
+  > img,
+  > video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    // Slightly desaturated under the brand veil below, so photographs from
+    // six different sources sit on one site without shouting six palettes.
+    filter: saturate(0.88) contrast(1.03);
+    transition: transform var(--tb-dur-4) var(--tb-ease-out);
+  }
+
+  // The brand veil: the accent laid over every thumbnail in soft-light, which
+  // nudges any image — screenshots, photos, YouTube thumbnails — toward the
+  // theme's temperature without recolouring it. Sits under the corner badges
+  // (z-raised) and claims no pointer.
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, var(--tb-accent-400), var(--tb-accent-800));
+    mix-blend-mode: soft-light;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+@include tb-hover {
+  .tb-card:hover .tb-card__media > img { transform: scale(1.03); }
+}
+
+.tb-card__media--square { aspect-ratio: var(--tb-ratio-square); }
+.tb-card__media--photo  { aspect-ratio: var(--tb-ratio-photo); }
+
+.tb-card__media-tl,
+.tb-card__media-tr,
+.tb-card__media-br {
+  position: absolute;
+  z-index: var(--tb-z-raised);
+}
+
+.tb-card__media-tl { top: var(--tb-space-3); left: var(--tb-space-3); }
+.tb-card__media-tr { top: var(--tb-space-3); right: var(--tb-space-3); }
+.tb-card__media-br { bottom: var(--tb-space-3); right: var(--tb-space-3); }
+
+// ── Body ────────────────────────────────────────────────────────────────────
+
+.tb-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-2);
+  padding: var(--tb-space-5);
+  flex: 1;
+}
+
+.tb-card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--tb-space-2);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+}
+
+.tb-card__title {
+  font-family: var(--tb-font-heading-effective);
+  font-size: var(--tb-text-lg);
+  font-weight: var(--tb-weight-bold);
+  line-height: var(--tb-leading-snug);
+  letter-spacing: var(--tb-tracking-tight);
+  color: var(--tb-fg-default);
+  text-wrap: balance;
+}
+
+.tb-card__excerpt {
+  font-size: var(--tb-text-sm);
+  line-height: var(--tb-leading-normal);
+  color: var(--tb-fg-muted);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.tb-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tb-space-3);
+  padding: var(--tb-space-3) var(--tb-space-5);
+  border-top: var(--tb-border-hair) solid var(--tb-line-subtle);
+  margin-top: auto;
+  font-size: var(--tb-text-xs);
+  color: var(--tb-fg-subtle);
+}
+
+// ── Variants ────────────────────────────────────────────────────────────────
+
+// Featured: an accent hairline. Used for exactly one card in a deck.
+.tb-card--featured { border-color: var(--tb-line-accent); }
+
+// Row: media left, body right. Search results, related lists, archives.
+.tb-card--row {
+  flex-direction: row;
+  align-items: stretch;
+
+  > .tb-card__media { width: 38%; max-width: 14rem; }
+  > .tb-card__body { padding: var(--tb-space-4); }
+}
+
+@include tb-down("xs") {
+  .tb-card--row {
+    flex-direction: column;
+
+    > .tb-card__media { width: 100%; max-width: none; }
+  }
+}
+
+// Compact: no media, tight padding. Snippets, changelog, link lists.
+.tb-card--compact {
+  > .tb-card__body { padding: var(--tb-space-4); gap: var(--tb-space-1); }
+
+  .tb-card__title { font-size: var(--tb-text-base); }
+}
+
+// Bare: no border or background, for a card inside a list that already rules.
+.tb-card--bare {
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0;
+
+  &:hover { transform: none; box-shadow: none; }
+}
+
+// ── Deck ────────────────────────────────────────────────────────────────────
+// The default grid a collection renders into.
+
+.tb-deck {
+  display: grid;
+  gap: var(--tb-space-6);
+  grid-template-columns: repeat(auto-fill, minmax(min(19rem, 100%), 1fr));
+}
+
+.tb-deck--sm { grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr)); }
+.tb-deck--lg { grid-template-columns: repeat(auto-fill, minmax(min(24rem, 100%), 1fr)); }
+
+// ── Numbered list ───────────────────────────────────────────────────────────
+// The blog's signature shape: an index, not a deck. The number is the only
+// decoration, and it is set in the display face so it reads as a chapter mark.
+
+.tb-numbered {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tb-numbered__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: var(--tb-space-5);
+  align-items: start;
+  padding: var(--tb-space-6) 0;
+  border-top: var(--tb-border-hair) solid var(--tb-line-subtle);
+  transition: var(--tb-t-colors);
+
+  &:first-child { border-top: 0; }
+
+  @include tb-hover {
+    &:hover .tb-numbered__title { color: var(--tb-fg-accent); }
+  }
+}
+
+.tb-numbered__num {
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-2xl);
+  font-weight: var(--tb-weight-bold);
+  line-height: 1;
+  color: var(--tb-fg-faint);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tb-tracking-tighter);
+}
+
+.tb-numbered__title {
+  font-family: var(--tb-font-heading-effective);
+  font-size: var(--tb-text-xl);
+  font-weight: var(--tb-weight-bold);
+  line-height: var(--tb-leading-snug);
+  letter-spacing: var(--tb-tracking-tight);
+  text-decoration: none;
+  color: inherit;
+  transition: var(--tb-t-colors);
+
+  &::after { content: ""; position: absolute; inset: 0; }
+}
+
+.tb-numbered__excerpt {
+  margin-top: var(--tb-space-2);
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-muted);
+  line-height: var(--tb-leading-relaxed);
+  max-width: var(--tb-measure-lead);
+}
+
+.tb-numbered__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tb-space-3);
+  margin-top: var(--tb-space-3);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+}
+
+// The small thumbnail on the right of a numbered row. Hidden below the fold
+// point — at phone width the column is for words.
+.tb-numbered__media {
+  display: none;
+  width: 8.5rem;
+  aspect-ratio: var(--tb-ratio-photo);
+  border-radius: var(--tb-radius-md);
+  overflow: hidden;
+  background: var(--tb-bg-media);
+  position: relative;
+  align-self: center;
+
+  img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.88); }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, var(--tb-accent-400), var(--tb-accent-800));
+    mix-blend-mode: soft-light;
+    opacity: 0.5;
+  }
+}
+
+@include tb-up("md") {
+  .tb-numbered__item { grid-template-columns: 3.5rem minmax(0, 1fr) auto; }
+  .tb-numbered__media { display: block; }
+}
+
+@include tb-down("xs") {
+  .tb-numbered__item { grid-template-columns: minmax(0, 1fr); gap: var(--tb-space-2); }
+  .tb-numbered__num { font-size: var(--tb-text-base); }
+}
+
+// ── Bento ───────────────────────────────────────────────────────────────────
+// The projects shape: one lead tile twice the size, the rest filling in around
+// it. Falls back to a plain deck below the fold point, because a bento grid on
+// a phone is just a column with extra rules.
+
+.tb-bento {
+  display: grid;
+  gap: var(--tb-space-4);
+  grid-template-columns: repeat(auto-fill, minmax(min(17rem, 100%), 1fr));
+}
+
+@include tb-up("md") {
+  .tb-bento { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .tb-bento > * { grid-column: span 2; height: 100%; }
+  .tb-bento > :first-child { grid-column: span 4; grid-row: span 2; }
+
+  // The lead tile is twice as tall as the cell its content was designed for.
+  // Without this its cover keeps a 16:9 box and the extra height becomes a
+  // hole under the excerpt — so on that one tile the cover gives up its fixed
+  // ratio and takes whatever room is left instead.
+  .tb-bento > :first-child .tb-card__media {
+    aspect-ratio: auto;
+    flex: 1;
+    min-height: 12rem;
+  }
+}
+
+@include tb-up("lg") {
+  .tb-bento > :first-child { grid-column: span 2; grid-row: span 2; }
+}
+
+// ── Rule list ───────────────────────────────────────────────────────────────
+// The lightest way to list things: rows separated by hairlines and no box.
+
+.tb-rule-list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  > li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--tb-space-4);
+    padding: var(--tb-space-4) 0;
+    border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle);
+  }
+
+  > li:last-child { border-bottom: 0; }
+}
+
+.tb-rule-list__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tb-rule-list__title {
+  font-weight: var(--tb-weight-semibold);
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-default);
+  text-decoration: none;
+  transition: var(--tb-t-colors);
+
+  &:hover { color: var(--tb-fg-accent); }
+}
+
+.tb-rule-list__meta {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+}
+
+// ── Repo card ───────────────────────────────────────────────────────────────
+// The projects shape: a card that reads like a repository listing, because for
+// a developer audience that IS the familiar grammar for "a piece of work" —
+// mono name, one-line description, a language dot, and the two links that
+// matter (the live thing, and the source). The case study is the title link;
+// the buttons are real, separate targets.
+
+.tb-repo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-3);
+  padding: var(--tb-space-5);
+  background: var(--tb-bg-surface);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  transition: var(--tb-t-colors), var(--tb-t-shadow);
+
+  @include tb-hover {
+    &:hover { border-color: var(--tb-line-strong); box-shadow: var(--tb-shadow-1); }
+  }
+}
+
+.tb-repo__head {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  min-width: 0;
+
+  > svg { width: var(--tb-icon-sm); height: var(--tb-icon-sm); flex: none; color: var(--tb-fg-faint); }
+}
+
+// The repo name speaks mono, because a repository name is an identifier, not a
+// headline — and the identifier is the part a developer scans for.
+.tb-repo__name {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-sm);
+  font-weight: var(--tb-weight-semibold);
+  color: var(--tb-fg-accent);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: var(--tb-t-colors);
+
+  &:hover { color: var(--tb-accent-hover); }
+}
+
+.tb-repo__desc {
+  font-size: var(--tb-text-sm);
+  line-height: var(--tb-leading-normal);
+  color: var(--tb-fg-muted);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.tb-repo__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--tb-space-2) var(--tb-space-4);
+  font-size: var(--tb-text-xs);
+  color: var(--tb-fg-subtle);
+  margin-top: auto;
+}
+
+// The language dot. Colour arrives per-card via --tb-lang, set inline by the
+// card include from a small language→colour map — the same convention every
+// repository listing has trained developers to read.
+.tb-repo__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+
+  &::before {
+    content: "";
+    width: var(--tb-dot-md);
+    height: var(--tb-dot-md);
+    border-radius: var(--tb-radius-full);
+    background: var(--tb-lang, var(--tb-accent));
+    flex: none;
+  }
+}
+
+.tb-repo__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tb-space-2);
+  padding-top: var(--tb-space-4);
+  border-top: var(--tb-border-hair) solid var(--tb-line-subtle);
+}
+
+// ── Video card ──────────────────────────────────────────────────────────────
+// A thumbnail that admits it is a video: a drawn play glyph over the cover and
+// the runtime in the corner. The glyph is decorative — the title carries the
+// link and the accessible name — so it is aria-hidden in the markup.
+
+.tb-card__play {
+  position: absolute;
+  inset: 0;
+  z-index: var(--tb-z-raised);
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+
+  &::before {
+    content: "";
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--tb-radius-full);
+    background: rgb(0 0 0 / 0.55);
+    backdrop-filter: blur(2px);
+    box-shadow: 0 0 0 var(--tb-border-2) rgb(255 255 255 / 0.35);
+    transition: var(--tb-t-transform), var(--tb-t-colors);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 0.85rem solid var(--tb-pure-white);
+    border-top: 0.55rem solid transparent;
+    border-bottom: 0.55rem solid transparent;
+    transform: translateX(3px); // optical centre: a triangle sits left-heavy
+  }
+}
+
+@include tb-hover {
+  .tb-card:hover .tb-card__play::before {
+    background: var(--tb-accent);
+    transform: scale(1.08);
+  }
+}
+
+.tb-timecode {
+  display: inline-flex;
+  align-items: center;
+  height: 1.375rem;
+  padding-inline: var(--tb-space-2);
+  border-radius: var(--tb-radius-sm);
+  background: rgb(0 0 0 / 0.72);
+  color: var(--tb-pure-white);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tb-tracking-wide);
+}
+
+// ── Book card ───────────────────────────────────────────────────────────────
+// A reading-list entry: portrait cover, author, a star rating. The stars are
+// drawn from the craft hue — a rating is the one place the second colour earns
+// its seat, because it is genuinely a different kind of information.
+
+.tb-card--book > .tb-card__media { aspect-ratio: var(--tb-ratio-poster); }
+
+.tb-card__author {
+  font-size: var(--tb-text-xs);
+  color: var(--tb-fg-subtle);
+}
+
+.tb-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.tb-stars__star {
+  width: 0.85rem;
+  height: 0.85rem;
+  background: var(--tb-line-strong);
+  clip-path: polygon(50% 0%, 63% 35%, 98% 35%, 70% 57%, 80% 91%, 50% 70%, 20% 91%, 30% 57%, 2% 35%, 37% 35%);
+
+  &[data-on] { background: var(--tb-craft); }
+}
+
+// ── Empty state ─────────────────────────────────────────────────────────────
+// A collection with nothing in it should say so plainly rather than render an
+// empty grid — a theme buyer sees this first, before they have written a word.
+
+.tb-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tb-space-3);
+  padding: var(--tb-space-16) var(--tb-space-6);
+  border: var(--tb-border-hair) dashed var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  text-align: center;
+  color: var(--tb-fg-subtle);
+
+  > svg { width: var(--tb-icon-xl); height: var(--tb-icon-xl); color: var(--tb-fg-faint); }
+}
+
+.tb-empty__title {
+  font-weight: var(--tb-weight-semibold);
+  color: var(--tb-fg-default);
+}

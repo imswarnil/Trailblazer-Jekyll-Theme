@@ -1,0 +1,78 @@
+# =============================================================================
+# Build the site and deploy it to GitHub Pages.
+#
+# Before this can work, set Settings → Pages → Source to "GitHub Actions".
+# With Source left on "Deploy from a branch" the workflow runs, goes green, and
+# deploys nothing — which is the single most common way to lose an hour here.
+# =============================================================================
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time. In-progress runs are allowed to finish rather than
+# being cancelled — a half-deployed site is worse than a slightly stale one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - uses: actions/configure-pages@v5
+        id: pages
+
+      # JEKYLL_ENV=production is what switches on analytics, comments and the
+      # service worker. Without it the deployed site quietly ships none of them.
+      - name: Build
+        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+        env:
+          JEKYLL_ENV: production
+
+      # A cheap smoke test. `jekyll build` exits 0 on a site where a Liquid
+      # error left a page half-rendered, so check that the pages that must
+      # exist actually do before this gets deployed over a working site.
+      - name: Check the build
+        run: |
+          set -e
+          for path in index.html blog/index.html resume/index.html \
+                      sitemap.xml feed.xml robots.txt assets/css/main.css; do
+            test -s "_site/$path" || { echo "missing or empty: $path"; exit 1; }
+          done
+          # A tag Liquid failed to render still has its space: "{% if" or
+          # "{{ site.". Syntax-highlighted examples on the style guide do not —
+          # Rouge splits them across spans, so "{%" is followed by "<".
+          # Matching on the space is what tells the two apart.
+          if grep -rlE '\{%[[:space:]]|\{\{[[:space:]]' _site --include='*.html' | head -1 | grep -q .; then
+            echo "unrendered Liquid found in the output:"
+            grep -rlE '\{%[[:space:]]|\{\{[[:space:]]' _site --include='*.html'
+            exit 1
+          fi
+          echo "build looks sane"
+
+      - uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

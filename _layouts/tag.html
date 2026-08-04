@@ -1,0 +1,84 @@
+---
+layout: default
+---
+{%- comment -%}
+  TAG (and CATEGORY) PAGE
+  One page per tag, as a real URL — /tag/apex/ — because "the Apex ones" is a
+  thing people link to, and an in-page anchor cannot be shared, indexed or
+  bookmarked the way a page can.
+
+  GitHub Pages will not run a tag-generator plugin, so the theme uses the
+  honest static version: a stub file per tag, four lines each —
+
+    tag/apex.md
+    ---
+    layout: tag
+    tag: Apex
+    permalink: /tag/apex/
+    ---
+
+  The same layout serves categories: set `category:` instead of `tag:` and
+  the filter switches. Everything else — hero, counts, the cross-collection
+  list — is derived.
+{%- endcomment -%}
+
+{%- assign all = site.posts -%}
+{%- for c in site.collections -%}
+  {%- if c.label != 'posts' and c.output -%}
+    {%- assign all = all | concat: site[c.label] -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign all = all | where_exp: 'i', 'i.type != "lesson"' -%}
+
+{%- if page.category -%}
+  {%- assign term = page.category -%}
+  {%- assign items = all | where_exp: 'i', 'i.categories contains term' -%}
+{%- else -%}
+  {%- assign term = page.tag -%}
+  {%- assign items = all | where_exp: 'i', 'i.tags contains term' -%}
+{%- endif -%}
+{%- assign items = items | sort: 'date' | reverse -%}
+
+<div class="tb-container">
+  {%- include breadcrumb.html -%}
+
+  <section class="tb-hero tb-hero--minimal">
+    <p class="tb-hero__eyebrow">{% if page.category %}Category{% else %}Tag{% endif %}</p>
+    <h1 class="tb-hero__title">{{ term }}</h1>
+    <p class="tb-hero__lead">
+      {{ items.size }} {% if items.size == 1 %}entry{% else %}entries{% endif %}
+      across the site.
+      <a class="tb-link" href="{{ '/archive/' | relative_url }}">All tags →</a>
+    </p>
+  </section>
+</div>
+
+<div class="tb-container tb-section">
+  {%- if items.size > 0 %}
+  <ul class="tb-rule-list">
+    {%- for item in items %}
+    {%- assign icoll = site.collections | where: 'label', item.collection | first %}
+    <li>
+      <span class="tb-rule-list__main">
+        <a class="tb-rule-list__title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+        <span class="tb-rule-list__meta">
+          {{ icoll.singular | default: 'Page' }}
+          {%- if item.description %} · {{ item.description | truncate: 90 }}{% endif -%}
+        </span>
+      </span>
+      {%- if item.date %}
+      <time class="tb-rule-list__meta" datetime="{{ item.date | date_to_xmlschema }}">
+        {{ item.date | date: '%b %Y' }}
+      </time>
+      {%- endif %}
+    </li>
+    {%- endfor %}
+  </ul>
+  {%- else %}
+  <div class="tb-empty">
+    {%- include icon.html name="tag" class="tb-icon--xl" %}
+    <p class="tb-empty__title">Nothing carries this tag yet</p>
+    <p>The stub exists; the content will find it.</p>
+  </div>
+  {%- endif %}
+</div>

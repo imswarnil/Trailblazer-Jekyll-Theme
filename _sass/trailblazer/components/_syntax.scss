@@ -1,0 +1,221 @@
+// =============================================================================
+// COMPONENTS · SYNTAX
+// Code blocks, and the Rouge theme that colours them.
+//
+// A code slab is always dark, in both site themes. That is deliberate: a
+// developer reads code in a dark editor all day, and a light slab in the
+// middle of an article is the one element that reliably makes people squint.
+// The `--light` twin exists for documentation prose where a dark block is too
+// loud a punctuation mark.
+//
+// Five token roles carry the meaning — keyword, string, number, name, comment.
+// Everything else inherits, because a rainbow is not a reading aid.
+// =============================================================================
+
+// Kramdown emits `div.language-x.highlighter-rouge > .highlight > pre.highlight`
+// for a fenced block, and the `{% highlight %}` tag emits `figure.highlight >
+// pre`. Both are styled here.
+//
+// The `div` in the selector is load-bearing: kramdown puts the SAME
+// `highlighter-rouge` class on inline <code> elements, and without the element
+// qualifier every piece of inline code in a sentence turns into a dark slab.
+div.highlighter-rouge,
+figure.highlight,
+.tb-code {
+  position: relative;
+  background: var(--tb-ink-950);
+  color: var(--tb-ink-100);
+  border: var(--tb-border-hair) solid rgb(255 255 255 / 0.08);
+  border-radius: var(--tb-radius-lg);
+  overflow: hidden;
+  color-scheme: dark;
+  margin: 0;
+
+  pre {
+    margin: 0;
+    padding: var(--tb-space-5);
+    overflow-x: auto;
+    font-family: var(--tb-font-mono);
+    font-size: var(--tb-text-xs);
+    line-height: 1.7;
+    tab-size: 2;
+    background: none;
+    border: 0;
+  }
+
+  code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+  }
+
+  // The inner wrappers Rouge adds are structural only.
+  .highlight { background: none; margin: 0; }
+}
+
+// The header strip: language on the left, copy button on the right. Rendered
+// by the `code` include; a bare fenced block simply does without it.
+.tb-code__head {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-3);
+  padding: var(--tb-space-2) var(--tb-space-2) var(--tb-space-2) var(--tb-space-4);
+  border-bottom: var(--tb-border-hair) solid rgb(255 255 255 / 0.08);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.5);
+}
+
+.tb-code__lang { margin-right: auto; }
+
+.tb-code__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-1);
+  border: var(--tb-border-hair) solid rgb(255 255 255 / 0.14);
+  background: transparent;
+  color: rgb(255 255 255 / 0.65);
+  border-radius: var(--tb-radius-sm);
+  font: inherit;
+  padding: 3px var(--tb-space-2);
+  cursor: pointer;
+  transition: var(--tb-t-colors);
+
+  &:hover { background: rgb(255 255 255 / 0.08); color: #fff; }
+  &[data-copied] { color: var(--tb-accent-300); border-color: currentcolor; }
+}
+
+// Line numbers, when Rouge is configured to emit them.
+.lineno {
+  color: rgb(255 255 255 / 0.25);
+  user-select: none;
+  padding-right: var(--tb-space-4);
+}
+
+// ── The light twin ──────────────────────────────────────────────────────────
+
+.tb-code--light {
+  background: var(--tb-bg-sunken);
+  color: var(--tb-fg-default);
+  border-color: var(--tb-line-default);
+  color-scheme: light dark;
+
+  .tb-code__head { border-color: var(--tb-line-subtle); color: var(--tb-fg-faint); }
+  .tb-code__copy { border-color: var(--tb-line-default); color: var(--tb-fg-subtle); }
+  .tb-code__copy:hover { background: var(--tb-bg-surface); color: var(--tb-fg-default); }
+}
+
+// =============================================================================
+// ROUGE TOKENS
+// Tuned against the near-black slab: enough separation to scan, close enough
+// in value that no single role jumps off the page.
+// =============================================================================
+
+$tb-syn-comment: #6b7f95;
+$tb-syn-keyword: #ff7b9c;
+$tb-syn-string:  #7ee0a8;
+$tb-syn-number:  #f2b872;
+$tb-syn-name:    #7cc7ff;
+$tb-syn-fn:      #c4a8ff;
+$tb-syn-type:    #6fd7d2;
+
+.highlight,
+.tb-code {
+  // Comments recede — they are the one role that should be easy to skip.
+  .c, .ch, .cd, .cm, .cp, .cpf, .c1, .cs { color: $tb-syn-comment; font-style: italic; }
+
+  // Keywords carry the structure of the language.
+  .k, .kc, .kd, .kn, .kp, .kr, .kv { color: $tb-syn-keyword; }
+  .kt { color: $tb-syn-type; }
+
+  // Strings and their escapes.
+  .s, .sa, .sb, .sc, .dl, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss { color: $tb-syn-string; }
+
+  // Numbers, and everything that is literally a value.
+  .m, .mb, .mf, .mh, .mi, .mo, .il { color: $tb-syn-number; }
+  .l, .ld { color: $tb-syn-number; }
+
+  // Names: classes, constants and tags read as one family, functions as
+  // another, because "what is this" and "what does it do" are different
+  // questions when you are scanning.
+  .n, .nb, .bp, .ni, .nl, .nx, .py, .nv, .vc, .vg, .vi { color: inherit; }
+  .nc, .no, .nn, .ne { color: $tb-syn-type; }
+  .na, .nt { color: $tb-syn-name; }
+  .nf, .fm { color: $tb-syn-fn; }
+  .nd { color: $tb-syn-fn; font-style: italic; }
+
+  // Operators and punctuation are structure, not content.
+  .o, .ow { color: #a5b6c8; }
+  .p, .pi { color: #8595a6; }
+
+  // Diffs, for changelog and migration posts.
+  .gd { color: #ff9aa8; background: rgb(255 90 110 / 0.1); display: inline-block; width: 100%; }
+  .gi { color: #8ce8b5; background: rgb(60 220 140 / 0.1); display: inline-block; width: 100%; }
+  .gh { color: $tb-syn-name; font-weight: var(--tb-weight-semibold); }
+  .gu { color: $tb-syn-fn; }
+  .gs { font-weight: var(--tb-weight-semibold); }
+  .ge { font-style: italic; }
+  .gp { color: $tb-syn-comment; user-select: none; }
+
+  .err { color: #ff8fa5; background: rgb(255 60 90 / 0.12); }
+  .w { color: transparent; }
+}
+
+// The light twin needs its own measured set — the dark hues wash out on paper.
+.tb-code--light .highlight,
+.tb-code--light {
+  .c, .ch, .cd, .cm, .cp, .cpf, .c1, .cs { color: var(--tb-fg-faint); }
+  .k, .kc, .kd, .kn, .kp, .kr, .kv { color: #b1145c; }
+  .kt, .nc, .no, .nn, .ne { color: #0b6b73; }
+  .s, .sa, .sb, .sc, .dl, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss { color: #14804a; }
+  .m, .mb, .mf, .mh, .mi, .mo, .il, .l, .ld { color: #8a5a10; }
+  .na, .nt { color: #1359b8; }
+  .nf, .fm, .nd { color: #6b3fc4; }
+  .o, .ow { color: var(--tb-fg-muted); }
+  .p, .pi { color: var(--tb-fg-subtle); }
+}
+
+// ── Inline copy chip ────────────────────────────────────────────────────────
+// For a one-liner in prose (`sfdx force:source:deploy`) that a reader is
+// obviously going to copy rather than read.
+
+.tb-copy-line {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-xs);
+  background: var(--tb-bg-sunken);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-md);
+  padding: var(--tb-space-1) var(--tb-space-1) var(--tb-space-1) var(--tb-space-3);
+  max-width: 100%;
+
+  > code {
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+
+  > button {
+    border: 0;
+    background: var(--tb-bg-surface);
+    border-radius: var(--tb-radius-sm);
+    padding: 2px var(--tb-space-2);
+    font: inherit;
+    color: var(--tb-fg-subtle);
+    cursor: pointer;
+    flex: none;
+    transition: var(--tb-t-colors);
+
+    &:hover { color: var(--tb-fg-default); }
+    &[data-copied] { color: var(--tb-fg-accent); }
+  }
+}

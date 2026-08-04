@@ -1,0 +1,194 @@
+// =============================================================================
+// TOKENS · TIER 2 — SEMANTIC ALIASES
+// The only colour names a component is allowed to read. Never a ramp step,
+// never a raw hex, in any file after this one.
+//
+// Dark is not an inversion of light. Surfaces lift with light rather than
+// casting shadow, the accent steps down one so it does not bloom on a black
+// canvas, and hairlines become translucent white so they survive over media.
+// =============================================================================
+
+// The dark palette lives in a mixin because it is emitted twice: once for an
+// explicit `data-theme="dark"`, once for "no explicit choice, and the OS says
+// dark". Written as two copies of one source so the attribute always wins.
+@mixin tb-dark-aliases {
+  color-scheme: dark;
+
+  --tb-bg-canvas:     var(--tb-ink-1000);
+  --tb-bg-surface:    var(--tb-ink-950);
+  --tb-bg-raised:     var(--tb-ink-900);
+  --tb-bg-sunken:     #0b1017;
+  --tb-bg-muted:      var(--tb-ink-800);
+  --tb-bg-inverse:    var(--tb-ink-50);
+  --tb-bg-scrim:      rgb(0 0 0 / 0.68);
+  --tb-bg-media:      var(--tb-pure-black);
+
+  --tb-fg-default:    var(--tb-ink-50);
+  --tb-fg-muted:      var(--tb-ink-400);
+  --tb-fg-subtle:     var(--tb-ink-500);
+  --tb-fg-faint:      var(--tb-ink-600);
+  --tb-fg-on-inverse: var(--tb-ink-900);
+  --tb-fg-accent:     var(--tb-accent-300);
+  --tb-fg-link-hover: var(--tb-accent-300);
+
+  --tb-line-subtle:   rgb(255 255 255 / 0.07);
+  --tb-line-default:  rgb(255 255 255 / 0.12);
+  --tb-line-strong:   rgb(255 255 255 / 0.22);
+  --tb-line-inverse:  rgb(7 10 14 / 0.14);
+
+  --tb-accent-hover:   var(--tb-accent-400);
+  --tb-accent-press:   var(--tb-accent-600);
+  --tb-accent-soft:    #{rgba($tb-accent, 0.18)};
+  --tb-accent-soft-fg: var(--tb-accent-200);
+  --tb-accent-ring:    #{rgba($tb-accent, 0.45)};
+
+  --tb-craft:      var(--tb-craft-300);
+  --tb-craft-soft: #{rgba($tb-craft, 0.16)};
+  --tb-craft-fg:   var(--tb-craft-200);
+
+  --tb-success-bg: #{rgba($tb-success, 0.20)};
+  --tb-success-fg: var(--tb-success-200);
+  --tb-warning-bg: #{rgba($tb-warning, 0.20)};
+  --tb-warning-fg: var(--tb-craft-200);
+  --tb-danger-bg:  #{rgba($tb-danger, 0.22)};
+  --tb-danger-fg:  var(--tb-danger-200);
+  --tb-info-bg:    #{rgba($tb-accent, 0.20)};
+  --tb-info-fg:    var(--tb-accent-200);
+
+  --tb-focus-ring:     var(--tb-accent-300);
+  --tb-focus-ring-alt: var(--tb-ink-1000);
+  --tb-selection-bg:   #{rgba($tb-accent, 0.38)};
+  --tb-selection-fg:   var(--tb-ink-0);
+  --tb-hover-wash:     rgb(255 255 255 / 0.05);
+  --tb-press-wash:     rgb(255 255 255 / 0.09);
+
+  --tb-pattern-ink:   rgb(255 255 255 / 0.07);
+  --tb-pattern-ink-2: rgb(255 255 255 / 0.12);
+
+  --tb-shadow-color: 0 0% 0%;
+  --tb-shadow-1: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 1px 3px rgb(0 0 0 / 0.5);
+  --tb-shadow-2: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 6px 16px rgb(0 0 0 / 0.55);
+  --tb-shadow-3: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 12px 28px rgb(0 0 0 / 0.6);
+  --tb-shadow-4: 0 1px 0 rgb(255 255 255 / 0.07) inset, 0 24px 56px rgb(0 0 0 / 0.65);
+  --tb-shadow-5: 0 1px 0 rgb(255 255 255 / 0.08) inset, 0 40px 96px rgb(0 0 0 / 0.7);
+  --tb-shadow-inset: inset 0 1px 2px rgb(0 0 0 / 0.5);
+}
+
+// ── LIGHT — the default ─────────────────────────────────────────────────────
+
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  // Surfaces. canvas is the page, surface is a card, raised is a popover,
+  // sunken is a well (code blocks, inputs, table headers).
+  --tb-bg-canvas:     var(--tb-ink-0);
+  --tb-bg-surface:    var(--tb-ink-0);
+  --tb-bg-raised:     var(--tb-ink-0);
+  --tb-bg-sunken:     var(--tb-ink-50);
+  --tb-bg-muted:      var(--tb-ink-100);
+  --tb-bg-inverse:    var(--tb-ink-950);
+  --tb-bg-scrim:      rgb(7 10 14 / 0.55);
+  --tb-bg-media:      var(--tb-ink-900);
+
+  --tb-fg-default:    var(--tb-ink-900);
+  --tb-fg-muted:      var(--tb-ink-600);
+  --tb-fg-subtle:     var(--tb-ink-500);
+  --tb-fg-faint:      var(--tb-ink-400);
+  --tb-fg-on-inverse: var(--tb-ink-50);
+  --tb-fg-on-accent:  var(--tb-pure-white);
+  --tb-fg-accent:     var(--tb-accent-700);
+  --tb-fg-link:       var(--tb-fg-default);
+  --tb-fg-link-hover: var(--tb-accent-700);
+
+  // Lines. subtle divides inside a component, default edges a card, strong
+  // survives a screenshot.
+  --tb-line-subtle:   var(--tb-ink-100);
+  --tb-line-default:  var(--tb-ink-200);
+  --tb-line-strong:   var(--tb-ink-300);
+  --tb-line-inverse:  rgb(255 255 255 / 0.14);
+  --tb-line-accent:   var(--tb-accent-500);
+
+  --tb-accent:         var(--tb-accent-500);
+  --tb-accent-hover:   var(--tb-accent-600);
+  --tb-accent-press:   var(--tb-accent-700);
+  --tb-accent-soft:    var(--tb-accent-50);
+  --tb-accent-soft-fg: var(--tb-accent-700);
+  --tb-accent-ring:    #{rgba($tb-accent, 0.30)};
+
+  --tb-craft:      var(--tb-craft-400);
+  --tb-craft-soft: var(--tb-craft-50);
+  --tb-craft-fg:   var(--tb-craft-700);
+
+  // Status: -bg is the tint, -fg is text on that tint, -line is the edge.
+  --tb-success-bg:   var(--tb-success-50);
+  --tb-success-fg:   var(--tb-success-700);
+  --tb-success-line: var(--tb-success-500);
+  --tb-warning-bg:   var(--tb-warning-50);
+  --tb-warning-fg:   var(--tb-warning-700);
+  --tb-warning-line: var(--tb-warning-500);
+  --tb-danger-bg:    var(--tb-danger-50);
+  --tb-danger-fg:    var(--tb-danger-700);
+  --tb-danger-line:  var(--tb-danger-500);
+  --tb-info-bg:      var(--tb-accent-50);
+  --tb-info-fg:      var(--tb-accent-700);
+  --tb-info-line:    var(--tb-accent-500);
+
+  --tb-focus-ring:     var(--tb-accent-500);
+  --tb-focus-ring-alt: var(--tb-pure-white);
+  --tb-selection-bg:   var(--tb-accent-100);
+  --tb-selection-fg:   var(--tb-ink-900);
+  --tb-hover-wash:     rgb(7 10 14 / 0.035);
+  --tb-press-wash:     rgb(7 10 14 / 0.07);
+
+  // Background textures derive from this, so a pattern never needs to know
+  // which theme it is sitting on.
+  --tb-pattern-ink:   rgb(7 10 14 / 0.055);
+  --tb-pattern-ink-2: rgb(7 10 14 / 0.10);
+}
+
+// ── DARK ────────────────────────────────────────────────────────────────────
+
+:root[data-theme="dark"] { @include tb-dark-aliases; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { @include tb-dark-aliases; }
+}
+
+// ── Inverse island ──────────────────────────────────────────────────────────
+// Flip the aliases on a subtree without touching the document theme. Used by
+// the CTA band, the inverse footer and the hero billboard.
+
+[data-surface="inverse"] {
+  --tb-bg-canvas:     var(--tb-ink-950);
+  --tb-bg-surface:    var(--tb-ink-950);
+  --tb-bg-raised:     var(--tb-ink-900);
+  --tb-bg-sunken:     var(--tb-ink-1000);
+  --tb-bg-muted:      var(--tb-ink-800);
+  --tb-fg-default:    var(--tb-ink-50);
+  --tb-fg-muted:      var(--tb-ink-400);
+  --tb-fg-subtle:     var(--tb-ink-400);
+  --tb-fg-on-inverse: var(--tb-ink-900);
+  --tb-line-subtle:   rgb(255 255 255 / 0.07);
+  --tb-line-default:  rgb(255 255 255 / 0.12);
+  --tb-line-strong:   rgb(255 255 255 / 0.22);
+  --tb-fg-accent:     var(--tb-accent-300);
+  --tb-accent-soft:   #{rgba($tb-accent, 0.18)};
+  --tb-hover-wash:    rgb(255 255 255 / 0.05);
+  --tb-pattern-ink:   rgb(255 255 255 / 0.07);
+  --tb-pattern-ink-2: rgb(255 255 255 / 0.12);
+
+  background: var(--tb-bg-surface);
+  color: var(--tb-fg-default);
+  color-scheme: dark;
+}
+
+// Derived helpers. `color-mix` keeps the maths in CSS rather than in the build,
+// so a token change propagates without a recompile.
+.tb-tint-accent  { background: color-mix(in srgb, var(--tb-accent) 8%, var(--tb-bg-surface)); }
+.tb-tint-craft   { background: color-mix(in srgb, var(--tb-craft) 12%, var(--tb-bg-surface)); }
+
+// A surface that lifts with light instead of shadow — the dark-mode idiom,
+// usable in both themes.
+.tb-lift-1 { background: color-mix(in srgb, var(--tb-fg-default) 4%, var(--tb-bg-surface)); }
+.tb-lift-2 { background: color-mix(in srgb, var(--tb-fg-default) 7%, var(--tb-bg-surface)); }

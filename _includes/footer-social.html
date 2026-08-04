@@ -1,0 +1,21 @@
+{%- comment -%}
+  SOCIAL LINKS
+  One row, from the `social:` block in _config.yml.
+
+  `rel="me"` is opt-in per link (`rel_me: true`) because it is a claim — it
+  says "this profile is me, and that site will confirm it". Mastodon uses it to
+  verify a link, and putting it on a profile that does not link back just makes
+  the claim fail quietly.
+
+  Off-site links carry rel="noopener"; the icon is labelled, since there is no
+  visible text to name it.
+{%- endcomment -%}
+{%- for s in site.social -%}
+  {%- assign is_external = true -%}
+  {%- if s.url contains '/feed' or s.url contains 'mailto:' %}{% assign is_external = false %}{% endif -%}
+<a class="tb-social-link" href="{{ s.url | relative_url }}"
+   {% if is_external %}rel="noopener{% if s.rel_me %} me{% endif %}" target="_blank"{% endif %}
+   aria-label="{{ s.name | escape }}{% if is_external %} (opens in a new tab){% endif %}">
+  {%- include icon.html name=s.icon -%}
+</a>
+{%- endfor -%}

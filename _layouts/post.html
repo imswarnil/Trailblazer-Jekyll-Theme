@@ -1,0 +1,250 @@
+---
+layout: default
+---
+{%- comment -%}
+  POST
+  One layout for every collection entry — a post, a project, a snippet, a
+  talk, a book. What differs is lead media, metadata and shape, and all of it
+  is decided by front matter rather than by a template per type.
+
+  The shape switches:
+
+    sidebar: right · left · false    where the rail goes (default: the
+                                     collection's own `sidebar:` in config)
+    hero_split: true                 header becomes two columns, image right
+    type: video                      the `video:` id opens the page as a player
+    series: "Name" + series_part: n  joins the post to a series, with the
+                                     series box listing every part
+    share / comments / toc: false    drop that block
+{%- endcomment -%}
+
+{%- assign coll = site.collections | where: 'label', page.collection | first -%}
+
+{%- comment -%}
+  Sidebar resolution: page front matter wins, then the collection's own
+  setting. `true` is legacy spelling for `right`. Anything that is not a side
+  is no sidebar.
+{%- endcomment -%}
+{%- assign sb = page.sidebar -%}
+{%- if sb == nil %}{% assign sb = coll.sidebar %}{% endif -%}
+{%- if sb == true %}{% assign sb = 'right' %}{% endif -%}
+{%- unless sb == 'left' or sb == 'right' %}{% assign sb = false %}{% endunless -%}
+
+<div class="tb-container tb-section">
+  {%- include breadcrumb.html -%}
+
+  <div class="tb-shell{% if sb %} tb-shell--sidebar{% if sb == 'left' %} tb-shell--sidebar-left{% endif %}{% endif %}">
+
+    <article class="tb-shell__main"{% if sb == false %} style="max-width:var(--tb-w-prose);margin-inline:auto"{% endif %}>
+
+      <header class="tb-post__header{% if page.hero_split and page.image %} tb-post__header--split{% endif %}">
+        <div>
+          <p class="tb-cluster-sm">
+            <a class="tb-badge tb-badge--accent" href="{{ coll.index_url | default: '/' | relative_url }}">
+              {%- if coll.icon %}{% include icon.html name=coll.icon %}{% endif -%}
+              {{ coll.singular | default: 'Page' }}
+            </a>
+            {%- if page.type == 'video' %}
+            <span class="tb-badge">{% include icon.html name="play" %}Video{% if page.duration %} · {{ page.duration }}{% endif %}</span>
+            {%- endif %}
+            {%- if page.series %}
+            <span class="tb-badge tb-badge--craft">Series · Part {{ page.series_part | default: '?' }}</span>
+            {%- endif %}
+            {%- if page.status %}<span class="tb-badge">{{ page.status }}</span>{% endif -%}
+          </p>
+
+          <h1 class="tb-post__title">{{ page.title }}</h1>
+
+          {%- if page.description %}
+          <p class="tb-post__lead">{{ page.description }}</p>
+          {%- endif %}
+
+          <div class="tb-post__meta">
+            {%- if page.date %}
+            <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%B %-d, %Y' }}</time>
+            <span class="tb-post__meta-sep" aria-hidden="true">·</span>
+            {%- endif %}
+            {%- if site.reading.show_reading_time != false %}
+            <span>{% include reading-time.html content=content %}</span>
+            {%- endif %}
+            {%- for tag in page.tags %}
+            {%- assign tag_slug = tag | slugify %}
+            <span class="tb-post__meta-sep" aria-hidden="true">·</span>
+            <a href="{{ '/tag/' | append: tag_slug | append: '/' | relative_url }}">{{ tag }}</a>
+            {%- endfor %}
+          </div>
+        </div>
+
+        {%- comment -%}
+          The split hero: text left, image right, and the image is part of the
+          header rather than a banner below it — which is what keeps the title
+          above the fold on the pages that use it.
+        {%- endcomment -%}
+        {%- if page.hero_split and page.image %}
+        <div class="tb-post__header-media">
+          <img src="{{ page.image | relative_url }}" alt="{{ page.image_alt | default: '' | escape }}"
+               width="800" height="533" loading="eager" decoding="async">
+        </div>
+        {%- endif %}
+      </header>
+
+      {%- comment -%}
+        ── Lead media ──
+        A video post or talk opens with its player; anything else with a
+        cover opens with the cover — unless the header already spent the
+        image on the split, or the entry is a snippet, where a hero image
+        above six lines of Apex is decoration pretending to be content.
+      {%- endcomment -%}
+      {%- if page.video %}
+      <div class="tb-media tb-ratio-wide tb-post__cover">
+        <iframe src="https://www.youtube-nocookie.com/embed/{{ page.video }}"
+                title="{{ page.title | escape }}" loading="lazy"
+                allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
+                allowfullscreen></iframe>
+      </div>
+      {%- elsif page.image and page.hero_split != true and page.collection != 'snippets' %}
+      <figure class="tb-post__cover">
+        <img src="{{ page.image | relative_url }}" alt="{{ page.image_alt | default: '' | escape }}"
+             width="1200" height="675" loading="eager" decoding="async">
+        {%- if page.image_caption %}<figcaption>{{ page.image_caption }}</figcaption>{% endif %}
+      </figure>
+      {%- endif %}
+
+      {%- comment -%}
+        A talk with a recording gets the audio player: a styled shell around
+        the NATIVE audio element, because scrubbing, keyboard support and the
+        lock-screen controls all come from the platform, and rebuilding them
+        buys nothing but bugs. `accent-color` is what makes it wear the theme.
+      {%- endcomment -%}
+      {%- if page.audio %}
+      <div class="tb-audio tb-u-mb-8">
+        <span class="tb-audio__icon" aria-hidden="true">{% include icon.html name="mic" %}</span>
+        <div class="tb-audio__body">
+          <span class="tb-audio__label">Listen · {{ page.audio_duration | default: 'recording' }}</span>
+          <audio controls preload="metadata" src="{{ page.audio | relative_url }}"></audio>
+        </div>
+      </div>
+      {%- endif %}
+
+      {%- if page.series %}{% include series-nav.html %}{% endif -%}
+
+      {%- if page.facts %}
+      <dl class="tb-dl tb-u-mb-8">
+        {%- for f in page.facts %}
+        <dt>{{ f.label }}</dt>
+        <dd>{% if f.url %}<a class="tb-link" href="{{ f.url }}">{{ f.value }}</a>{% else %}{{ f.value }}{% endif %}</dd>
+        {%- endfor %}
+      </dl>
+      {%- endif %}
+
+      {%- comment -%}
+        A book's exits: where to buy it, or the notes as a PDF. Real buttons,
+        above the review, because "should I get this" is the question the
+        page exists to answer.
+      {%- endcomment -%}
+      {%- if page.amazon or page.pdf %}
+      <p class="tb-cluster tb-u-mb-8">
+        {%- if page.amazon %}
+        <a class="tb-btn tb-btn--primary" href="{{ page.amazon }}" rel="noopener" target="_blank">
+          {%- include icon.html name="external" %}Buy on Amazon<span class="tb-sr-only"> (opens in a new tab)</span>
+        </a>
+        {%- endif %}
+        {%- if page.pdf %}
+        <a class="tb-btn tb-btn--ghost" href="{{ page.pdf | relative_url }}" download>
+          {%- include icon.html name="download" %}Notes as PDF
+        </a>
+        {%- endif %}
+      </p>
+      {%- endif %}
+
+      {%- if page.demo or page.github %}
+      <p class="tb-cluster tb-u-mb-8">
+        {%- if page.demo %}
+        <a class="tb-btn tb-btn--primary" href="{{ page.demo }}" rel="noopener" target="_blank">
+          {%- include icon.html name="external" %}Live preview<span class="tb-sr-only"> (opens in a new tab)</span>
+        </a>
+        {%- endif %}
+        {%- if page.github %}
+        <a class="tb-btn tb-btn--ghost" href="{{ page.github }}" rel="noopener" target="_blank">
+          {%- include icon.html name="github" %}View source<span class="tb-sr-only"> (opens in a new tab)</span>
+        </a>
+        {%- endif %}
+      </p>
+      {%- endif %}
+
+      {%- if site.reading.show_toc != false and page.toc != false and sb %}
+      <details class="tb-toc-mobile" data-tb-toc-mobile hidden>
+        <summary>On this page</summary>
+        <ul class="tb-toc"></ul>
+      </details>
+      {%- endif %}
+
+      <div class="tb-prose" data-tb-article>
+        {{ content }}
+      </div>
+
+      {%- if site.adsense.client and site.adsense.client != "" and page.ads != false %}
+      <div class="tb-u-mt-8">
+        {%- include ad.html slot=site.adsense.slots.in_article -%}
+      </div>
+      {%- endif %}
+
+      <footer class="tb-post__footer">
+        {%- if page.share %}{% include share.html %}{% endif -%}
+        {%- include author-card.html -%}
+        {%- include post-nav.html -%}
+        {%- include integrations/comments.html -%}
+      </footer>
+
+    </article>
+
+    {%- if sb %}{% include sidebar.html %}{% endif -%}
+
+  </div>
+</div>
+
+{%- comment -%}
+  Related entries from the same collection — lessons excluded, because a
+  course's lessons are chapters of one thing, not siblings of everything.
+{%- endcomment -%}
+{%- assign siblings = site[page.collection]
+      | where_exp: 'i', 'i.url != page.url'
+      | where_exp: 'i', 'i.type != "lesson"' -%}
+{%- if siblings.size > 0 %}
+<section class="tb-container tb-section">
+  <div class="tb-section__head">
+    <div>
+      <p class="tb-eyebrow">Keep reading</p>
+      <h2 class="tb-section__title">More {{ page.collection }}</h2>
+    </div>
+    <a class="tb-btn tb-btn--ghost tb-btn--sm" href="{{ coll.index_url | relative_url }}">
+      All {{ page.collection }}{% include icon.html name="arrow-right" %}
+    </a>
+  </div>
+  {%- assign related = siblings | sort: 'date' | reverse | slice: 0, 3 -%}
+  {%- include collection-list.html items=related style="deck" -%}
+</section>
+{%- endif %}
+
+{%- comment -%}
+  The ask, on project pages only: someone who just read a case study to the
+  end is the exact person the contact page exists for, and this is the one
+  place on the site where "hire me" is an answer rather than an interruption.
+{%- endcomment -%}
+{%- if page.collection == 'projects' %}
+<div class="tb-container tb-section">
+  <section class="tb-cta">
+    <p class="tb-cta__kicker">Work with me</p>
+    <h2 class="tb-cta__title">Need something <em>like this</em> built?</h2>
+    <p class="tb-cta__body">
+      {{ site.author.first_name | default: site.author.name }} takes a small
+      number of Salesforce projects a year — builds, migrations and the odd
+      rescue job. The honest first step is a short email about yours.
+    </p>
+    <div class="tb-cta__actions">
+      <a class="tb-btn tb-btn--primary tb-btn--lg" href="{{ '/contact/' | relative_url }}">Start a conversation</a>
+      <a class="tb-btn tb-btn--ghost tb-btn--lg" href="{{ '/resume/' | relative_url }}">See the resume</a>
+    </div>
+  </section>
+</div>
+{%- endif -%}

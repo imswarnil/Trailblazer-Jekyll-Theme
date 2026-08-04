@@ -1,0 +1,142 @@
+{%- comment -%}
+  HEADER
+  Driven by the `header:` and `navigation:` blocks in _config.yml — and
+  overridable per page, because a landing page sometimes needs a welded bar on
+  a site of islands:
+
+    header_layout: full        header_sticky: false
+    header_blur: false         header_progress: false
+    header_search: false
+
+  The `!= nil` checks matter: `false` is a real answer and must win over the
+  site default, which a `| default:` filter would silently discard.
+
+  One navigation list in the markup, not two — the mobile drawer is the same
+  <ul>, re-flowed by CSS, which is the only way the two can never drift.
+  The current page is marked with `aria-current` and the stylesheet draws a
+  small cloud beside it; there is deliberately no `.active` class.
+{%- endcomment -%}
+
+{%- assign h = site.header -%}
+{%- assign h_layout = page.header_layout | default: h.layout | default: 'island' -%}
+{%- assign h_sticky = h.sticky -%}
+{%- if page.header_sticky != nil %}{% assign h_sticky = page.header_sticky %}{% endif -%}
+{%- assign h_blur = h.blur -%}
+{%- if page.header_blur != nil %}{% assign h_blur = page.header_blur %}{% endif -%}
+{%- assign h_progress = h.progress -%}
+{%- if page.header_progress != nil %}{% assign h_progress = page.header_progress %}{% endif -%}
+{%- assign h_search = h.search -%}
+{%- if page.header_search != nil %}{% assign h_search = page.header_search %}{% endif -%}
+
+{%- assign nav_class = 'tb-navbar tb-navbar--' | append: h_layout -%}
+{%- if h_sticky %}{% assign nav_class = nav_class | append: ' tb-navbar--sticky' %}{% endif -%}
+{%- if h_blur %}{% assign nav_class = nav_class | append: ' tb-navbar--blur' %}{% endif -%}
+
+<header class="{{ nav_class }}" data-tb-navbar>
+  <div class="tb-container">
+    <div class="tb-navbar__inner">
+
+      <a class="tb-navbar__brand" href="{{ '/' | relative_url }}">
+        {%- if h.brand != 'title' %}
+        <img class="tb-navbar__logo" src="{{ '/assets/img/logo.svg' | relative_url }}"
+             alt="" width="28" height="28">
+        {%- endif %}
+        {%- if h.brand != 'logo' %}
+        <span class="tb-navbar__title">{{ site.title }}</span>
+        {%- endif %}
+        {%- if h.brand == 'logo' %}<span class="tb-sr-only">{{ site.title }}</span>{% endif %}
+      </a>
+
+      <div class="tb-navbar__menu" id="tb-nav-menu">
+        <ul class="tb-navbar__nav">
+          {%- for item in site.navigation %}
+            {%- if item.children %}
+            <li>
+              <details class="tb-dropdown" data-tb-dropdown>
+                <summary>
+                  {%- if item.icon %}{% include icon.html name=item.icon %}{% endif -%}
+                  {{ item.title }}
+                </summary>
+                <div class="tb-dropdown__panel">
+                  {%- for child in item.children %}
+                  <a class="tb-dropdown__item" href="{{ child.url | relative_url }}"
+                     {% if page.url contains child.url %}aria-current="page"{% endif %}>
+                    {%- if child.icon %}{% include icon.html name=child.icon class="tb-icon--md" %}{% endif %}
+                    <span>
+                      <span class="tb-dropdown__label">{{ child.title }}</span>
+                      {%- if child.blurb %}<span class="tb-dropdown__blurb">{{ child.blurb }}</span>{% endif %}
+                    </span>
+                  </a>
+                  {%- endfor %}
+                </div>
+              </details>
+            </li>
+            {%- else %}
+            <li>
+              <a class="tb-navbar__link" href="{{ item.url | relative_url }}"
+                 {% if page.url == item.url or page.url contains item.url and item.url != '/' %}aria-current="page"{% endif %}>
+                {{ item.title }}
+              </a>
+            </li>
+            {%- endif %}
+          {%- endfor %}
+        </ul>
+      </div>
+
+      <div class="tb-navbar__actions">
+        {%- comment -%}
+          The right-hand rail is all icon buttons, same size, same weight —
+          search, the configured external links, and the theme toggle read as
+          one family.
+        {%- endcomment -%}
+        {%- if h_search %}
+        <button type="button" class="tb-navbar__icon-btn" data-tb-search-open
+                aria-label="Search this site (press /)">
+          {%- include icon.html name="search" class="tb-icon--md" %}
+        </button>
+        {%- endif %}
+
+        {%- for l in h.icon_links %}
+        {%- assign is_external = false -%}
+        {%- if l.url contains '//' %}{% assign is_external = true %}{% endif %}
+        <a class="tb-navbar__icon-btn" href="{{ l.url | relative_url }}"
+           {%- if is_external %} rel="noopener" target="_blank"{% endif %}
+           aria-label="{{ l.label | escape }}{% if is_external %} (opens in a new tab){% endif %}">
+          {%- include icon.html name=l.icon class="tb-icon--md" %}
+        </a>
+        {%- endfor %}
+
+        {%- if h.dark_toggle %}
+        <button type="button" class="tb-navbar__icon-btn" data-tb-theme-toggle
+                aria-label="Switch colour theme">
+          <span class="tb-theme-toggle__moon">{% include icon.html name="moon" class="tb-icon--md" %}</span>
+          <span class="tb-theme-toggle__sun">{% include icon.html name="sun" class="tb-icon--md" %}</span>
+        </button>
+        {%- endif %}
+
+        {%- if h.cta.label and h.cta.url %}
+        <a class="tb-btn tb-btn--primary tb-btn--sm tb-u-md-down-hidden" href="{{ h.cta.url | relative_url }}">
+          {{ h.cta.label }}
+        </a>
+        {%- endif %}
+
+        <button type="button" class="tb-navbar__icon-btn tb-navbar__burger"
+                data-tb-nav-toggle aria-expanded="false" aria-controls="tb-nav-menu"
+                aria-label="Open menu">
+          <span class="tb-navbar__burger-bars"></span>
+        </button>
+      </div>
+
+      {%- comment -%}
+        Reading progress. On the island it is a ring — a fine accent border
+        that starts at the brand and travels the pill's whole outline as the
+        reader travels the article. On the full bar it stays a hairline along
+        the bottom edge. At 0 both are invisible, so a page with nothing to
+        measure shows nothing.
+      {%- endcomment -%}
+      {%- if h_progress %}
+      <div class="tb-progress" data-tb-progress aria-hidden="true"></div>
+      {%- endif %}
+    </div>
+  </div>
+</header>

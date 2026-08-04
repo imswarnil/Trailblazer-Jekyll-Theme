@@ -1,0 +1,299 @@
+---
+layout: default
+---
+{%- comment -%}
+  COURSE & LESSON
+  One layout, two faces, chosen by depth. A course lives at
+  /courses/<slug>/ and its lessons at /courses/<slug>/<lesson>/ — so the URL
+  itself says which face to render, and the folder structure IS the data
+  model. No registry of lessons to maintain: a lesson is a file in the
+  course's folder carrying `type: lesson` and an `order:`.
+
+    _courses/apex-for-admins/index.md      → the course page
+    _courses/apex-for-admins/01-intro.md   → a lesson, inside the player
+
+  The course face: a meta header built from front matter (level, duration,
+  lesson count, updated), a Start button aimed at the first lesson, the
+  curriculum, then the prose as "about this course".
+
+  The lesson face: the player — video on top, prose under it, every lesson
+  in a rail on the right with the current one marked, and prev/next
+  pagination at the bottom. The rail collapses to a <details> above the
+  content on narrow screens.
+{%- endcomment -%}
+
+{%- assign parts = page.url | split: '/' -%}
+{%- assign is_lesson = false -%}
+{%- if parts.size > 3 %}{% assign is_lesson = true %}{% endif -%}
+
+{%- if is_lesson -%}
+  {%- capture course_url %}/{{ parts[1] }}/{{ parts[2] }}/{% endcapture -%}
+  {%- assign course = site.courses | where: 'url', course_url | first -%}
+{%- else -%}
+  {%- assign course = page -%}
+  {%- assign course_url = page.url -%}
+{%- endif -%}
+
+{%- comment -%}
+  The syllabus: every doc in this course's folder that calls itself a lesson,
+  in `order:` order. The order key is required on lessons — a syllabus that
+  falls back to filename sorting is a syllabus that reorders itself when
+  someone renames a file.
+{%- endcomment -%}
+{%- assign lessons = site.courses
+      | where_exp: 'd', 'd.url contains course_url'
+      | where: 'type', 'lesson'
+      | sort: 'order' -%}
+
+{%- if is_lesson -%}
+{%- comment -%} ══ THE LESSON FACE ═══════════════════════════════════════ {%- endcomment -%}
+
+{%- assign idx = 0 -%}
+{%- for l in lessons -%}
+  {%- if l.url == page.url %}{% assign idx = forloop.index0 %}{% endif -%}
+{%- endfor -%}
+{%- assign prev_i = idx | minus: 1 -%}
+{%- assign next_i = idx | plus: 1 -%}
+{%- if prev_i >= 0 %}{% assign prev_lesson = lessons[prev_i] %}{% endif -%}
+{%- if next_i < lessons.size %}{% assign next_lesson = lessons[next_i] %}{% endif -%}
+
+<div class="tb-container tb-section">
+  {%- include breadcrumb.html parent_url=course.url parent_title=course.title parent_icon='graduation' -%}
+
+  <div class="tb-shell tb-shell--sidebar">
+    <article class="tb-shell__main">
+
+      <header class="tb-post__header">
+        <p class="tb-mono-sm">
+          Lesson {{ idx | plus: 1 }} of {{ lessons.size }}
+          {%- if page.duration %} · {{ page.duration }}{% endif %}
+        </p>
+        <h1 class="tb-post__title">{{ page.title }}</h1>
+        {%- if page.description %}
+        <p class="tb-post__lead">{{ page.description }}</p>
+        {%- endif %}
+      </header>
+
+      {%- if page.video %}
+      <div class="tb-media tb-ratio-wide tb-post__cover">
+        <iframe src="https://www.youtube-nocookie.com/embed/{{ page.video }}"
+                title="{{ page.title | escape }}" loading="lazy"
+                allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
+                allowfullscreen></iframe>
+      </div>
+      {%- endif %}
+
+      {%- comment -%}
+        The mobile twin of the lesson rail — same list, in a <details> so
+        small screens still get "where am I in this course" without
+        sacrificing the reading column.
+      {%- endcomment -%}
+      <details class="tb-toc-mobile">
+        <summary>Course contents · {{ lessons.size }} lessons</summary>
+        {%- include lesson-list.html lessons=lessons compact=true bare=true -%}
+      </details>
+
+      <div class="tb-prose" data-tb-article>
+        {{ content }}
+      </div>
+
+      {%- comment -%} Lesson pagination — the course's own prev/next. {%- endcomment -%}
+      <footer class="tb-post__footer">
+        <nav class="tb-post__nav" aria-label="Lesson navigation">
+          {%- if prev_lesson %}
+          <a class="tb-post__nav-item" href="{{ prev_lesson.url | relative_url }}" rel="prev">
+            <span class="tb-post__nav-dir">← Previous lesson</span>
+            <span class="tb-post__nav-title">{{ prev_lesson.title }}</span>
+          </a>
+          {%- else %}
+          <a class="tb-post__nav-item" href="{{ course.url | relative_url }}">
+            <span class="tb-post__nav-dir">← Back to</span>
+            <span class="tb-post__nav-title">{{ course.title }}</span>
+          </a>
+          {%- endif %}
+
+          {%- if next_lesson %}
+          <a class="tb-post__nav-item tb-post__nav-item--next" href="{{ next_lesson.url | relative_url }}" rel="next">
+            <span class="tb-post__nav-dir">Next lesson →</span>
+            <span class="tb-post__nav-title">{{ next_lesson.title }}</span>
+          </a>
+          {%- else %}
+          <a class="tb-post__nav-item tb-post__nav-item--next" href="{{ course.url | relative_url }}">
+            <span class="tb-post__nav-dir">Course complete →</span>
+            <span class="tb-post__nav-title">Back to {{ course.title }}</span>
+          </a>
+          {%- endif %}
+        </nav>
+      </footer>
+
+    </article>
+
+    {%- comment -%} The player rail: the whole course, current lesson marked. {%- endcomment -%}
+    <aside class="tb-sidebar" aria-label="Course contents">
+      <div class="tb-widget">
+        {%- comment -%}
+          Plain link, not the growing-underline treatment — a widget heading
+          is furniture, and furniture does not perform on hover.
+        {%- endcomment -%}
+        <h2 class="tb-widget__head">
+          <a class="tb-u-no-underline" style="color:inherit;text-decoration:none" href="{{ course.url | relative_url }}">{{ course.title }}</a>
+        </h2>
+        {%- include lesson-list.html lessons=lessons compact=true bare=true -%}
+      </div>
+    </aside>
+  </div>
+</div>
+
+{%- else -%}
+{%- comment -%} ══ THE COURSE FACE ═══════════════════════════════════════ {%- endcomment -%}
+
+{%- assign first_lesson = lessons | first -%}
+
+<div class="tb-container tb-section">
+  {%- include breadcrumb.html -%}
+
+  <div class="tb-shell tb-shell--sidebar">
+    <article class="tb-shell__main">
+
+      <header class="tb-post__header">
+        <p class="tb-cluster-sm">
+          <span class="tb-badge tb-badge--accent">{% include icon.html name="graduation" %}Course</span>
+          {%- if page.level %}<span class="tb-badge">{{ page.level }}</span>{% endif %}
+        </p>
+        <h1 class="tb-post__title">{{ page.title }}</h1>
+        {%- if page.description %}
+        <p class="tb-post__lead">{{ page.description }}</p>
+        {%- endif %}
+
+        {%- comment -%}
+          The meta strip — every fact a reader wants before committing two
+          hours, each with its glyph, all from front matter.
+        {%- endcomment -%}
+        <div class="tb-post__meta">
+          <span>{% include icon.html name="list" %} {{ lessons.size }} lessons</span>
+          {%- if page.total_duration %}
+          <span class="tb-post__meta-sep" aria-hidden="true">·</span>
+          <span>{% include icon.html name="clock" %} {{ page.total_duration }}</span>
+          {%- endif %}
+          {%- if page.updated %}
+          <span class="tb-post__meta-sep" aria-hidden="true">·</span>
+          <span>{% include icon.html name="calendar" %} Updated {{ page.updated | date: '%b %Y' }}</span>
+          {%- endif %}
+          {%- for tag in page.tags %}
+          {%- assign tag_slug = tag | slugify %}
+          <span class="tb-post__meta-sep" aria-hidden="true">·</span>
+          <a href="{{ '/tag/' | append: tag_slug | append: '/' | relative_url }}">{{ tag }}</a>
+          {%- endfor %}
+        </div>
+
+        {%- if first_lesson %}
+        <p class="tb-cluster tb-u-mt-6">
+          <a class="tb-btn tb-btn--primary tb-btn--lg" href="{{ first_lesson.url | relative_url }}">
+            {%- include icon.html name="play" %}Start the course
+          </a>
+          <span class="tb-u-text-sm tb-u-fg-subtle">Free · no sign-up</span>
+        </p>
+        {%- endif %}
+      </header>
+
+      {%- if lessons.size > 0 %}
+      <section aria-label="Curriculum" class="tb-u-mb-8">
+        <h2 class="tb-widget__head">Curriculum</h2>
+        {%- include lesson-list.html lessons=lessons -%}
+      </section>
+      {%- endif %}
+
+      {%- comment -%}
+        ── The course's own sections, each drawn as its own thing ──
+        Outcomes as a tick grid, prerequisites behind a dashed rule,
+        testimonials in the display face, FAQs on native <details>. All from
+        front matter; a course without one simply doesn't render it.
+      {%- endcomment -%}
+      {%- if page.outcomes %}
+      <section class="tb-u-mb-8" aria-label="What you will learn">
+        <h2 class="tb-widget__head">What you will learn</h2>
+        <ul class="tb-outcomes">
+          {%- for o in page.outcomes %}<li>{{ o }}</li>{% endfor %}
+        </ul>
+      </section>
+      {%- endif %}
+
+      {%- if page.prerequisites %}
+      <section class="tb-u-mb-8" aria-label="Prerequisites">
+        <h2 class="tb-widget__head">Before you start</h2>
+        <ul class="tb-prereqs">
+          {%- for p in page.prerequisites %}<li>{{ p }}</li>{% endfor %}
+        </ul>
+      </section>
+      {%- endif %}
+
+      {%- if content != blank and content != "" %}
+      <div class="tb-prose" data-tb-article>
+        <h2>About this course</h2>
+        {{ content }}
+      </div>
+      {%- endif %}
+
+      {%- if page.testimonials %}
+      <section class="tb-u-mt-8" aria-label="What students say">
+        <h2 class="tb-widget__head">From people who took it</h2>
+        <div class="tb-testimonials">
+          {%- for t in page.testimonials %}
+          <figure class="tb-testimonial">
+            <blockquote>{{ t.quote }}</blockquote>
+            <figcaption>
+              <span class="tb-testimonial__name">{{ t.name }}</span>
+              {%- if t.role %}<span class="tb-testimonial__role">{{ t.role }}</span>{% endif %}
+            </figcaption>
+          </figure>
+          {%- endfor %}
+        </div>
+      </section>
+      {%- endif %}
+
+      {%- if page.faqs %}
+      <section class="tb-u-mt-8" aria-label="Frequently asked questions">
+        <h2 class="tb-widget__head">Questions people ask</h2>
+        <div class="tb-accordion">
+          {%- for f in page.faqs %}
+          <details class="tb-accordion__item"{% if forloop.first %} open{% endif %}>
+            <summary>{{ f.q }}</summary>
+            <div class="tb-accordion__body">{{ f.a | markdownify }}</div>
+          </details>
+          {%- endfor %}
+        </div>
+      </section>
+      {%- endif %}
+
+    </article>
+
+    <aside class="tb-sidebar" aria-label="Course details">
+      <div class="tb-widget">
+        <h2 class="tb-widget__head">This course</h2>
+        <dl class="tb-dl">
+          <dt>Lessons</dt><dd>{{ lessons.size }}</dd>
+          {%- if page.total_duration %}<dt>Length</dt><dd>{{ page.total_duration }}</dd>{% endif %}
+          {%- if page.level %}<dt>Level</dt><dd>{{ page.level }}</dd>{% endif %}
+          {%- if page.updated %}<dt>Updated</dt><dd>{{ page.updated | date: '%B %Y' }}</dd>{% endif %}
+        </dl>
+        {%- if first_lesson %}
+        <a class="tb-btn tb-btn--primary tb-btn--block tb-u-mt-4" href="{{ first_lesson.url | relative_url }}">Start learning</a>
+        {%- endif %}
+      </div>
+
+      {%- assign others = site.courses | where_exp: 'c', 'c.type != "lesson"' | where_exp: 'c', 'c.url != page.url' -%}
+      {%- if others.size > 0 %}
+      <div class="tb-widget">
+        <h2 class="tb-widget__head">More courses</h2>
+        <div class="tb-stack-sm">
+          {%- for c in others limit: 3 %}
+          <a class="tb-rule-list__title" href="{{ c.url | relative_url }}">{{ c.title }}</a>
+          {%- endfor %}
+        </div>
+      </div>
+      {%- endif %}
+    </aside>
+  </div>
+</div>
+
+{%- endif -%}

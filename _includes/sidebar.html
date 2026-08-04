@@ -1,0 +1,105 @@
+{%- comment -%}
+  ARTICLE SIDEBAR
+  Desktop only — below 1200px the reading column takes the whole width and the
+  TOC's mobile twin carries the navigation. Everything here is a convenience,
+  never the only route to something.
+
+  The widgets choose themselves from the page: a table of contents when the
+  article has headings, the project's facts when it has facts, a share row
+  when sharing is on, the ad slot when AdSense is configured, and the
+  credentials last — always last, because they are about the author, and the
+  page is about the work.
+{%- endcomment -%}
+<aside class="tb-sidebar" aria-label="Article sidebar">
+
+  {%- if site.reading.show_toc != false and page.toc != false %}
+  <div class="tb-widget" data-tb-toc-widget hidden>
+    <h2 class="tb-widget__head">On this page</h2>
+    <ul class="tb-toc" id="tb-toc"></ul>
+  </div>
+  {%- endif %}
+
+  {%- comment -%}
+    The build log: a project's facts repeated where they stay visible while
+    the case study scrolls. The same data as the header list — one source.
+  {%- endcomment -%}
+  {%- if page.facts %}
+  <div class="tb-widget">
+    <h2 class="tb-widget__head">At a glance</h2>
+    <dl class="tb-dl">
+      {%- for f in page.facts %}
+      <dt>{{ f.label }}</dt>
+      <dd>{% if f.url %}<a class="tb-link" href="{{ f.url }}">{{ f.value }}</a>{% else %}{{ f.value }}{% endif %}</dd>
+      {%- endfor %}
+    </dl>
+    {%- if page.demo or page.github %}
+    <div class="tb-stack-sm tb-u-mt-4">
+      {%- if page.demo %}
+      <a class="tb-btn tb-btn--primary tb-btn--sm tb-btn--block" href="{{ page.demo }}" rel="noopener" target="_blank">
+        {%- include icon.html name="external" %}Live preview
+      </a>
+      {%- endif %}
+      {%- if page.github %}
+      <a class="tb-btn tb-btn--ghost tb-btn--sm tb-btn--block" href="{{ page.github }}" rel="noopener" target="_blank">
+        {%- include icon.html name="github" %}Source
+      </a>
+      {%- endif %}
+    </div>
+    {%- endif %}
+  </div>
+  {%- endif %}
+
+  {%- if page.share %}
+  <div class="tb-widget">
+    <h2 class="tb-widget__head">Share this</h2>
+    <div class="tb-footer__social">
+      <a class="tb-social-link" rel="noopener" target="_blank"
+         href="https://bsky.app/intent/compose?text={{ page.title | uri_escape }}%20{{ page.url | absolute_url | uri_escape }}"
+         aria-label="Share on Bluesky (opens in a new tab)">
+        {%- include icon.html name="bluesky" %}
+      </a>
+      <a class="tb-social-link" rel="noopener" target="_blank"
+         href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | uri_escape }}"
+         aria-label="Share on LinkedIn (opens in a new tab)">
+        {%- include icon.html name="linkedin" %}
+      </a>
+      <a class="tb-social-link"
+         href="mailto:?subject={{ page.title | uri_escape }}&amp;body={{ page.url | absolute_url | uri_escape }}"
+         aria-label="Share by email">
+        {%- include icon.html name="mail" %}
+      </a>
+      <button class="tb-social-link" type="button" data-tb-copy="{{ page.url | absolute_url }}"
+              aria-label="Copy link">
+        {%- include icon.html name="link" %}<span class="tb-sr-only" data-tb-copy-label>Copy link</span>
+      </button>
+    </div>
+  </div>
+  {%- endif %}
+
+  {%- if site.adsense.client and site.adsense.client != "" %}
+  <div class="tb-widget">
+    {%- include ad.html slot=site.adsense.slots.sidebar -%}
+  </div>
+  {%- endif %}
+
+  {%- if site.data.certifications and site.data.certifications.size > 0 %}
+  <div class="tb-widget">
+    <h2 class="tb-widget__head">Certified in</h2>
+    <div class="tb-stack-sm">
+      {%- for c in site.data.certifications limit: 4 %}
+      <div class="tb-cert tb-cert--quiet">
+        <span class="tb-cert__seal">{{ c.short }}</span>
+        <span class="tb-cert__body">
+          <span class="tb-cert__name">{{ c.name }}</span>
+          <span class="tb-cert__issuer">{{ c.issuer }}</span>
+        </span>
+      </div>
+      {%- endfor %}
+    </div>
+    <p class="tb-u-mt-4">
+      <a class="tb-link tb-u-text-sm" href="{{ '/resume/' | relative_url }}">See all {{ site.data.certifications.size }} →</a>
+    </p>
+  </div>
+  {%- endif %}
+
+</aside>

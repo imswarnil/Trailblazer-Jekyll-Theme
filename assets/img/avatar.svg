@@ -1,0 +1,49 @@
+<!--
+  AVATAR PLACEHOLDER
+  Stands in for the author's photograph until they replace `author.avatar` in
+  _config.yml with a real one.
+
+  Deliberately an illustration rather than a grey silhouette: a stock "person"
+  glyph on a personal site reads as unfinished, whereas a drawn mark reads as a
+  choice. Square, so it survives both the circular crop the theme applies in
+  the author card and the rounded-square crop it applies in the hero.
+
+  The figure sits low and is cropped by the frame the way a real portrait would
+  be — a full body floating in the middle of the square is what makes most
+  generated avatars look generated.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"
+     role="img" aria-label="Placeholder portrait">
+  <defs>
+    <linearGradient id="tb-av-sky" x1="0" y1="0" x2="0.55" y2="1">
+      <stop offset="0" stop-color="#eaf4fd"/>
+      <stop offset="1" stop-color="#c2ddf6"/>
+    </linearGradient>
+    <linearGradient id="tb-av-ink" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#3aa3f0"/>
+      <stop offset="1" stop-color="#0159a0"/>
+    </linearGradient>
+    <clipPath id="tb-av-frame"><rect width="512" height="512"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#tb-av-frame)">
+    <rect width="512" height="512" fill="url(#tb-av-sky)"/>
+
+    <!-- Weather. Two soft bands, so the field is not a flat rectangle. -->
+    <ellipse cx="110" cy="96" rx="210" ry="104" fill="#fff" opacity="0.45"/>
+    <ellipse cx="452" cy="214" rx="160" ry="86" fill="#fff" opacity="0.3"/>
+
+    <!-- The cloud, reading over the shoulder. The theme's mark, used once. -->
+    <path fill="#fff" fill-opacity="0.92"
+          d="M356 168h56a19 19 0 0 0 2.4-37.8 26.5 26.5 0 0 0-49.8-6.2A16.9 16.9 0 0 0 356 168Z"/>
+
+    <!-- Shoulders: a wide, shallow arc rather than a half-circle, so the
+         silhouette reads as a torso instead of as a dome. Its top edge sits
+         ABOVE the bottom of the head on purpose — leave a gap and the neck
+         becomes a stick, which is the tell of a generated avatar. -->
+    <path d="M44 512c0-116 95-184 212-184s212 68 212 184Z" fill="url(#tb-av-ink)"/>
+
+    <!-- Head -->
+    <circle cx="256" cy="248" r="86" fill="url(#tb-av-ink)"/>
+  </g>
+</svg>

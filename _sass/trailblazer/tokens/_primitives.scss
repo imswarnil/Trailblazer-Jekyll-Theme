@@ -1,0 +1,51 @@
+// =============================================================================
+// TOKENS · TIER 1 — PRIMITIVES
+// The ramps. Nothing in a component may reference a step from this file: they
+// exist only so the semantic aliases in `_semantic.scss` have something to
+// point at. Two tiers is what makes one override rebrand everything.
+// =============================================================================
+
+:root {
+  // ── INK ───────────────────────────────────────────────────────────────────
+  // A near-neutral grey with a cool cast, so dark surfaces read as "unlit"
+  // rather than muddy. Extra steps at each end exist for hairlines and for
+  // the near-black surfaces behind media.
+  --tb-ink-0:    #fff;
+  --tb-ink-25:   #fcfcfd;
+  --tb-ink-50:   #f7f9fb;
+  --tb-ink-100:  #eef2f6;
+  --tb-ink-200:  #e0e6ed;
+  --tb-ink-300:  #cbd4de;
+  --tb-ink-400:  #9aa5b4;
+  --tb-ink-500:  #6b7684;
+  --tb-ink-600:  #4d5866;
+  --tb-ink-700:  #3a4451;
+  --tb-ink-800:  #252d38;
+  --tb-ink-900:  #171d26;
+  --tb-ink-950:  #0e131a;
+  --tb-ink-1000: #070a0e;
+
+  // ── ACCENT ────────────────────────────────────────────────────────────────
+  // Generated from `$tb-accent`. This is the cloud blue: the colour a
+  // Salesforce developer's work is already wearing, and the only hue in the
+  // system with authority.
+  @include tb-ramp("accent", $tb-accent);
+
+  // ── CRAFT ─────────────────────────────────────────────────────────────────
+  // The rationed one. Highlights, viewfinder brackets, a single flagged word.
+  // One per page, maximum — a second craft mark makes both of them decoration.
+  @include tb-ramp("craft", $tb-craft);
+
+  // ── STATUS ────────────────────────────────────────────────────────────────
+  // Deliberately distinct from the accent: a blue accent means "this is the
+  // brand", info means "read this". They must not be confusable at a glance,
+  // which is why info borrows the accent ramp rather than inventing a
+  // near-identical second blue.
+  @include tb-ramp("success", $tb-success);
+  @include tb-ramp("warning", $tb-warning);
+  @include tb-ramp("danger", $tb-danger);
+
+  // Fixed, theme-independent. Scrims, letterboxing, text on a filled accent.
+  --tb-pure-black: #000;
+  --tb-pure-white: #fff;
+}

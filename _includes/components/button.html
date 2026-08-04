@@ -1,0 +1,21 @@
+{%- comment -%}
+  BUTTON
+
+    {% include components/button.html label="Read the docs" url="/docs/" %}
+    {% include components/button.html label="Download" url="/x.pdf" style="primary" icon="download" %}
+    {% include components/button.html label="Source" url="https://github.com/..." style="ghost" external=true %}
+
+  style: primary · secondary · ghost (default) · soft · quiet · danger
+  size:  sm · (default) · lg
+
+  `external=true` adds rel="noopener" and a new tab, and says so in the
+  accessible name — a link that changes context without warning is the most
+  common avoidable accessibility bug on a personal site.
+{%- endcomment -%}
+<a class="tb-btn tb-btn--{{ include.style | default: 'ghost' }}{% if include.size %} tb-btn--{{ include.size }}{% endif %}{% if include.block %} tb-btn--block{% endif %}"
+   href="{{ include.url | relative_url }}"
+   {%- if include.external %} rel="noopener" target="_blank"{% endif %}>
+  {%- if include.icon %}{% include icon.html name=include.icon %}{% endif -%}
+  {{ include.label }}
+  {%- if include.external %}<span class="tb-sr-only"> (opens in a new tab)</span>{% endif -%}
+</a>

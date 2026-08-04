@@ -1,0 +1,165 @@
+// =============================================================================
+// BASE · MOTION
+// Entrances travel a short distance — 16px, not 60. Long travel reads as
+// "loading", which is a lie when the content is already on the page.
+//
+// The finished state is the resting state: if a script never runs or a user
+// has asked for reduced motion, everything here is still visible and legible.
+// =============================================================================
+
+@keyframes tb-rise {
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes tb-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes tb-scale {
+  from { opacity: 0; transform: scale3d(0.96, 0.96, 1); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes tb-slide-down {
+  from { opacity: 0; transform: translate3d(0, -8px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+// The pulse. The only looping animation allowed on a resting page, and only
+// on something that is genuinely live.
+@keyframes tb-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(0.86); }
+}
+
+@keyframes tb-shimmer {
+  from { background-position: -160% 0; }
+  to   { background-position: 260% 0; }
+}
+
+@keyframes tb-spin {
+  to { transform: rotate(360deg); }
+}
+
+.tb-fx-rise  { animation: tb-rise var(--tb-dur-3) var(--tb-ease-out) both; }
+.tb-fx-fade  { animation: tb-fade var(--tb-dur-3) var(--tb-ease-out) both; }
+.tb-fx-scale { animation: tb-scale var(--tb-dur-3) var(--tb-ease-out) both; }
+.tb-fx-pulse { animation: tb-pulse 1.6s var(--tb-ease-inout) infinite; }
+.tb-fx-spin  { animation: tb-spin var(--tb-dur-4) linear infinite; }
+
+// Stagger the children of a revealed group: each child carries its own --tb-i.
+.tb-fx-stagger > * { animation-delay: calc(var(--tb-i, 0) * var(--tb-stagger)); }
+
+// ── Scroll reveal ───────────────────────────────────────────────────────────
+// Opt in with `data-tb-reveal`. The script in `theme.js` adds `is-revealed`
+// when the element enters the viewport. Without the script — or with JS off —
+// the `:not(.is-revealed)` rule never applies, so content is simply visible.
+// That is the whole trick: the hidden state is applied BY the script, on a
+// class the script also removes.
+
+html.tb-js [data-tb-reveal]:not(.is-revealed) {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+}
+
+[data-tb-reveal] {
+  transition: opacity var(--tb-dur-3) var(--tb-ease-out),
+              transform var(--tb-dur-3) var(--tb-ease-out);
+  transition-delay: calc(var(--tb-i, 0) * var(--tb-stagger));
+}
+
+// ── Hover behaviours ────────────────────────────────────────────────────────
+
+@include tb-hover {
+  .tb-fx-lift {
+    transition: var(--tb-t-transform), var(--tb-t-shadow);
+
+    &:hover {
+      transform: translate3d(0, -3px, 0);
+      box-shadow: var(--tb-shadow-2);
+    }
+  }
+}
+
+// ── Reduced motion ──────────────────────────────────────────────────────────
+// Everything off, including the reveal's starting offset — an element that
+// never animates must never be left mid-transition.
+
+@include tb-reduced-motion {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html.tb-js [data-tb-reveal]:not(.is-revealed) {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ── Background patterns ─────────────────────────────────────────────────────
+// Drawn from `--tb-pattern-ink`, so a pattern never needs to know which theme
+// it is sitting on. Used behind heroes and section bands.
+
+.tb-pattern {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--tb-z-below);
+    pointer-events: none;
+  }
+}
+
+// A dot field — the default. Quiet enough to sit under body copy.
+.tb-pattern-dots::before {
+  background-image: radial-gradient(var(--tb-pattern-ink) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+
+// A grid — for anything that wants to read as a schema or an org chart.
+.tb-pattern-grid::before {
+  background-image:
+    linear-gradient(to right, var(--tb-pattern-ink) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--tb-pattern-ink) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 0%, #000 30%, transparent 100%);
+}
+
+// A soft cloud wash behind the hero. Two overlapping radial fields, offset so
+// the result reads as weather rather than as a gradient.
+.tb-pattern-cloud::before {
+  background:
+    radial-gradient(60rem 28rem at 15% -10%, var(--tb-accent-soft), transparent 60%),
+    radial-gradient(48rem 24rem at 85% 0%, var(--tb-craft-soft), transparent 62%);
+  opacity: 0.9;
+}
+
+// A tiled grid of the theme's own mark. Drawn as a repeating MASK over an
+// accent-coloured layer rather than as an image, so it recolours with the
+// brand and costs no request. Faded toward the bottom the same way the dots
+// are — a pattern that runs under body copy has overstayed.
+.tb-pattern-clouds::before {
+  background: var(--tb-accent);
+  opacity: 0.07;
+  mask-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='48' viewBox='0 0 72 48'%3E%3Cpath d='M23.5 30H12.2a4.8 4.8 0 0 1-.55-9.56A6.2 6.2 0 0 1 23.6 19.4 4.9 4.9 0 0 1 23.5 30Z'/%3E%3Cpath d='M59.5 13H50.2a3.9 3.9 0 0 1-.45-7.77A5.1 5.1 0 0 1 59.6 4.4 4 4 0 0 1 59.5 13Z'/%3E%3C/svg%3E"),
+    linear-gradient(#000, #000);
+  mask-size: 72px 48px, 100% 100%;
+  mask-repeat: repeat, no-repeat;
+  mask-composite: intersect;
+  -webkit-mask-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='48' viewBox='0 0 72 48'%3E%3Cpath d='M23.5 30H12.2a4.8 4.8 0 0 1-.55-9.56A6.2 6.2 0 0 1 23.6 19.4 4.9 4.9 0 0 1 23.5 30Z'/%3E%3Cpath d='M59.5 13H50.2a3.9 3.9 0 0 1-.45-7.77A5.1 5.1 0 0 1 59.6 4.4 4 4 0 0 1 59.5 13Z'/%3E%3C/svg%3E");
+  -webkit-mask-size: 72px 48px;
+  -webkit-mask-repeat: repeat;
+}

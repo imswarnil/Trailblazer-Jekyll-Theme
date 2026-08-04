@@ -1,0 +1,23 @@
+{%- comment -%}
+  ACCORDION
+
+    {% include components/accordion.html items="Does it work on GitHub Pages?|Yes — every plugin the theme uses is on the allowlist.,Can I remove the credit?|Yes, with an extended licence." %}
+
+  Each item is `question|answer`, items separated by commas.
+
+  Built on <details>, so it opens without JavaScript, is searchable by the
+  browser's find-in-page in Chrome, and needs no ARIA of its own.
+
+  Do not put anything a reader NEEDS behind one of these. A collapsed answer is
+  an answer most people will not read.
+{%- endcomment -%}
+<div class="tb-accordion">
+  {%- assign items = include.items | split: ',' -%}
+  {%- for raw in items -%}
+    {%- assign parts = raw | split: '|' -%}
+  <details class="tb-accordion__item"{% if forloop.first and include.open_first %} open{% endif %}>
+    <summary>{{ parts[0] | strip | url_decode }}</summary>
+    <div class="tb-accordion__body">{{ parts[1] | strip | url_decode | markdownify }}</div>
+  </details>
+  {%- endfor -%}
+</div>

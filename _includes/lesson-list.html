@@ -1,0 +1,29 @@
+{%- comment -%}
+  LESSON LIST
+
+    {% include lesson-list.html lessons=lessons %}                the curriculum
+    {% include lesson-list.html lessons=lessons compact=true %}   the player rail
+
+  Numbers are drawn from a CSS counter, so the list and the `order:` keys can
+  never disagree about numbering — the list IS the order. The current lesson
+  is marked with aria-current, which is both the styling hook and the truth.
+{%- endcomment -%}
+<ol class="tb-lessons{% if include.compact %} tb-lessons--compact{% endif %}{% if include.bare %} tb-lessons--bare{% endif %}">
+  {%- for l in include.lessons %}
+  <li>
+    <a class="tb-lessons__row" href="{{ l.url | relative_url }}"
+       {%- if l.url == page.url %} aria-current="page"{% endif %}>
+      <span class="tb-lessons__body">
+        <span class="tb-lessons__title">
+          {%- if l.video %}{% include icon.html name="play" %}{% endif -%}
+          {{ l.title }}
+        </span>
+        {%- unless include.compact %}
+        {%- if l.description %}<span class="tb-lessons__summary">{{ l.description }}</span>{% endif %}
+        {%- endunless %}
+      </span>
+      {%- if l.duration %}<span class="tb-lessons__dur">{{ l.duration }}</span>{% endif %}
+    </a>
+  </li>
+  {%- endfor %}
+</ol>

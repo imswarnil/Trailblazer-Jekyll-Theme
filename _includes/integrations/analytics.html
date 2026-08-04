@@ -1,0 +1,35 @@
+{%- comment -%}
+  ANALYTICS
+  Nothing here loads unless it has been configured AND the build is production.
+  That second condition matters more than it looks: without it, every local
+  `jekyll serve` session pollutes real reporting, and every contributor's
+  laptop shows up as traffic.
+
+  Pick ONE of GA4 / Tag Manager / Plausible. Configuring two means two scripts
+  counting the same visit, and neither number will be right.
+{%- endcomment -%}
+{%- if jekyll.environment == 'production' -%}
+  {%- assign i = site.integrations -%}
+
+  {%- if i.google_tag_manager and i.google_tag_manager != "" -%}
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+  var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+  j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','{{ i.google_tag_manager }}');
+</script>
+
+  {%- elsif i.google_analytics and i.google_analytics != "" -%}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ i.google_analytics }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ i.google_analytics }}');
+</script>
+  {%- endif -%}
+
+  {%- if i.plausible_domain and i.plausible_domain != "" -%}
+<script defer data-domain="{{ i.plausible_domain }}" src="https://plausible.io/js/script.js"></script>
+  {%- endif -%}
+{%- endif -%}

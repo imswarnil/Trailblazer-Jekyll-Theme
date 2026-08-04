@@ -1,0 +1,30 @@
+// =============================================================================
+// SITE OVERRIDES
+// Ships empty on purpose. This is the last file the stylesheet imports, so
+// anything written here wins against the framework.
+//
+// To use it in a site that installs Trailblazer as a gem or a remote theme,
+// create a file at the same path in your own repo:
+//
+//     _sass/trailblazer-overrides.scss
+//
+// Jekyll looks in your site before it looks in the theme, so your copy is the
+// one that gets compiled. No build configuration, no fork.
+//
+// Reach for a token before you reach for a rule. Almost everything worth
+// changing is a custom property, and overriding one moves every component that
+// reads it:
+//
+//     :root {
+//       --tb-radius-card: 4px;          // squarer cards, everywhere
+//       --tb-w-prose: 40rem;            // a narrower reading column
+//       --tb-font-heading: "Georgia", serif;
+//     }
+//
+//     :root[data-theme="dark"] {
+//       --tb-bg-canvas: #000;           // a true-black dark mode
+//     }
+//
+// Write an actual rule only when the change cannot be expressed as a token —
+// at which point it is usually a new component rather than a patch.
+// =============================================================================

@@ -1,0 +1,29 @@
+<!--
+  TRAILBLAZER MARK
+  A cloud with a person inside it: the platform, and the developer working in
+  it. Drawn for this theme — it is not, and does not imitate, any vendor's
+  logo.
+
+  The two shapes are deliberately built from the same circle radii, so the mark
+  stays readable when it is scaled down to a 16px favicon and the person
+  becomes a single dot.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Trailblazer">
+  <defs>
+    <linearGradient id="tb-logo-sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a9bef"/>
+      <stop offset="1" stop-color="#0160ab"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="15" fill="url(#tb-logo-sky)"/>
+
+  <!-- The cloud. Three lobes over a flat base, all on the same baseline. -->
+  <path fill="#fff" fill-opacity="0.96"
+        d="M20 42h25a8.5 8.5 0 0 0 1.1-16.9 12 12 0 0 0-22.4-2.8A7.6 7.6 0 0 0 20 42Z"/>
+
+  <!-- The person, cut out of the cloud rather than drawn on top of it, so the
+       mark holds together as one silhouette at small sizes. -->
+  <circle cx="32" cy="31" r="4.4" fill="url(#tb-logo-sky)"/>
+  <path d="M24.6 42a7.6 7.6 0 0 1 14.8 0Z" fill="url(#tb-logo-sky)"/>
+</svg>

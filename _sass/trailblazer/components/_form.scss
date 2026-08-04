@@ -1,0 +1,285 @@
+// =============================================================================
+// COMPONENTS · FORM & SEARCH
+// Every control is the same height as a button, so a field and a submit sit on
+// one line without shimming. Validity is read from `aria-invalid`, so the
+// styling and the screen reader can never disagree.
+// =============================================================================
+
+.tb-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-2);
+}
+
+.tb-label {
+  font-size: var(--tb-text-sm);
+  font-weight: var(--tb-weight-semibold);
+  color: var(--tb-fg-default);
+}
+
+.tb-hint {
+  font-size: var(--tb-text-xs);
+  color: var(--tb-fg-subtle);
+}
+
+// Error copy. Never just "invalid" — say what happened and what to do.
+.tb-error-text {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tb-space-2);
+  font-size: var(--tb-text-xs);
+  color: var(--tb-danger-fg);
+
+  &::before {
+    content: "!";
+    display: inline-grid;
+    place-items: center;
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+    border-radius: var(--tb-radius-full);
+    background: var(--tb-danger-line);
+    color: var(--tb-pure-white);
+    font-family: var(--tb-font-mono);
+    font-size: 10px;
+    line-height: 1;
+  }
+}
+
+.tb-input,
+.tb-textarea,
+.tb-select {
+  width: 100%;
+  height: var(--tb-control-md);
+  padding-inline: var(--tb-space-3);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-control);
+  background: var(--tb-bg-sunken);
+  color: var(--tb-fg-default);
+  font-size: var(--tb-text-sm);
+  transition: var(--tb-t-colors), var(--tb-t-shadow);
+  appearance: none;
+
+  &::placeholder { color: var(--tb-fg-faint); }
+
+  &:hover { border-color: var(--tb-line-strong); }
+
+  &:focus {
+    outline: none;
+    border-color: var(--tb-accent);
+    box-shadow: 0 0 0 3px var(--tb-accent-ring);
+    background: var(--tb-bg-surface);
+  }
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  &[aria-invalid="true"] { border-color: var(--tb-danger-line); }
+  &[aria-invalid="true"]:focus { box-shadow: 0 0 0 3px var(--tb-danger-bg); }
+}
+
+.tb-textarea {
+  height: auto;
+  min-height: 7rem;
+  padding-block: var(--tb-space-3);
+  line-height: var(--tb-leading-normal);
+}
+
+// The select needs its own chevron, since `appearance` was reset.
+.tb-select {
+  padding-right: var(--tb-space-8);
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentcolor 50%),
+    linear-gradient(135deg, currentcolor 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% + 2px),
+    calc(100% - 13px) calc(50% + 2px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+// Input plus button on one line — the subscribe form.
+.tb-input-group {
+  display: flex;
+  gap: var(--tb-space-2);
+  align-items: center;
+
+  > .tb-input { flex: 1 1 12rem; min-width: 0; }
+}
+
+@include tb-down("xs") {
+  .tb-input-group { flex-wrap: wrap; }
+  .tb-input-group > .tb-btn { width: 100%; }
+}
+
+// Real inputs, restyled — not divs pretending. Keyboard and form submission
+// come free.
+.tb-check,
+.tb-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-3);
+  font-size: var(--tb-text-sm);
+  cursor: pointer;
+  user-select: none;
+
+  > input {
+    appearance: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    flex: none;
+    margin: 0;
+    border: var(--tb-border-2) solid var(--tb-line-strong);
+    background: var(--tb-bg-surface);
+    cursor: pointer;
+    transition: var(--tb-t-colors);
+    display: grid;
+    place-items: center;
+  }
+
+  > input:hover { border-color: var(--tb-accent); }
+
+  > input:checked {
+    background: var(--tb-accent);
+    border-color: var(--tb-accent);
+  }
+}
+
+.tb-check > input { border-radius: var(--tb-radius-xs); }
+.tb-radio > input { border-radius: var(--tb-radius-full); }
+
+.tb-check > input:checked::after {
+  content: "";
+  width: 0.55rem;
+  height: 0.3rem;
+  border-left: var(--tb-border-2) solid var(--tb-fg-on-accent);
+  border-bottom: var(--tb-border-2) solid var(--tb-fg-on-accent);
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+.tb-radio > input:checked::after {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: var(--tb-radius-full);
+  background: var(--tb-fg-on-accent);
+}
+
+.tb-form-row {
+  display: grid;
+  gap: var(--tb-space-5);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@include tb-down("sm") {
+  .tb-form-row { grid-template-columns: minmax(0, 1fr); }
+}
+
+// =============================================================================
+// SEARCH
+// A command palette over the whole site index, plus the same results list on
+// the standalone /search/ page. Built on <dialog>, so Escape, focus trapping
+// and the backdrop come from the platform.
+// =============================================================================
+
+.tb-search-dialog {
+  width: min(40rem, calc(100vw - var(--tb-space-8)));
+  max-height: min(32rem, calc(100vh - var(--tb-space-16)));
+  padding: 0;
+  margin-top: 12vh;
+  margin-inline: auto;
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-sheet);
+  background: var(--tb-bg-raised);
+  color: var(--tb-fg-default);
+  box-shadow: var(--tb-shadow-4);
+  overflow: hidden;
+
+  &::backdrop {
+    background: var(--tb-bg-scrim);
+    backdrop-filter: blur(2px);
+  }
+
+  &[open] { animation: tb-scale var(--tb-dur-2) var(--tb-ease-out) both; }
+}
+
+.tb-search__head {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-3);
+  padding: var(--tb-space-4) var(--tb-space-5);
+  border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle);
+
+  > svg { width: var(--tb-icon-md); height: var(--tb-icon-md); color: var(--tb-fg-faint); flex: none; }
+}
+
+.tb-search__input {
+  flex: 1;
+  border: 0;
+  background: none;
+  font-size: var(--tb-text-lg);
+  color: var(--tb-fg-default);
+  min-width: 0;
+
+  &:focus { outline: none; }
+  &::placeholder { color: var(--tb-fg-faint); }
+}
+
+.tb-search__results {
+  list-style: none;
+  margin: 0;
+  padding: var(--tb-space-2);
+  overflow-y: auto;
+  max-height: 22rem;
+}
+
+.tb-search__hit {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--tb-space-3) var(--tb-space-4);
+  border-radius: var(--tb-radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: var(--tb-t-colors);
+
+  &:hover,
+  &[aria-selected="true"] { background: var(--tb-hover-wash); }
+}
+
+.tb-search__hit-title {
+  font-weight: var(--tb-weight-semibold);
+  font-size: var(--tb-text-sm);
+}
+
+.tb-search__hit-meta {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+}
+
+.tb-search__hit-excerpt {
+  font-size: var(--tb-text-xs);
+  color: var(--tb-fg-muted);
+  line-height: var(--tb-leading-normal);
+}
+
+.tb-search__foot {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-4);
+  padding: var(--tb-space-3) var(--tb-space-5);
+  border-top: var(--tb-border-hair) solid var(--tb-line-subtle);
+  background: var(--tb-bg-sunken);
+  font-size: var(--tb-text-2xs);
+  color: var(--tb-fg-faint);
+}
+
+.tb-search__empty {
+  padding: var(--tb-space-10) var(--tb-space-5);
+  text-align: center;
+  color: var(--tb-fg-subtle);
+  font-size: var(--tb-text-sm);
+}

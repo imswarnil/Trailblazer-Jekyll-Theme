@@ -1,0 +1,43 @@
+---
+layout: null
+permalink: /search.json
+sitemap: false
+---
+{%- comment -%}
+  SEARCH INDEX
+  Every published entry across every collection, plus the standalone pages.
+
+  The body is truncated to 800 characters on purpose: a full-text index of a
+  long-running blog runs to megabytes, and the palette is for finding a page by
+  its title and subject, not for grepping prose. Anyone who needs the latter
+  has a search engine.
+
+  Pages opt out with `search: false` in front matter — used by the search page
+  itself, the offline shell and anything that would only ever be noise.
+{%- endcomment -%}
+{%- assign entries = site.posts -%}
+{%- for c in site.collections -%}
+  {%- if c.label != 'posts' and c.output -%}
+    {%- assign entries = entries | concat: site[c.label] -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign pages = site.pages | where_exp: 'p', 'p.title' -%}
+{%- assign entries = entries | concat: pages -%}
+[
+{%- assign printed = 0 -%}
+{%- for item in entries -%}
+  {%- if item.search == false or item.noindex -%}{%- continue -%}{%- endif -%}
+  {%- if printed > 0 %},{% endif -%}
+  {%- assign printed = printed | plus: 1 -%}
+  {%- assign coll = site.collections | where: 'label', item.collection | first -%}
+  {
+    "title": {{ item.title | jsonify }},
+    "url": {{ item.url | relative_url | jsonify }},
+    "type": {{ coll.singular | default: 'Page' | jsonify }},
+    "date": {{ item.date | date: '%Y-%m-%d' | jsonify }},
+    "tags": {{ item.tags | join: ' ' | jsonify }},
+    "excerpt": {{ item.description | default: item.excerpt | strip_html | normalize_whitespace | truncate: 140 | jsonify }},
+    "body": {{ item.content | strip_html | normalize_whitespace | truncate: 800 | jsonify }}
+  }
+{%- endfor %}
+]

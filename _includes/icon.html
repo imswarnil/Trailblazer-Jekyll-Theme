@@ -1,0 +1,19 @@
+{%- comment -%}
+  ICON
+
+    {% include icon.html name="cloud" %}
+    {% include icon.html name="mail" class="tb-u-fg-accent" label="Email" %}
+
+  Decorative by default: no `label` means `aria-hidden`, because an icon beside
+  a word that already says "Email" is read twice otherwise. Pass `label` only
+  when the icon is the ONLY thing naming a control, in which case it becomes an
+  img role with an accessible name.
+
+  Unknown names render nothing rather than a broken box — a missing icon should
+  not be able to break a layout in production.
+{%- endcomment -%}
+{%- assign icon_class = include.class | default: '' -%}
+<svg class="tb-icon {{ icon_class }}" viewBox="0 0 24 24" width="24" height="24"
+  {%- if include.label %} role="img" aria-label="{{ include.label | escape }}"{% else %} aria-hidden="true" focusable="false"{% endif %}>
+  <use href="#tb-{{ include.name }}"></use>
+</svg>

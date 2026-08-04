@@ -1,0 +1,36 @@
+{%- comment -%}
+  ONE CERTIFICATION BADGE
+
+    {% include cert.html cert=item %}
+    {% include cert.html cert=item quiet=true %}
+
+  The shield takes its colour from the entry's `color:` key, which is how a
+  wall of credentials shows its tracks — developer, admin, architect — before
+  anyone reads a word. `quiet=true` drops the colour entirely, for rails where
+  a row of enamel shields would compete with the content beside it.
+{%- endcomment -%}
+{%- assign c = include.cert -%}
+{%- assign cls = 'tb-cert' -%}
+{%- if include.quiet %}{% assign cls = cls | append: ' tb-cert--quiet' %}{% endif -%}
+{%- capture seal -%}
+<span class="tb-cert__seal" aria-hidden="true"{% if c.color and include.quiet != true %} style="--tb-cert-color: {{ c.color }}"{% endif %}>{{ c.short }}</span>
+{%- endcapture -%}
+
+{%- if c.url and c.url != "" -%}
+<a class="{{ cls }}" href="{{ c.url }}" rel="noopener" target="_blank">
+  {{ seal }}
+  <span class="tb-cert__body">
+    <span class="tb-cert__name">{{ c.name }}</span>
+    <span class="tb-cert__issuer">{{ c.issuer }}{% if c.year %} · {{ c.year }}{% endif %}</span>
+  </span>
+  <span class="tb-sr-only">(verify, opens in a new tab)</span>
+</a>
+{%- else -%}
+<div class="{{ cls }}">
+  {{ seal }}
+  <span class="tb-cert__body">
+    <span class="tb-cert__name">{{ c.name }}</span>
+    <span class="tb-cert__issuer">{{ c.issuer }}{% if c.year %} · {{ c.year }}{% endif %}</span>
+  </span>
+</div>
+{%- endif -%}

@@ -1,0 +1,464 @@
+// =============================================================================
+// COMPONENTS · PROSE
+// What Markdown turns into. One class on the wrapper and every element a post
+// can contain is styled — no per-element classes in the content itself, which
+// is the whole point: the writer writes Markdown, not markup.
+// =============================================================================
+
+.tb-prose {
+  font-size: var(--tb-text-md);
+  line-height: var(--tb-leading-relaxed);
+  color: var(--tb-fg-default);
+
+  > * + * { margin-block-start: var(--tb-space-5); }
+
+  // ── Headings ──────────────────────────────────────────────────────────────
+  // Generous space above, tight below: a heading belongs to what follows it.
+  h2, h3, h4, h5, h6 {
+    scroll-margin-top: calc(var(--tb-nav-h) + var(--tb-space-6));
+  }
+
+  > h2 { margin-block-start: var(--tb-space-12); font-size: var(--tb-text-2xl); }
+  > h3 { margin-block-start: var(--tb-space-10); font-size: var(--tb-text-xl); }
+  > h4 { margin-block-start: var(--tb-space-8); font-size: var(--tb-text-lg); }
+
+  > h2 + *,
+  > h3 + *,
+  > h4 + * { margin-block-start: var(--tb-space-3); }
+
+  // The anchor link a heading grows on hover. Hidden from the reading flow but
+  // present in the tab order, so a keyboard user can still grab a permalink.
+  .tb-anchor {
+    margin-left: var(--tb-space-2);
+    color: var(--tb-fg-faint);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity var(--tb-dur-1) var(--tb-ease-out);
+  }
+
+  :is(h2, h3, h4):hover .tb-anchor,
+  .tb-anchor:focus-visible { opacity: 1; }
+
+  // ── Body ──────────────────────────────────────────────────────────────────
+  p { text-wrap: pretty; }
+
+  a:not(.tb-btn, .tb-anchor, .tb-chip) {
+    color: var(--tb-fg-accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentcolor 35%, transparent);
+    transition: var(--tb-t-colors);
+
+    &:hover { text-decoration-color: currentcolor; }
+  }
+
+  strong { font-weight: var(--tb-weight-semibold); }
+
+  // ── Lists ─────────────────────────────────────────────────────────────────
+  ul, ol { padding-left: var(--tb-space-6); }
+
+  li + li { margin-top: var(--tb-space-2); }
+
+  li::marker { color: var(--tb-fg-faint); }
+
+  ul > li::marker { color: var(--tb-accent); }
+
+  li > ul,
+  li > ol { margin-top: var(--tb-space-2); }
+
+  // ── Quote ─────────────────────────────────────────────────────────────────
+  blockquote {
+    padding-left: var(--tb-space-5);
+    border-left: var(--tb-border-3) solid var(--tb-accent);
+    font-family: var(--tb-font-display);
+    font-size: var(--tb-text-lg);
+    font-weight: var(--tb-weight-medium);
+    line-height: var(--tb-leading-snug);
+    letter-spacing: var(--tb-tracking-tight);
+    color: var(--tb-fg-default);
+
+    p + p { margin-top: var(--tb-space-3); }
+
+    cite {
+      display: block;
+      margin-top: var(--tb-space-3);
+      font-family: var(--tb-font-mono);
+      font-size: var(--tb-text-2xs);
+      font-weight: var(--tb-weight-regular);
+      letter-spacing: var(--tb-tracking-mono);
+      text-transform: uppercase;
+      font-style: normal;
+      color: var(--tb-fg-subtle);
+    }
+  }
+
+  // ── Media ─────────────────────────────────────────────────────────────────
+  img,
+  video { border-radius: var(--tb-radius-media); }
+
+  figure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tb-space-3);
+  }
+
+  figcaption {
+    display: flex;
+    gap: var(--tb-space-2);
+    align-items: baseline;
+    font-family: var(--tb-font-mono);
+    font-size: var(--tb-text-2xs);
+    letter-spacing: var(--tb-tracking-wide);
+    color: var(--tb-fg-subtle);
+
+    &::before {
+      content: "";
+      width: var(--tb-dot-sm);
+      height: var(--tb-dot-sm);
+      border-radius: var(--tb-radius-full);
+      background: var(--tb-craft);
+      flex: none;
+      transform: translateY(-1px);
+    }
+  }
+
+  // ── Rules ─────────────────────────────────────────────────────────────────
+  hr {
+    height: var(--tb-border-hair);
+    margin-block: var(--tb-space-12);
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--tb-line-default) 12%,
+      var(--tb-line-default) 88%,
+      transparent
+    );
+  }
+
+  // ── Inline code ───────────────────────────────────────────────────────────
+  :not(pre) > code {
+    font-family: var(--tb-font-mono);
+    font-size: 0.875em;
+    background: var(--tb-bg-sunken);
+    border: var(--tb-border-hair) solid var(--tb-line-subtle);
+    border-radius: var(--tb-radius-sm);
+    padding: 0.15em 0.4em;
+    overflow-wrap: break-word;
+  }
+
+  // Footnotes, as emitted by kramdown.
+  .footnotes {
+    margin-top: var(--tb-space-12);
+    padding-top: var(--tb-space-5);
+    border-top: var(--tb-border-hair) solid var(--tb-line-subtle);
+    font-size: var(--tb-text-sm);
+    color: var(--tb-fg-muted);
+  }
+
+  sup a { font-family: var(--tb-font-mono); font-size: 0.75em; text-decoration: none; }
+}
+
+// =============================================================================
+// TABLE
+// Mono caps headers, tabular numerals, hover rows. A table scrolls inside its
+// own wrapper — the page never scrolls sideways.
+// =============================================================================
+
+.tb-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  background: var(--tb-bg-surface);
+}
+
+.tb-table,
+.tb-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--tb-text-sm);
+
+  th {
+    background: var(--tb-bg-sunken);
+    text-align: left;
+    font-family: var(--tb-font-mono);
+    font-size: var(--tb-text-2xs);
+    font-weight: var(--tb-weight-medium);
+    letter-spacing: var(--tb-tracking-mono);
+    text-transform: uppercase;
+    color: var(--tb-fg-subtle);
+    padding: var(--tb-space-3) var(--tb-space-4);
+    border-bottom: var(--tb-border-hair) solid var(--tb-line-default);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--tb-space-4);
+    border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle);
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr { transition: background-color var(--tb-dur-1) var(--tb-ease-out); }
+  tbody tr:hover { background: var(--tb-hover-wash); }
+}
+
+// A Markdown table has no wrapper to scroll inside, so it becomes its own
+// scroll container.
+//
+// `display: block` is what makes overflow-x possible on a table — and it also
+// makes the table shrink to its content, so a narrow table would sit in the
+// left half of the column with its header background stopping mid-row. The
+// `width: max-content` / `min-width: 100%` pair fixes both cases at once: fill
+// the column when the content is narrower, scroll when it is wider.
+.tb-prose table {
+  display: block;
+  overflow-x: auto;
+  width: max-content;
+  min-width: 100%;
+  max-width: 100%;
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+}
+
+// Definition list — specs, resume facts, front-matter reference tables.
+.tb-dl {
+  display: grid;
+  grid-template-columns: minmax(8rem, 1fr) 2fr;
+  gap: var(--tb-space-3) var(--tb-space-5);
+  font-size: var(--tb-text-sm);
+
+  dt {
+    font-family: var(--tb-font-mono);
+    font-size: var(--tb-text-2xs);
+    letter-spacing: var(--tb-tracking-mono);
+    text-transform: uppercase;
+    color: var(--tb-fg-subtle);
+    padding-top: 2px;
+  }
+
+  dd { margin: 0; color: var(--tb-fg-default); }
+}
+
+@include tb-down("xs") {
+  .tb-dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--tb-space-1) 0;
+
+    dd { margin-bottom: var(--tb-space-3); }
+  }
+}
+
+// =============================================================================
+// CALLOUT
+// An aside with a job. Four intents, and each one is a promise about what the
+// reader will find inside it — a note is not a warning wearing a different hue.
+// =============================================================================
+
+.tb-callout {
+  --tb-callout-line: var(--tb-line-default);
+  --tb-callout-bg: var(--tb-bg-sunken);
+  --tb-callout-fg: var(--tb-fg-muted);
+
+  display: flex;
+  gap: var(--tb-space-4);
+  padding: var(--tb-space-5);
+  border: var(--tb-border-hair) solid var(--tb-callout-line);
+  border-left-width: var(--tb-border-3);
+  border-radius: var(--tb-radius-md);
+  background: var(--tb-callout-bg);
+  font-size: var(--tb-text-sm);
+  line-height: var(--tb-leading-relaxed);
+
+  > svg {
+    width: var(--tb-icon-md);
+    height: var(--tb-icon-md);
+    flex: none;
+    color: var(--tb-callout-fg);
+    margin-top: 2px;
+  }
+}
+
+.tb-callout__title {
+  display: block;
+  font-weight: var(--tb-weight-semibold);
+  color: var(--tb-callout-fg);
+  margin-bottom: var(--tb-space-1);
+}
+
+.tb-callout__body > * + * { margin-top: var(--tb-space-3); }
+
+.tb-callout--info    { --tb-callout-line: var(--tb-info-line); --tb-callout-bg: var(--tb-info-bg); --tb-callout-fg: var(--tb-info-fg); }
+.tb-callout--success { --tb-callout-line: var(--tb-success-line); --tb-callout-bg: var(--tb-success-bg); --tb-callout-fg: var(--tb-success-fg); }
+.tb-callout--warning { --tb-callout-line: var(--tb-warning-line); --tb-callout-bg: var(--tb-warning-bg); --tb-callout-fg: var(--tb-warning-fg); }
+.tb-callout--danger  { --tb-callout-line: var(--tb-danger-line); --tb-callout-bg: var(--tb-danger-bg); --tb-callout-fg: var(--tb-danger-fg); }
+
+// =============================================================================
+// DISCLOSURE · accordion & tabs
+// Both built on the platform: <details> for the accordion, real radio inputs
+// for the tabs. Keyboard support and deep-linking come free.
+// =============================================================================
+
+.tb-accordion {
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-lg);
+  overflow: hidden;
+  background: var(--tb-bg-surface);
+}
+
+.tb-accordion__item {
+  border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle);
+
+  &:last-child { border-bottom: 0; }
+
+  > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--tb-space-4);
+    padding: var(--tb-space-4) var(--tb-space-5);
+    font-weight: var(--tb-weight-semibold);
+    font-size: var(--tb-text-sm);
+    transition: var(--tb-t-colors);
+  }
+
+  > summary:hover { background: var(--tb-hover-wash); }
+
+  > summary::after {
+    content: "";
+    flex: none;
+    width: 0.45em;
+    height: 0.45em;
+    border-right: var(--tb-border-2) solid var(--tb-fg-faint);
+    border-bottom: var(--tb-border-2) solid var(--tb-fg-faint);
+    transform: translateY(-2px) rotate(45deg);
+    transition: var(--tb-t-transform);
+  }
+
+  &[open] > summary::after { transform: translateY(1px) rotate(-135deg); }
+}
+
+.tb-accordion__body {
+  padding: 0 var(--tb-space-5) var(--tb-space-5);
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-muted);
+  line-height: var(--tb-leading-relaxed);
+}
+
+// ── Tabs ────────────────────────────────────────────────────────────────────
+// One radio per panel, the label as the tab. The active rule is 2px, not a
+// filled pill — the same house rule the navbar follows.
+
+.tb-tabs {
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-lg);
+  overflow: hidden;
+  background: var(--tb-bg-surface);
+}
+
+.tb-tabs__list {
+  display: flex;
+  gap: var(--tb-space-1);
+  padding: 0 var(--tb-space-3);
+  border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle);
+  background: var(--tb-bg-sunken);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.tb-tabs__tab {
+  flex: none;
+  padding: var(--tb-space-3) var(--tb-space-4);
+  border-bottom: var(--tb-border-2) solid transparent;
+  color: var(--tb-fg-subtle);
+  font-size: var(--tb-text-sm);
+  font-weight: var(--tb-weight-medium);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--tb-t-colors);
+
+  &:hover { color: var(--tb-fg-default); }
+}
+
+.tb-tabs__radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+
+  &:checked + .tb-tabs__tab {
+    color: var(--tb-fg-default);
+    border-bottom-color: var(--tb-accent);
+  }
+
+  &:focus-visible + .tb-tabs__tab {
+    outline: var(--tb-border-2) solid var(--tb-focus-ring);
+    outline-offset: -2px;
+  }
+}
+
+// Panels are hidden by default and revealed by the per-instance rules the
+// `tabs` include generates. The first one stays visible unconditionally, which
+// is the fallback: if `:has()` is unavailable, the component degrades to the
+// first panel showing rather than to an empty box.
+.tb-tabs__panel {
+  display: none;
+  padding: var(--tb-space-5);
+  font-size: var(--tb-text-sm);
+  line-height: var(--tb-leading-relaxed);
+
+  &[data-tb-panel="1"] { display: block; }
+
+  > * + * { margin-top: var(--tb-space-4); }
+}
+
+// ── Steps ───────────────────────────────────────────────────────────────────
+
+.tb-steps {
+  counter-reset: tb-step;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+
+  > li {
+    counter-increment: tb-step;
+    position: relative;
+    padding: 0 0 var(--tb-space-6) var(--tb-space-10);
+    border-left: var(--tb-border-hair) solid var(--tb-line-default);
+    margin-left: 0.9rem;
+  }
+
+  > li:last-child { border-left-color: transparent; padding-bottom: 0; }
+
+  > li::before {
+    content: counter(tb-step, decimal-leading-zero);
+    position: absolute;
+    left: -0.9rem;
+    top: 0;
+    display: grid;
+    place-items: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: var(--tb-radius-full);
+    background: var(--tb-bg-surface);
+    border: var(--tb-border-hair) solid var(--tb-line-default);
+    font-family: var(--tb-font-mono);
+    font-size: var(--tb-text-2xs);
+    color: var(--tb-fg-subtle);
+  }
+
+  > li[data-done]::before {
+    background: var(--tb-accent);
+    border-color: var(--tb-accent);
+    color: var(--tb-fg-on-accent);
+  }
+}
+
+.tb-steps__title {
+  font-weight: var(--tb-weight-semibold);
+  display: block;
+  margin-bottom: var(--tb-space-1);
+}

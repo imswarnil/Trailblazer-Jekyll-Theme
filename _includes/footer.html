@@ -1,0 +1,112 @@
+{%- comment -%}
+  FOOTER
+  Driven by the `footer:` block in _config.yml. Two layouts — `columns` and
+  `minimal` — and an optional `boxed: true` that wraps either in a rounded
+  island.
+
+  The collection column is generated from `site.collections`, so adding a
+  collection to _config.yml puts it in the footer without anyone remembering to.
+{%- endcomment -%}
+
+{%- assign f = site.footer -%}
+{%- assign footer_class = 'tb-footer' -%}
+{%- if f.layout == 'minimal' %}{% assign footer_class = footer_class | append: ' tb-footer--minimal' %}{% endif -%}
+{%- if f.boxed %}{% assign footer_class = footer_class | append: ' tb-footer--boxed' %}{% endif -%}
+
+<footer class="{{ footer_class }}">
+  <div class="tb-container">
+
+    {%- if f.layout != 'minimal' %}
+    <div class="tb-footer__grid">
+
+      <div class="tb-footer__brand">
+        <a class="tb-footer__logo" href="{{ '/' | relative_url }}">
+          <img src="{{ '/assets/img/logo.svg' | relative_url }}" alt="" width="32" height="32">
+          <span>{{ site.title }}</span>
+        </a>
+        {%- if f.tagline %}
+        <p class="tb-footer__tag">{{ f.tagline }}</p>
+        {%- endif %}
+
+        {%- if f.show_social %}
+        <div class="tb-footer__social">
+          {%- include footer-social.html %}
+        </div>
+        {%- endif %}
+
+        {%- if f.newsletter %}
+        <div class="tb-footer__newsletter">
+          {%- include newsletter.html compact=true %}
+        </div>
+        {%- endif %}
+      </div>
+
+      {%- if f.show_collections %}
+      <nav aria-labelledby="tb-footer-writing">
+        <h2 class="tb-footer__head" id="tb-footer-writing">Writing</h2>
+        <ul class="tb-footer__links">
+          {%- for c in site.collections %}
+            {%- if c.output and c.index_url %}
+          <li>
+            <a href="{{ c.index_url | relative_url }}">
+              {%- if c.icon %}{% include icon.html name=c.icon %}{% endif -%}
+              {{ c.label | capitalize }}
+            </a>
+          </li>
+            {%- endif %}
+          {%- endfor %}
+        </ul>
+      </nav>
+      {%- endif %}
+
+      {%- if f.links %}
+      <nav aria-labelledby="tb-footer-more">
+        <h2 class="tb-footer__head" id="tb-footer-more">More</h2>
+        <ul class="tb-footer__links">
+          {%- for link in f.links %}
+          <li><a href="{{ link.url | relative_url }}">{{ link.title }}</a></li>
+          {%- endfor %}
+        </ul>
+      </nav>
+      {%- endif %}
+
+      <nav aria-labelledby="tb-footer-subscribe">
+        <h2 class="tb-footer__head" id="tb-footer-subscribe">Subscribe</h2>
+        <ul class="tb-footer__links">
+          <li><a href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %}RSS feed</a></li>
+          <li><a href="{{ '/sitemap.xml' | relative_url }}">{% include icon.html name="list" %}Sitemap</a></li>
+          {%- if site.author.email and site.author.email != "" %}
+          <li><a href="mailto:{{ site.author.email }}">{% include icon.html name="mail" %}Email</a></li>
+          {%- endif %}
+        </ul>
+      </nav>
+
+    </div>
+    {%- else %}
+
+    {%- if f.show_social %}
+    <div class="tb-footer__social">{% include footer-social.html %}</div>
+    {%- endif %}
+
+    {%- endif %}
+
+    <div class="tb-footer__signoff">
+      <span>
+        © {{ 'now' | date: '%Y' }} {{ site.author.name }}.
+        {%- comment -%}
+          The credit is appreciated, not required — the theme is MIT. Delete
+          the line if you like; it will not sulk.
+        {%- endcomment -%}
+        Built with <a href="https://jekyllrb.com">Jekyll</a> and the
+        <a href="{{ site.theme_home | default: 'https://trailblazer.imswarnil.com' }}">Trailblazer</a> theme.
+      </span>
+      <span class="tb-cluster-sm">
+        {%- for l in f.legal %}
+        <a href="{{ l.url | relative_url }}">{{ l.title }}</a>
+        {%- endfor %}
+        <a href="#main">Back to top</a>
+      </span>
+    </div>
+
+  </div>
+</footer>

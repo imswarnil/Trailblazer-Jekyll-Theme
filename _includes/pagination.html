@@ -1,0 +1,41 @@
+{%- comment -%}
+  PAGINATION
+  Numbers, not "load more". A reader who arrives on page 4 from a search result
+  needs page 4 to have a URL, and a crawler needs to be able to walk the
+  archive without running JavaScript.
+
+  Long runs are elided: first, a window around the current page, last. The
+  window is ±2, which keeps the row on one line down to a 360px viewport.
+{%- endcomment -%}
+{%- if paginator.total_pages > 1 -%}
+<nav class="tb-pagination" aria-label="Pagination">
+
+  <a class="tb-pagination__link" rel="prev"
+     {% if paginator.previous_page %}href="{{ paginator.previous_page_path | relative_url }}"{% else %}aria-disabled="true"{% endif %}>
+    {%- include icon.html name="arrow-left" %}<span class="tb-sr-only">Previous page</span>
+  </a>
+
+  {%- for n in (1..paginator.total_pages) -%}
+    {%- assign distance = n | minus: paginator.page -%}
+    {%- if distance < 0 %}{% assign distance = 0 | minus: distance %}{% endif -%}
+
+    {%- if n == 1 or n == paginator.total_pages or distance <= 2 -%}
+      {%- if n == paginator.page %}
+  <a class="tb-pagination__link" aria-current="page" href="#">{{ n }}</a>
+      {%- elsif n == 1 %}
+  <a class="tb-pagination__link" href="{{ '/blog/' | relative_url }}">1</a>
+      {%- else %}
+  <a class="tb-pagination__link" href="{{ site.paginate_path | replace: ':num', n | relative_url }}">{{ n }}</a>
+      {%- endif -%}
+    {%- elsif distance == 3 %}
+  <span class="tb-pagination__gap" aria-hidden="true">…</span>
+    {%- endif -%}
+  {%- endfor %}
+
+  <a class="tb-pagination__link" rel="next"
+     {% if paginator.next_page %}href="{{ paginator.next_page_path | relative_url }}"{% else %}aria-disabled="true"{% endif %}>
+    {%- include icon.html name="arrow-right" %}<span class="tb-sr-only">Next page</span>
+  </a>
+
+</nav>
+{%- endif -%}

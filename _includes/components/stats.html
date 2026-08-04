@@ -1,0 +1,22 @@
+{%- comment -%}
+  STAT BAND
+
+    {% include components/stats.html items="99.98%|Uptime,3.1s|Saved per page,12|Orgs" %}
+
+  A compact string rather than YAML, because this is called from inside a
+  Markdown post where a nested data structure is not available. Each item is
+  `value|label`, items separated by commas.
+
+  For anything with more than four numbers, use a table. A stat band is a
+  headline; a fifth number turns it into data, and data belongs in rows.
+{%- endcomment -%}
+<div class="tb-stats">
+  {%- assign items = include.items | split: ',' -%}
+  {%- for raw in items -%}
+    {%- assign parts = raw | split: '|' -%}
+  <div class="tb-stat">
+    <span class="tb-stat__label">{{ parts[1] | strip }}</span>
+    <span class="tb-stat__value">{{ parts[0] | strip }}</span>
+  </div>
+  {%- endfor -%}
+</div>

@@ -1,0 +1,104 @@
+{%- comment -%}
+  SEO
+  Title, description, canonical, Open Graph, Twitter and JSON-LD.
+
+  Written by hand rather than delegated to jekyll-seo-tag, for one reason: the
+  theme has typed collections, and the structured data for a talk should not
+  claim to be a blog post. The plugin emits one shape; this emits the shape the
+  collection declared in `_config.yml`.
+
+  Every absolute URL is built off `site.url`, which is why that value has to be
+  the domain you actually want indexed.
+{%- endcomment -%}
+
+{%- comment -%} ── Title ──────────────────────────────────────────────────────
+  The home page is "Title · Tagline"; everything else is "Page · Title". A page
+  can override the whole thing with `seo_title:` when the on-page headline and
+  the search-result headline should differ.
+{%- endcomment -%}
+{%- if page.seo_title -%}
+  {%- assign seo_title = page.seo_title -%}
+{%- elsif page.url == '/' -%}
+  {%- assign seo_title = site.title | append: ' · ' | append: site.tagline -%}
+{%- elsif page.title -%}
+  {%- assign seo_title = page.title | append: ' · ' | append: site.title -%}
+{%- else -%}
+  {%- assign seo_title = site.title -%}
+{%- endif -%}
+
+{%- comment -%} ── Description ──────────────────────────────────────────────── {%- endcomment -%}
+{%- if page.description -%}
+  {%- assign seo_desc = page.description -%}
+{%- elsif page.excerpt -%}
+  {%- assign seo_desc = page.excerpt | strip_html | normalize_whitespace | truncate: 200 -%}
+{%- else -%}
+  {%- assign seo_desc = site.description -%}
+{%- endif -%}
+{%- assign seo_desc = seo_desc | strip_newlines | strip -%}
+
+{%- comment -%} ── Share image ──────────────────────────────────────────────── {%- endcomment -%}
+{%- assign coll = site.collections | where: 'label', page.collection | first -%}
+{%- if page.image -%}
+  {%- assign seo_image = page.image -%}
+{%- elsif coll.image -%}
+  {%- assign seo_image = coll.image -%}
+{%- else -%}
+  {%- assign seo_image = site.seo.default_image -%}
+{%- endif -%}
+
+{%- assign canonical = page.canonical_url | default: page.url | absolute_url -%}
+
+<title>{{ seo_title | escape }}</title>
+<meta name="description" content="{{ seo_desc | escape }}">
+<link rel="canonical" href="{{ canonical }}">
+
+{%- comment -%}
+  A page can ask to stay out of the index with `noindex: true`. Used by the
+  search page, the offline shell and anything paginated past page one.
+{%- endcomment -%}
+{%- comment -%}
+  Page 2 and beyond of a paginated archive is a list of links, not a page
+  anyone should arrive on from a search result — so it stays out of the index
+  while still being followed, which is how the crawler reaches the posts on it.
+{%- endcomment -%}
+{%- if page.noindex or paginator.page > 1 %}
+<meta name="robots" content="noindex, follow">
+{%- else %}
+<meta name="robots" content="index, follow, max-image-preview:large">
+{%- endif %}
+
+{%- comment -%} ── Open Graph ───────────────────────────────────────────────── {%- endcomment -%}
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ seo_desc | escape }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:locale" content="{{ site.locale | default: 'en_US' }}">
+{%- if seo_image %}
+<meta property="og:image" content="{{ seo_image | absolute_url }}">
+{%- endif %}
+{%- if page.collection or page.date %}
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+{%- if page.last_modified_at %}
+<meta property="article:modified_time" content="{{ page.last_modified_at | date_to_xmlschema }}">
+{%- endif %}
+<meta property="article:author" content="{{ site.author.name | escape }}">
+{%- for tag in page.tags %}
+<meta property="article:tag" content="{{ tag | escape }}">
+{%- endfor %}
+{%- else %}
+<meta property="og:type" content="website">
+{%- endif %}
+
+{%- comment -%} ── Twitter ──────────────────────────────────────────────────── {%- endcomment -%}
+<meta name="twitter:card" content="{% if seo_image %}summary_large_image{% else %}summary{% endif %}">
+{%- if site.seo.twitter and site.seo.twitter != "" %}
+<meta name="twitter:site" content="{{ site.seo.twitter }}">
+{%- endif %}
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ seo_desc | escape }}">
+{%- if seo_image %}
+<meta name="twitter:image" content="{{ seo_image | absolute_url }}">
+{%- endif %}
+
+{%- if site.seo.json_ld %}{% include seo-jsonld.html %}{% endif -%}

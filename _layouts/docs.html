@@ -1,0 +1,46 @@
+---
+layout: default
+---
+{%- comment -%}
+  DOCS
+  The documentation, rendered on the site itself — a theme whose manual lives
+  only in the repository is a theme whose users read the CSS instead.
+
+  The nav strip lists every guide with the current one marked; the pages
+  themselves are the same Markdown files a contributor edits in docs/, so
+  there is exactly one copy of the truth and it ships with the theme.
+{%- endcomment -%}
+
+<div class="tb-container-prose">
+  {%- include breadcrumb.html -%}
+
+  <section class="tb-hero tb-hero--minimal">
+    <p class="tb-hero__eyebrow">Theme docs</p>
+    <h1 class="tb-hero__title">{{ page.title }}</h1>
+    {%- if page.description %}
+    <p class="tb-hero__lead">{{ page.description }}</p>
+    {%- endif %}
+  </section>
+</div>
+
+<div class="tb-container-prose tb-section">
+
+  <nav class="tb-cluster-sm tb-u-mb-8" aria-label="Documentation">
+    {%- assign guides = "Documentation,/docs/|Installing,/docs/installing/|Deploying,/docs/deploying/|Configuring,/docs/configuring/|Content,/docs/content/|Components,/docs/components/|Customising,/docs/customising/|Integrations,/docs/integrations/|SEO,/docs/seo/|PWA,/docs/pwa/|FAQ,/docs/faq/" | split: '|' -%}
+    {%- for g in guides %}
+      {%- assign bits = g | split: ',' %}
+    <a class="tb-chip" href="{{ bits[1] | relative_url }}"
+       {%- if page.url == bits[1] %} aria-current="page"{% endif %}>{{ bits[0] }}</a>
+    {%- endfor %}
+  </nav>
+
+  <div class="tb-prose" data-tb-article>
+    {{ content }}
+  </div>
+
+  <p class="tb-u-mt-12 tb-u-text-sm tb-u-fg-subtle">
+    Found something wrong on this page? The source lives at
+    <code>docs/{{ page.title | slugify }}.md</code> — corrections welcome, see the
+    <a class="tb-link" href="https://github.com/imswarnil/trailblazer-jekyll-theme/blob/main/CONTRIBUTING.md">contribution guide</a>.
+  </p>
+</div>

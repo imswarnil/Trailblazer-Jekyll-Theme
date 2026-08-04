@@ -1,0 +1,559 @@
+// =============================================================================
+// COMPONENTS · HERO
+// Four shapes, one rule: a hero states, it does not list. One headline with one
+// accent phrase, one supporting line, at most two actions.
+//
+// The shape is chosen from front matter (`hero_style:`), so a collection index
+// or a single page can change its opening without touching a template:
+//
+//   statement — centred, for manifestos, 404 and section fronts
+//   split     — copy beside a stage, the homepage shape
+//   band      — a full-bleed inverse billboard
+//   minimal   — a title and a rule, for utility pages
+// =============================================================================
+
+.tb-hero {
+  position: relative;
+  padding-block: var(--tb-space-16) var(--tb-space-12);
+}
+
+.tb-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+}
+
+.tb-hero__title {
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-5xl);
+  font-weight: var(--tb-weight-bold);
+  letter-spacing: var(--tb-tracking-tighter);
+  line-height: var(--tb-leading-flat);
+  text-wrap: balance;
+  margin-top: var(--tb-space-5);
+
+  // The one rationed accent phrase. Written as <em> in the front matter, so a
+  // publisher marks emphasis in prose rather than in markup.
+  em { font-style: normal; color: var(--tb-accent); }
+}
+
+.tb-hero__lead {
+  margin-top: var(--tb-space-5);
+  font-size: var(--tb-text-lg);
+  line-height: var(--tb-leading-relaxed);
+  color: var(--tb-fg-muted);
+  max-width: var(--tb-measure-lead);
+  text-wrap: pretty;
+}
+
+.tb-hero__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--tb-space-3);
+  margin-top: var(--tb-space-8);
+}
+
+.tb-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tb-space-4);
+  margin-top: var(--tb-space-8);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+}
+
+// ── Statement ───────────────────────────────────────────────────────────────
+
+.tb-hero--statement {
+  text-align: center;
+
+  .tb-hero__title { max-width: 18ch; margin-inline: auto; }
+  .tb-hero__lead { margin-inline: auto; }
+  .tb-hero__actions,
+  .tb-hero__meta { justify-content: center; }
+}
+
+// ── Split ───────────────────────────────────────────────────────────────────
+// A headline in a half-width column cannot take the full-width statement size:
+// at the largest step it runs to six lines and the eye has to re-find the left
+// edge on every one of them. One step down, and a measure in `ch` so it breaks
+// at three lines rather than wherever the column happens to end.
+
+.tb-hero--split {
+  display: grid;
+  gap: var(--tb-space-10);
+  align-items: center;
+
+  .tb-hero__title { font-size: var(--tb-text-4xl); max-width: 16ch; }
+  .tb-hero__lead { max-width: 42ch; }
+}
+
+@include tb-up("lg") {
+  .tb-hero--split {
+    grid-template-columns: 1.05fr 1fr;
+    gap: var(--tb-space-12);
+  }
+}
+
+.tb-hero__stage {
+  position: relative;
+
+  // The portrait fills the stage; the floating tag must NOT — it is absolutely
+  // positioned and would otherwise be stretched to the full column width by a
+  // blanket `> * { width: 100% }`.
+  > .tb-hero__portrait { width: 100%; }
+}
+
+// The portrait. A cloud-shaped mask rather than a circle: it is the theme's
+// one piece of ornament, and it is drawn rather than shipped as an image so it
+// re-colours with the accent.
+.tb-hero__portrait {
+  position: relative;
+  aspect-ratio: var(--tb-ratio-square);
+  border-radius: var(--tb-radius-sheet);
+  overflow: hidden;
+  background: var(--tb-bg-sunken);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+
+  > img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+// The badge floating over the portrait's corner — availability, role, a count.
+.tb-hero__tag {
+  position: absolute;
+  left: var(--tb-space-4);
+  bottom: var(--tb-space-4);
+  z-index: var(--tb-z-raised);
+}
+
+// ── Band ────────────────────────────────────────────────────────────────────
+
+.tb-hero--band {
+  background: var(--tb-bg-inverse);
+  color: var(--tb-fg-on-inverse);
+  border-radius: var(--tb-radius-sheet);
+  overflow: hidden;
+  padding: var(--tb-space-16) var(--tb-space-8);
+
+  .tb-hero__eyebrow,
+  .tb-hero__lead,
+  .tb-hero__meta { color: var(--tb-fg-on-inverse); opacity: 0.72; }
+}
+
+// Media behind the copy: a filled poster plus a scrim, copy on top. Two
+// gradients rather than a flat overlay, so the image is still an image.
+.tb-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, var(--tb-bg-scrim) 0%, transparent 55%),
+      linear-gradient(to right, var(--tb-bg-scrim) 0%, transparent 65%);
+  }
+}
+
+.tb-hero--media {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 24rem;
+
+  > :not(.tb-hero__media) { position: relative; z-index: 1; }
+}
+
+// ── Minimal ─────────────────────────────────────────────────────────────────
+
+.tb-hero--minimal {
+  padding-block: var(--tb-space-12) var(--tb-space-8);
+  border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle);
+
+  .tb-hero__title { font-size: var(--tb-text-3xl); margin-top: var(--tb-space-3); }
+  .tb-hero__lead { font-size: var(--tb-text-base); margin-top: var(--tb-space-3); }
+}
+
+@include tb-down("sm") {
+  .tb-hero { padding-block: var(--tb-space-12) var(--tb-space-10); }
+  .tb-hero__title { font-size: var(--tb-text-4xl); }
+  .tb-hero--band { padding: var(--tb-space-10) var(--tb-space-5); }
+}
+
+// =============================================================================
+// STATS
+// Numbers as a band. The number is display-face and tabular, the label is mono,
+// and nothing else competes. Hairlines separate; borders do not box — a stat
+// grid is one surface, not four cards.
+// =============================================================================
+
+.tb-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  background: var(--tb-bg-surface);
+  overflow: hidden;
+}
+
+.tb-stat {
+  position: relative;
+  padding: var(--tb-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-2);
+  // A hairline grid without doubled edges: every cell draws its top and left,
+  // and the container's own border owns the outside.
+  margin: calc(-1 * var(--tb-border-hair)) 0 0 calc(-1 * var(--tb-border-hair));
+  border-top: var(--tb-border-hair) solid var(--tb-line-subtle);
+  border-left: var(--tb-border-hair) solid var(--tb-line-subtle);
+}
+
+.tb-stat__value {
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-3xl);
+  font-weight: var(--tb-weight-bold);
+  letter-spacing: var(--tb-tracking-tighter);
+  line-height: var(--tb-leading-flat);
+  font-variant-numeric: tabular-nums;
+
+  small {
+    font-size: 0.45em;
+    font-weight: var(--tb-weight-medium);
+    color: var(--tb-fg-faint);
+    letter-spacing: var(--tb-tracking-normal);
+    margin-left: 2px;
+  }
+}
+
+.tb-stat__label {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+  order: -1;
+}
+
+.tb-stat__note {
+  font-size: var(--tb-text-xs);
+  color: var(--tb-fg-faint);
+}
+
+// No chrome, for use inside a hero or a footer.
+.tb-stats--bare {
+  border: 0;
+  border-radius: 0;
+  background: none;
+  overflow: visible;
+
+  .tb-stat {
+    border-top: 0;
+    border-left: var(--tb-border-hair) solid var(--tb-line-default);
+    padding: var(--tb-space-4) var(--tb-space-5);
+  }
+
+  .tb-stat:first-child { border-left: 0; padding-left: 0; }
+}
+
+// =============================================================================
+// CTA
+// The ask. One per page, near the end, and it earns its contrast by being the
+// only inverse band in view.
+// =============================================================================
+
+.tb-cta {
+  position: relative;
+  background: var(--tb-bg-inverse);
+  color: var(--tb-fg-on-inverse);
+  border-radius: var(--tb-radius-sheet);
+  padding: var(--tb-space-12) var(--tb-space-8);
+  overflow: hidden;
+  text-align: center;
+}
+
+.tb-cta__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.tb-cta__title {
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-3xl);
+  font-weight: var(--tb-weight-bold);
+  letter-spacing: var(--tb-tracking-tight);
+  line-height: var(--tb-leading-tight);
+  text-wrap: balance;
+  max-width: 22ch;
+  margin: var(--tb-space-4) auto 0;
+
+  em { font-style: normal; color: var(--tb-accent-300); }
+}
+
+.tb-cta__body {
+  margin: var(--tb-space-4) auto 0;
+  max-width: var(--tb-measure-lead);
+  line-height: var(--tb-leading-relaxed);
+  opacity: 0.78;
+}
+
+.tb-cta__actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--tb-space-3);
+  margin-top: var(--tb-space-8);
+}
+
+// The honest line under the actions — how often, and how to leave.
+.tb-cta__fine {
+  margin-top: var(--tb-space-4);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: 0.05em;
+  opacity: 0.5;
+}
+
+.tb-cta__form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--tb-space-2);
+  margin-top: var(--tb-space-8);
+
+  .tb-input {
+    flex: 1 1 14rem;
+    max-width: 22rem;
+    background: color-mix(in srgb, var(--tb-fg-on-inverse) 8%, transparent);
+    border-color: var(--tb-line-inverse);
+    color: var(--tb-fg-on-inverse);
+
+    &::placeholder { color: var(--tb-fg-on-inverse); opacity: 0.45; }
+  }
+}
+
+@include tb-down("sm") {
+  .tb-cta { padding: var(--tb-space-10) var(--tb-space-5); }
+}
+
+// =============================================================================
+// TIMELINE
+// An ordered sequence with a rail through it. State is ARIA and data
+// attributes, never a styling-only class:
+//   [data-done]    behind you — the node fills
+//   [aria-current] you are here — the node takes the accent ring
+// =============================================================================
+
+.tb-timeline {
+  --tb-tl-node: 1.45rem;
+  --tb-tl-gap: var(--tb-space-6);
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-tl-gap);
+
+  // The rail. Inset by half a node so it runs through their centres, and
+  // stopped short at both ends — a line running past the first and last node
+  // reads as "there is more", which is a lie in a finished sequence.
+  &::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--tb-tl-node) / 2 - var(--tb-border-hair) / 2);
+    top: calc(var(--tb-tl-node) / 2);
+    bottom: calc(var(--tb-tl-node) / 2);
+    width: var(--tb-border-hair);
+    background: var(--tb-line-default);
+  }
+}
+
+.tb-timeline__item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tb-space-4);
+  min-width: 0;
+}
+
+.tb-timeline__node {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: var(--tb-tl-node);
+  height: var(--tb-tl-node);
+  border-radius: var(--tb-radius-full);
+  border: var(--tb-border-2) solid var(--tb-line-strong);
+  background: var(--tb-bg-canvas);
+  display: grid;
+  place-items: center;
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  color: var(--tb-fg-subtle);
+  transition: var(--tb-t-colors), var(--tb-t-shadow);
+}
+
+.tb-timeline__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: calc((var(--tb-tl-node) - 1.15rem) / 2);
+}
+
+.tb-timeline__time {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-faint);
+  font-variant-numeric: tabular-nums;
+  order: -1;
+}
+
+.tb-timeline__title {
+  font-weight: var(--tb-weight-semibold);
+  font-size: var(--tb-text-base);
+  line-height: var(--tb-leading-snug);
+  color: var(--tb-fg-default);
+}
+
+.tb-timeline__org {
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-accent);
+  font-weight: var(--tb-weight-medium);
+}
+
+.tb-timeline__note {
+  margin-top: var(--tb-space-2);
+  font-size: var(--tb-text-sm);
+  line-height: var(--tb-leading-relaxed);
+  color: var(--tb-fg-muted);
+  max-width: var(--tb-measure-prose);
+}
+
+.tb-timeline__list {
+  margin-top: var(--tb-space-3);
+  padding-left: var(--tb-space-5);
+  font-size: var(--tb-text-sm);
+  color: var(--tb-fg-muted);
+  line-height: var(--tb-leading-relaxed);
+
+  li::marker { color: var(--tb-accent); }
+  li + li { margin-top: var(--tb-space-1); }
+}
+
+.tb-timeline__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tb-space-2);
+  margin-top: var(--tb-space-3);
+}
+
+// A node carrying an icon — the job, the degree, the stage. The glyph
+// inherits the node's colour, so it flips with the done/current states.
+.tb-timeline__node > svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: currentcolor;
+}
+
+.tb-timeline__item[data-done] .tb-timeline__node {
+  background: var(--tb-fg-default);
+  border-color: var(--tb-fg-default);
+  color: var(--tb-bg-canvas);
+}
+
+.tb-timeline__item[aria-current] .tb-timeline__node {
+  border-color: var(--tb-accent);
+  background: var(--tb-accent);
+  color: var(--tb-fg-on-accent);
+  box-shadow: 0 0 0 3px var(--tb-accent-ring);
+}
+
+// Ranged: a role held for three years is a bar, not a dot. The node becomes a
+// capsule that fills its own row, which is what makes a CV read as duration.
+.tb-timeline--ranged .tb-timeline__node {
+  border-radius: var(--tb-radius-pill);
+  height: auto;
+  align-self: stretch;
+  min-height: var(--tb-tl-node);
+  place-items: start center;
+  padding-top: calc((var(--tb-tl-node) - 1.2rem) / 2);
+}
+
+.tb-timeline--lg { --tb-tl-node: 2rem; --tb-tl-gap: var(--tb-space-8); }
+
+// =============================================================================
+// PAGINATION
+// Numbers, not "load more". A reader who arrives on page 4 from a search result
+// needs page 4 to be a URL.
+// =============================================================================
+
+.tb-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--tb-space-2);
+  margin-top: var(--tb-space-12);
+  padding-top: var(--tb-space-8);
+  border-top: var(--tb-border-hair) solid var(--tb-line-subtle);
+}
+
+.tb-pagination__link {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--tb-control-md);
+  height: var(--tb-control-md);
+  padding-inline: var(--tb-space-3);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-control);
+  color: var(--tb-fg-muted);
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-xs);
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  transition: var(--tb-t-colors);
+
+  &:hover { border-color: var(--tb-line-strong); color: var(--tb-fg-default); }
+
+  &[aria-current] {
+    background: var(--tb-bg-inverse);
+    border-color: var(--tb-bg-inverse);
+    color: var(--tb-fg-on-inverse);
+  }
+}
+
+.tb-pagination__gap {
+  color: var(--tb-fg-faint);
+  padding-inline: var(--tb-space-1);
+}
+
+.tb-pagination__link[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+}

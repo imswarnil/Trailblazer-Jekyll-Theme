@@ -1,0 +1,21 @@
+{%- comment -%}
+  VIDEO
+
+    {% include components/video.html id="dQw4w9WgXcQ" title="Deploying with scratch orgs" %}
+
+  YouTube's privacy-enhanced domain, lazily loaded, in a box that reserves its
+  own 16:9 space — so the article does not jump when the iframe arrives.
+
+  `title` is required by the include for a reason: an untitled iframe is
+  announced as "frame" and nothing else.
+{%- endcomment -%}
+<figure class="tb-media tb-ratio-wide">
+  <iframe src="https://www.youtube-nocookie.com/embed/{{ include.id }}"
+          title="{{ include.title | escape }}"
+          loading="lazy"
+          allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
+          allowfullscreen></iframe>
+</figure>
+{%- if include.caption %}
+<p class="tb-mono-sm tb-u-mt-2">{{ include.caption }}</p>
+{%- endif -%}

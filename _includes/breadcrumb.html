@@ -1,0 +1,54 @@
+{%- comment -%}
+  BREADCRUMB
+
+    {% include breadcrumb.html %}
+    {% include breadcrumb.html parent_url=course.url parent_title=course.title parent_icon='graduation' %}
+
+  Home → collection → this page, each crumb with its glyph. The trail is
+  derived: a collection entry gets its collection's index as the middle crumb;
+  a lesson passes its course in explicitly; a plain page just gets Home.
+
+  The current page is a <span> with aria-current, not a link — a link to the
+  page you are on is a tab stop that goes nowhere. The whole thing is a <nav>
+  with a name, so a screen-reader user can jump past it.
+{%- endcomment -%}
+{%- unless page.url == '/' or page.breadcrumb == false -%}
+{%- assign bc_coll = site.collections | where: 'label', page.collection | first -%}
+
+<nav class="tb-breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li>
+      <a href="{{ '/' | relative_url }}">
+        {%- include icon.html name="cloud" -%}
+        <span>Home</span>
+      </a>
+    </li>
+
+    {%- if include.parent_url %}
+    <li>
+      <a href="{{ bc_coll.index_url | default: '/' | relative_url }}">
+        {%- if bc_coll.icon %}{% include icon.html name=bc_coll.icon %}{% endif -%}
+        <span>{{ page.collection | capitalize }}</span>
+      </a>
+    </li>
+    <li>
+      <a href="{{ include.parent_url | relative_url }}">
+        {%- if include.parent_icon %}{% include icon.html name=include.parent_icon %}{% endif -%}
+        <span>{{ include.parent_title }}</span>
+      </a>
+    </li>
+    {%- elsif page.collection %}
+    <li>
+      <a href="{{ bc_coll.index_url | default: '/' | relative_url }}">
+        {%- if bc_coll.icon %}{% include icon.html name=bc_coll.icon %}{% endif -%}
+        <span>{{ page.collection | capitalize }}</span>
+      </a>
+    </li>
+    {%- endif %}
+
+    <li>
+      <span aria-current="page">{{ page.title | truncate: 48 }}</span>
+    </li>
+  </ol>
+</nav>
+{%- endunless -%}

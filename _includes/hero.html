@@ -1,0 +1,91 @@
+{%- comment -%}
+  HERO
+  The shape is chosen in front matter, or inherited from the collection's
+  `hero_style` in _config.yml:
+
+    ---
+    title: Projects
+    hero_style: split           # statement · split · band · minimal
+    hero_eyebrow: Selected work
+    hero_lead: Things I built and what they cost.
+    hero_image: /assets/img/covers/projects.svg
+    hero_actions:
+      - { label: "Get in touch", url: /contact/, style: primary }
+      - { label: "Read the blog", url: /blog/, style: ghost }
+    ---
+
+  `hero_title` accepts <em> for the one rationed accent phrase. Everything else
+  is escaped; the title is the only place markup is honoured, and only for
+  emphasis.
+
+  Two actions is the maximum by design. A hero with four buttons has not
+  decided what the page is for, and the reader can tell.
+{%- endcomment -%}
+
+{%- assign coll = site.collections | where: 'label', page.collection | first -%}
+{%- assign style = page.hero_style | default: coll.hero_style | default: 'minimal' -%}
+{%- assign title = page.hero_title | default: page.title -%}
+{%- assign lead = page.hero_lead | default: page.description -%}
+{%- assign hero_class = 'tb-hero tb-hero--' | append: style -%}
+{%- if style == 'band' and page.hero_image %}{% assign hero_class = hero_class | append: ' tb-hero--media' %}{% endif -%}
+{%- if style == 'statement' or style == 'minimal' %}{% assign hero_class = hero_class | append: ' tb-pattern tb-pattern-clouds' %}{% endif -%}
+
+<section class="{{ hero_class }}">
+
+  {%- if style == 'band' and page.hero_image %}
+  <div class="tb-hero__media">
+    <img src="{{ page.hero_image | relative_url }}" alt="" loading="eager" decoding="async">
+  </div>
+  {%- endif %}
+
+  <div{% if style == 'split' %} class="tb-hero__copy"{% endif %}>
+    {%- if page.hero_eyebrow %}
+    <p class="tb-hero__eyebrow">{{ page.hero_eyebrow }}</p>
+    {%- endif %}
+
+    <h1 class="tb-hero__title">{{ title }}</h1>
+
+    {%- if lead %}
+    <p class="tb-hero__lead">{{ lead }}</p>
+    {%- endif %}
+
+    {%- if page.hero_actions %}
+    <div class="tb-hero__actions">
+      {%- for a in page.hero_actions %}
+      <a class="tb-btn tb-btn--{{ a.style | default: 'ghost' }}{% if forloop.first %} tb-btn--lg{% endif %}"
+         href="{{ a.url | relative_url }}">
+        {{- a.label -}}
+        {%- if a.icon %}{% include icon.html name=a.icon %}{% endif -%}
+      </a>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+
+    {%- comment -%}
+      A count of what is in the collection, on its index page. Reads as a fact
+      rather than as a boast, which is why it is in the mono voice and not a
+      stat block.
+    {%- endcomment -%}
+    {%- if page.hero_meta %}
+    <p class="tb-hero__meta">
+      {%- for m in page.hero_meta %}
+      <span>{% if m.icon %}{% include icon.html name=m.icon %}{% endif %}{{ m.text }}</span>
+      {%- endfor %}
+    </p>
+    {%- endif %}
+  </div>
+
+  {%- if style == 'split' %}
+  <div class="tb-hero__stage">
+    <div class="tb-hero__portrait">
+      <img src="{{ page.hero_image | default: site.author.avatar | relative_url }}"
+           alt="{{ page.hero_image_alt | default: site.author.name | escape }}"
+           width="640" height="640" loading="eager" decoding="async">
+    </div>
+    {%- if page.hero_tag %}
+    <span class="tb-hero__tag tb-badge tb-badge--accent">{{ page.hero_tag }}</span>
+    {%- endif %}
+  </div>
+  {%- endif %}
+
+</section>

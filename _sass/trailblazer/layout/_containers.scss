@@ -1,0 +1,322 @@
+// =============================================================================
+// LAYOUT · CONTAINERS, GRID, COMPOSITION
+// One container class with four crops, an auto grid for card decks, and the
+// three composition primitives nearly every layout in the theme is made of.
+// =============================================================================
+
+.tb-container,
+.tb-container-prose,
+.tb-container-narrow,
+.tb-container-wide,
+.tb-container-full {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--tb-gutter);
+}
+
+.tb-container        { max-width: calc(var(--tb-w-site) + var(--tb-gutter) * 2); }
+.tb-container-prose  { max-width: calc(var(--tb-w-prose) + var(--tb-gutter) * 2); }
+.tb-container-narrow { max-width: calc(var(--tb-w-narrow) + var(--tb-gutter) * 2); }
+.tb-container-wide   { max-width: calc(var(--tb-w-wide) + var(--tb-gutter) * 2); }
+.tb-container-full   { max-width: none; }
+
+// Break a child out of a prose column without a wrapper div.
+.tb-bleed-full {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+// ── Section rhythm ──────────────────────────────────────────────────────────
+// A section pads both ends, which is right when it stands alone and wrong the
+// moment two of them sit together: 96px + 96px reads as a hole in the page
+// rather than as a gap between two things. Neighbours therefore drop their
+// leading padding. A section that paints its own surface needs that padding
+// back — which is what `.tb-section-standalone` is for.
+
+.tb-section    { padding-block: var(--tb-section-md); }
+.tb-section-sm { padding-block: var(--tb-section-sm); }
+.tb-section-lg { padding-block: var(--tb-section-lg); }
+
+:is(.tb-section, .tb-section-sm, .tb-section-lg)
++ :is(.tb-section, .tb-section-sm, .tb-section-lg):not(.tb-section-standalone) {
+  padding-block-start: 0;
+}
+
+// The heading that opens a section: eyebrow, title, optional link on the right.
+.tb-section__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--tb-space-4);
+  margin-bottom: var(--tb-space-8);
+}
+
+.tb-section__title {
+  font-family: var(--tb-font-heading-effective);
+  font-size: var(--tb-text-2xl);
+  font-weight: var(--tb-weight-bold);
+  letter-spacing: var(--tb-tracking-tight);
+  line-height: var(--tb-leading-snug);
+  margin-top: var(--tb-space-2);
+}
+
+.tb-section__lead {
+  color: var(--tb-fg-muted);
+  font-size: var(--tb-text-sm);
+  max-width: var(--tb-measure-lead);
+  margin-top: var(--tb-space-2);
+}
+
+// ── Grids ───────────────────────────────────────────────────────────────────
+// For card decks, "how many fit" beats "how many columns", so the default grid
+// is auto-filling rather than a fixed column count.
+
+.tb-grid {
+  display: grid;
+  gap: var(--tb-space-6);
+}
+
+.tb-grid-auto {
+  display: grid;
+  gap: var(--tb-space-6);
+  grid-template-columns: repeat(auto-fill, minmax(min(19rem, 100%), 1fr));
+}
+
+.tb-grid-auto-sm {
+  display: grid;
+  gap: var(--tb-space-4);
+  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
+}
+
+.tb-grid-auto-lg {
+  display: grid;
+  gap: var(--tb-space-6);
+  grid-template-columns: repeat(auto-fill, minmax(min(24rem, 100%), 1fr));
+}
+
+.tb-grid-2,
+.tb-grid-3,
+.tb-grid-4 {
+  display: grid;
+  gap: var(--tb-space-6);
+}
+
+.tb-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tb-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tb-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@include tb-down("lg") {
+  .tb-grid-3,
+  .tb-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@include tb-down("sm") {
+  .tb-grid-2,
+  .tb-grid-3,
+  .tb-grid-4 { grid-template-columns: minmax(0, 1fr); }
+}
+
+// The golden split. A hero or article splits on φ rather than 2/3, so the
+// narrower column never competes with the main one.
+.tb-split-phi {
+  display: grid;
+  gap: var(--tb-space-10);
+  grid-template-columns: 1.618fr 1fr;
+  align-items: start;
+}
+
+.tb-split-half {
+  display: grid;
+  gap: var(--tb-space-8);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@include tb-down("lg") {
+  .tb-split-phi,
+  .tb-split-half { grid-template-columns: minmax(0, 1fr); }
+}
+
+// ── Composition primitives ──────────────────────────────────────────────────
+// Stack is vertical rhythm, cluster is a wrapping inline row. Gap is the only
+// spacing mechanism in a layout — no margins between siblings, ever.
+
+.tb-stack,
+.tb-stack-xs,
+.tb-stack-sm,
+.tb-stack-lg,
+.tb-stack-xl {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-4);
+}
+
+.tb-stack-xs { gap: var(--tb-space-2); }
+.tb-stack-sm { gap: var(--tb-space-3); }
+.tb-stack-lg { gap: var(--tb-space-6); }
+.tb-stack-xl { gap: var(--tb-space-10); }
+
+.tb-cluster,
+.tb-cluster-sm,
+.tb-cluster-lg {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tb-space-3);
+}
+
+.tb-cluster-sm { gap: var(--tb-space-2); }
+.tb-cluster-lg { gap: var(--tb-space-5); }
+
+.tb-row-between {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tb-space-4);
+}
+
+// The owl. Vertical rhythm inside flowing Markdown, where you cannot put a
+// class on every child.
+.tb-flow > * + * { margin-block-start: var(--tb-flow, var(--tb-space-5)); }
+.tb-flow-tight { --tb-flow: var(--tb-space-3); }
+
+// A sticky rail (a table of contents, a resume aside). Offset by the nav
+// height so it never hides under the header.
+.tb-sticky-rail {
+  position: sticky;
+  top: calc(var(--tb-nav-h) + var(--tb-space-6));
+  align-self: start;
+}
+
+// ── Surfaces ────────────────────────────────────────────────────────────────
+// The three ways a rectangle can exist in this theme. Everything else is a
+// variation on one of them.
+
+.tb-surface {
+  background: var(--tb-bg-surface);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+}
+
+.tb-surface-raised {
+  background: var(--tb-bg-raised);
+  border: var(--tb-border-hair) solid var(--tb-line-default);
+  border-radius: var(--tb-radius-card);
+  box-shadow: var(--tb-shadow-3);
+}
+
+.tb-surface-sunken {
+  background: var(--tb-bg-sunken);
+  border: var(--tb-border-hair) solid var(--tb-line-subtle);
+  border-radius: var(--tb-radius-md);
+}
+
+// ── Browse shell ────────────────────────────────────────────────────────────
+// The archive's shape: a sticky rail of tags on the left, the years on the
+// right. Rail folds above the content on narrow screens, where sticky
+// navigation beside a list would cost the list its width.
+
+.tb-browse {
+  display: grid;
+  gap: var(--tb-space-10);
+  align-items: start;
+}
+
+@include tb-up("lg") {
+  .tb-browse { grid-template-columns: 15rem minmax(0, 1fr); }
+
+  .tb-browse__rail {
+    position: sticky;
+    top: calc(var(--tb-nav-h) + var(--tb-space-6));
+    max-height: calc(100vh - var(--tb-nav-h) - var(--tb-space-12));
+    overflow-y: auto;
+  }
+}
+
+.tb-browse__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-1);
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--tb-space-3);
+    padding: var(--tb-space-1) var(--tb-space-2);
+    border-radius: var(--tb-radius-sm);
+    font-size: var(--tb-text-sm);
+    color: var(--tb-fg-muted);
+    text-decoration: none;
+    transition: var(--tb-t-colors);
+
+    &:hover { color: var(--tb-fg-default); background: var(--tb-hover-wash); }
+  }
+}
+
+.tb-browse__count {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  color: var(--tb-fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+// ── Divider ─────────────────────────────────────────────────────────────────
+// The house rule: a horizontal rule fades at both ends, so a page never feels
+// boxed in.
+
+.tb-rule {
+  height: var(--tb-border-hair);
+  border: 0;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--tb-line-default) 12%,
+    var(--tb-line-default) 88%,
+    transparent
+  );
+}
+
+// ── Media ───────────────────────────────────────────────────────────────────
+
+.tb-media {
+  position: relative;
+  overflow: hidden;
+  background: var(--tb-bg-media);
+  border-radius: var(--tb-radius-media);
+  isolation: isolate;
+
+  > img,
+  > video,
+  > iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: cover;
+  }
+}
+
+// ── Icon ────────────────────────────────────────────────────────────────────
+// Every icon is a 24×24 stroke drawing that inherits `currentColor`, so it
+// takes the colour of whatever it sits inside without a single colour rule.
+// The default size matches the body text it usually sits beside.
+
+.tb-icon {
+  width: var(--tb-icon-sm);
+  height: var(--tb-icon-sm);
+  flex: none;
+  color: inherit;
+  vertical-align: middle;
+}
+
+.tb-icon--md { width: var(--tb-icon-md); height: var(--tb-icon-md); }
+.tb-icon--lg { width: var(--tb-icon-lg); height: var(--tb-icon-lg); }
+.tb-icon--xl { width: var(--tb-icon-xl); height: var(--tb-icon-xl); }
+
+.tb-ratio-wide   { aspect-ratio: var(--tb-ratio-wide); }
+.tb-ratio-photo  { aspect-ratio: var(--tb-ratio-photo); }
+.tb-ratio-square { aspect-ratio: var(--tb-ratio-square); }
+.tb-ratio-poster { aspect-ratio: var(--tb-ratio-poster); }

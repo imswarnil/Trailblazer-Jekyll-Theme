@@ -1,0 +1,78 @@
+# =============================================================================
+# CERTIFICATIONS
+# Rendered as the seal wall on /resume/ and in the sidebar widget.
+#
+#   short   2–4 characters, the acronym the credential is actually known by.
+#           This is what goes inside the seal, and the seal does not grow —
+#           anything longer than four characters will be squeezed.
+#   name    the full title, spelled the way the issuer spells it
+#   issuer  who awarded it
+#   year    when. Use the year it was earned, not the year it was renewed.
+#   url     the public verification page, if there is one. Omit it and the
+#           entry renders as plain text rather than as a link.
+#   color   the track colour, shown as the shield's enamel. Convention here:
+#           developer track indigo, admin sky blue, app builder teal,
+#           architect navy — so the wall reads by track before anyone reads
+#           a word. Omit it and the shield takes the theme accent.
+#   featured  true pulls it to the front of the wall. Keep it to two or
+#           three; a wall where everything is featured has no front.
+# =============================================================================
+
+- short: PDI
+  color: "#3b5bdb"
+  name: Platform Developer I
+  issuer: Salesforce
+  year: 2018
+  url: https://example.com/verify/pdi
+  featured: true
+
+- short: PDII
+  color: "#3b5bdb"
+  name: Platform Developer II
+  issuer: Salesforce
+  year: 2020
+  url: https://example.com/verify/pdii
+  featured: true
+
+- short: JSD
+  color: "#5f3dc4"
+  name: JavaScript Developer I
+  issuer: Salesforce
+  year: 2021
+  url: https://example.com/verify/jsd
+  featured: true
+
+- short: ADM
+  color: "#0b7bc2"
+  name: Certified Administrator
+  issuer: Salesforce
+  year: 2017
+  url: https://example.com/verify/adm
+
+- short: APP
+  color: "#0b8f84"
+  name: Platform App Builder
+  issuer: Salesforce
+  year: 2019
+  url: https://example.com/verify/app
+
+- short: INT
+  color: "#123a6d"
+  name: Integration Architect
+  issuer: Salesforce
+  year: 2022
+  url: https://example.com/verify/int
+
+- short: SHD
+  color: "#123a6d"
+  name: Sharing and Visibility Architect
+  issuer: Salesforce
+  year: 2023
+  url: https://example.com/verify/shd
+
+- short: DMA
+  color: "#123a6d"
+  name: Data Architect
+  issuer: Salesforce
+  year: 2023
+  url: https://example.com/verify/dma

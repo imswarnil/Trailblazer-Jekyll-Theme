@@ -1,0 +1,240 @@
+// =============================================================================
+// BASE · TYPOGRAPHY
+// Three faces, three jobs, and a fluid scale so no component ever needs a
+// breakpoint-specific font size.
+//
+//   display → headlines, numbers, anything at 20px and above
+//   body    → everything you actually read
+//   mono    → the metadata voice: labels, dates, versions, code
+// =============================================================================
+
+:root {
+  --tb-font-display: #{$tb-font-display};
+  --tb-font-body:    #{$tb-font-body};
+  --tb-font-mono:    #{$tb-font-mono};
+
+  // A publisher's `_config.yml` font choice wins over the theme default.
+  --tb-font-heading-effective: var(--tb-font-heading, var(--tb-font-display));
+  --tb-font-body-effective:    var(--tb-font-base, var(--tb-font-body));
+
+  // ── Fluid scale ───────────────────────────────────────────────────────────
+  // clamp(min, preferred, max), fluid between a 360px and a 1440px viewport.
+  // Ratio ≈ 1.22 at the small end, opening to ≈ 1.30 at display sizes so
+  // headlines get dramatic without the body text drifting with them.
+  --tb-text-2xs:  0.6875rem;
+  --tb-text-xs:   0.75rem;
+  --tb-text-sm:   0.8125rem;
+  --tb-text-base: 1rem;
+  --tb-text-md:   1.0625rem;
+  --tb-text-lg:   clamp(1.125rem, 1.05rem + 0.32vw, 1.3125rem);
+  --tb-text-xl:   clamp(1.3125rem, 1.19rem + 0.55vw, 1.625rem);
+  --tb-text-2xl:  clamp(1.5rem, 1.31rem + 0.83vw, 2rem);
+  --tb-text-3xl:  clamp(1.875rem, 1.55rem + 1.42vw, 2.75rem);
+  --tb-text-4xl:  clamp(2.25rem, 1.72rem + 2.36vw, 3.75rem);
+  --tb-text-5xl:  clamp(2.75rem, 1.86rem + 3.94vw, 5.25rem);
+  --tb-text-6xl:  clamp(3.25rem, 1.82rem + 6.3vw, 7rem);
+
+  // Display sits tight, body sits open. Nothing in between exists.
+  --tb-leading-flat:    1;
+  --tb-leading-tight:   1.1;
+  --tb-leading-snug:    1.25;
+  --tb-leading-normal:  1.5;
+  --tb-leading-relaxed: 1.65; // the reading default
+  --tb-leading-loose:   1.85;
+
+  --tb-tracking-tighter: -0.035em;
+  --tb-tracking-tight:   -0.02em;
+  --tb-tracking-normal:  0;
+  --tb-tracking-wide:    0.04em;
+  --tb-tracking-mono:    0.14em; // uppercase mono labels
+
+  --tb-weight-regular:  400;
+  --tb-weight-medium:   500;
+  --tb-weight-semibold: 600;
+  --tb-weight-bold:     700;
+
+  // Long-form prose caps at 68ch; UI copy at 46ch so cards break predictably.
+  --tb-measure-prose: 68ch;
+  --tb-measure-ui:    46ch;
+  --tb-measure-lead:  56ch;
+}
+
+html { font-size: 100%; }
+
+body {
+  font-family: var(--tb-font-body-effective);
+  font-size: var(--tb-text-base);
+  line-height: var(--tb-leading-relaxed);
+  font-weight: var(--tb-weight-regular);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--tb-font-heading-effective);
+  font-weight: var(--tb-weight-bold);
+  line-height: var(--tb-leading-tight);
+  letter-spacing: var(--tb-tracking-tight);
+  text-wrap: balance;
+}
+
+// ── Text roles ──────────────────────────────────────────────────────────────
+// Semantic classes, not size utilities. Use the role that describes the job and
+// the size follows — which is what keeps a heading a heading when the scale
+// later changes.
+
+.tb-display-1 {
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-6xl);
+  font-weight: var(--tb-weight-bold);
+  line-height: var(--tb-leading-flat);
+  letter-spacing: var(--tb-tracking-tighter);
+  text-wrap: balance;
+}
+
+.tb-display-2 {
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-5xl);
+  font-weight: var(--tb-weight-bold);
+  line-height: 1.04;
+  letter-spacing: var(--tb-tracking-tighter);
+  text-wrap: balance;
+}
+
+.tb-h1 {
+  font-family: var(--tb-font-heading-effective);
+  font-size: var(--tb-text-4xl);
+  font-weight: var(--tb-weight-bold);
+  line-height: var(--tb-leading-tight);
+  letter-spacing: var(--tb-tracking-tight);
+  text-wrap: balance;
+}
+
+.tb-h2 {
+  font-family: var(--tb-font-heading-effective);
+  font-size: var(--tb-text-3xl);
+  font-weight: var(--tb-weight-bold);
+  line-height: var(--tb-leading-tight);
+  letter-spacing: var(--tb-tracking-tight);
+  text-wrap: balance;
+}
+
+.tb-h3 {
+  font-family: var(--tb-font-heading-effective);
+  font-size: var(--tb-text-2xl);
+  font-weight: var(--tb-weight-semibold);
+  line-height: var(--tb-leading-snug);
+  letter-spacing: var(--tb-tracking-tight);
+}
+
+.tb-h4 {
+  font-family: var(--tb-font-heading-effective);
+  font-size: var(--tb-text-xl);
+  font-weight: var(--tb-weight-semibold);
+  line-height: var(--tb-leading-snug);
+}
+
+.tb-lead {
+  font-size: var(--tb-text-lg);
+  line-height: var(--tb-leading-relaxed);
+  color: var(--tb-fg-muted);
+  max-width: var(--tb-measure-lead);
+  text-wrap: pretty;
+}
+
+.tb-body {
+  font-size: var(--tb-text-md);
+  line-height: var(--tb-leading-relaxed);
+  max-width: var(--tb-measure-prose);
+  text-wrap: pretty;
+}
+
+.tb-small {
+  font-size: var(--tb-text-sm);
+  line-height: var(--tb-leading-normal);
+  color: var(--tb-fg-muted);
+}
+
+// The mono voice — every piece of metadata on the site speaks like this.
+.tb-mono {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-xs);
+  font-weight: var(--tb-weight-medium);
+  line-height: var(--tb-leading-normal);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+}
+
+.tb-mono-sm {
+  font-family: var(--tb-font-mono);
+  font-size: var(--tb-text-2xs);
+  letter-spacing: var(--tb-tracking-mono);
+  text-transform: uppercase;
+  color: var(--tb-fg-subtle);
+}
+
+// Counts, versions, dates — tabular so columns of numbers line up.
+.tb-numeric {
+  font-family: var(--tb-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tb-tracking-wide);
+}
+
+.tb-quote {
+  font-family: var(--tb-font-display);
+  font-size: var(--tb-text-xl);
+  font-weight: var(--tb-weight-medium);
+  line-height: var(--tb-leading-snug);
+  letter-spacing: var(--tb-tracking-tight);
+  border-left: var(--tb-border-2) solid var(--tb-accent);
+  padding-left: var(--tb-space-4);
+  text-wrap: balance;
+}
+
+.tb-muted  { color: var(--tb-fg-muted); }
+.tb-subtle { color: var(--tb-fg-subtle); }
+.tb-accent-text { color: var(--tb-fg-accent); }
+
+// The house link: the underline grows from the left on hover rather than
+// flashing a colour. Under reduced motion the colour change carries it.
+.tb-link {
+  color: var(--tb-fg-link);
+  text-decoration: none;
+  background-image: linear-gradient(var(--tb-accent), var(--tb-accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% var(--tb-border-2);
+  padding-bottom: 0.08em;
+  transition: background-size var(--tb-dur-2) var(--tb-ease-out),
+              color var(--tb-dur-2) var(--tb-ease-out);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--tb-fg-link-hover);
+    background-size: 100% var(--tb-border-2);
+  }
+}
+
+.tb-measure       { max-width: var(--tb-measure-prose); }
+.tb-measure-ui    { max-width: var(--tb-measure-ui); }
+.tb-measure-lead  { max-width: var(--tb-measure-lead); }
+
+// Truncation — one job each, never invented ad hoc inside a component.
+.tb-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tb-clamp-2,
+.tb-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tb-clamp-2 { -webkit-line-clamp: 2; line-clamp: 2; }
+.tb-clamp-3 { -webkit-line-clamp: 3; line-clamp: 3; }

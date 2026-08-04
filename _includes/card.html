@@ -1,0 +1,260 @@
+{%- comment -%}
+  CARD
+
+    {% include card.html item=post %}
+    {% include card.html item=project style="compact" %}
+    {% include card.html item=post style="numbered" index=forloop.index %}
+
+  One include for every collection. The shape comes from `style`, which
+  defaults to the collection's own `card_style` in _config.yml — so a
+  collection changes how it lists everywhere at once, from one line of config.
+
+  Styles: deck (cover + body) · compact (no cover) · row (cover beside body) ·
+  numbered (an index, not a deck) · bento (deck, sized by the grid around it).
+
+  The link lives on the title and its ::after covers the card, so the
+  accessible name is the title rather than "read more", and there is exactly
+  one tab stop per card.
+{%- endcomment -%}
+
+{%- assign item = include.item -%}
+{%- assign coll = site.collections | where: 'label', item.collection | first -%}
+{%- assign style = include.style | default: coll.card_style | default: 'deck' -%}
+{%- assign cover = item.image | default: coll.image -%}
+{%- assign label = item.badge | default: coll.singular -%}
+
+{%- if style == 'numbered' -%}
+
+<li class="tb-numbered__item">
+  <span class="tb-numbered__num" aria-hidden="true">{{ include.index | default: forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+  <div class="tb-numbered__body">
+    <h3 class="tb-u-mt-0">
+      <a class="tb-numbered__title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+    </h3>
+    {%- if item.description or item.excerpt %}
+    <p class="tb-numbered__excerpt">
+      {{- item.description | default: item.excerpt | strip_html | normalize_whitespace | truncatewords: site.reading.excerpt_words | default: 34 -}}
+    </p>
+    {%- endif %}
+    <p class="tb-numbered__meta">
+      {%- if item.date %}<span>{{ item.date | date: '%b %-d, %Y' }}</span>{% endif -%}
+      {%- if item.type == 'video' %}<span>▶ Video{% if item.duration %} · {{ item.duration }}{% endif %}</span>
+      {%- elsif item.content %}<span>{% include reading-time.html content=item.content %}</span>{% endif -%}
+      {%- if item.series %}<span>{{ item.series }} · {{ item.series_part }}</span>{% endif -%}
+      {%- for tag in item.tags limit: 2 %}<span>{{ tag }}</span>{% endfor -%}
+    </p>
+  </div>
+  {%- if cover %}
+  <span class="tb-numbered__media" aria-hidden="true">
+    <img src="{{ cover | relative_url }}" alt="" loading="lazy" decoding="async">
+  </span>
+  {%- endif %}
+</li>
+
+{%- elsif style == 'compact' -%}
+
+<article class="tb-card tb-card--compact">
+  <div class="tb-card__body">
+    <p class="tb-card__meta">
+      {%- if coll.icon %}{% include icon.html name=coll.icon %}{% endif -%}
+      {%- if item.language %}<span>{{ item.language }}</span>{% endif -%}
+      {%- if item.date %}<span>{{ item.date | date: '%b %Y' }}</span>{% endif -%}
+    </p>
+    <h3 class="tb-card__title">
+      <a class="tb-card__link" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+    </h3>
+    {%- if item.description %}
+    <p class="tb-card__excerpt">{{ item.description }}</p>
+    {%- endif %}
+  </div>
+</article>
+
+{%- elsif style == 'repo' -%}
+
+{%- comment -%}
+  The repository shape. `repo:` names it (falling back to a slug of the
+  title), `github:` and `demo:` become the two real buttons, and `language:`
+  drives the dot through a small colour map — the convention every repository
+  listing has already taught this audience to read.
+{%- endcomment -%}
+{%- assign repo_name = item.repo | default: item.title | slugify -%}
+{%- assign lang = item.language | default: 'Apex' -%}
+{%- case lang -%}
+  {%- when 'Apex' -%}{%- assign lang_color = '#1797c0' -%}
+  {%- when 'JavaScript' -%}{%- assign lang_color = '#f1e05a' -%}
+  {%- when 'TypeScript' -%}{%- assign lang_color = '#3178c6' -%}
+  {%- when 'HTML' -%}{%- assign lang_color = '#e34c26' -%}
+  {%- when 'Python' -%}{%- assign lang_color = '#3572a5' -%}
+  {%- when 'Ruby' -%}{%- assign lang_color = '#701516' -%}
+  {%- else -%}{%- assign lang_color = '#6b7684' -%}
+{%- endcase -%}
+<article class="tb-repo">
+  <header class="tb-repo__head">
+    {%- include icon.html name="github" %}
+    <a class="tb-repo__name" href="{{ item.url | relative_url }}">{{ repo_name }}</a>
+    {%- if item.featured %}<span class="tb-badge tb-badge--accent tb-u-ms-auto">Featured</span>{% endif %}
+  </header>
+
+  {%- if item.description or item.excerpt %}
+  <p class="tb-repo__desc">{{ item.description | default: item.excerpt | strip_html | normalize_whitespace }}</p>
+  {%- endif %}
+
+  {%- comment -%}
+    The tag row skips whatever the language dot already says — otherwise a
+    project tagged with its own language reads "Apex · Data · Apex".
+  {%- endcomment -%}
+  {%- assign repo_tags = item.tags | where_exp: 't', 't != lang' -%}
+  <div class="tb-repo__meta">
+    <span class="tb-repo__lang" style="--tb-lang: {{ lang_color }}">{{ lang }}</span>
+    {%- for t in repo_tags limit: 2 %}<span>{{ t }}</span>{% endfor -%}
+    {%- if item.date %}<span>{{ item.date | date: '%b %Y' }}</span>{% endif -%}
+  </div>
+
+  <footer class="tb-repo__actions">
+    {%- if item.demo %}
+    <a class="tb-btn tb-btn--primary tb-btn--sm" href="{{ item.demo }}" rel="noopener" target="_blank">
+      {%- include icon.html name="external" %}Live preview<span class="tb-sr-only"> of {{ item.title }} (opens in a new tab)</span>
+    </a>
+    {%- endif %}
+    {%- if item.github %}
+    <a class="tb-btn tb-btn--ghost tb-btn--sm" href="{{ item.github }}" rel="noopener" target="_blank">
+      {%- include icon.html name="github" %}Source<span class="tb-sr-only"> of {{ item.title }} (opens in a new tab)</span>
+    </a>
+    {%- endif %}
+    <a class="tb-btn tb-btn--quiet tb-btn--sm" href="{{ item.url | relative_url }}">
+      Case study{% include icon.html name="arrow-right" %}
+    </a>
+  </footer>
+</article>
+
+{%- elsif style == 'video' -%}
+
+{%- comment -%}
+  The thumbnail is the video's own — YouTube serves it per id — with the
+  collection cover as the fallback for an entry that has no id yet.
+{%- endcomment -%}
+<article class="tb-card">
+  <div class="tb-card__media">
+    {%- if item.video %}
+    <img src="https://i.ytimg.com/vi/{{ item.video }}/hqdefault.jpg" alt="" loading="lazy" decoding="async">
+    {%- else %}
+    <img src="{{ cover | relative_url }}" alt="" loading="lazy" decoding="async">
+    {%- endif %}
+    <span class="tb-card__play" aria-hidden="true"></span>
+    {%- if item.duration %}
+    <span class="tb-card__media-br tb-timecode">{{ item.duration }}</span>
+    {%- endif %}
+  </div>
+  <div class="tb-card__body">
+    <p class="tb-card__meta">
+      {%- include icon.html name="play" %}<span>Video</span>
+      {%- if item.date %}<span>{{ item.date | date: '%b %Y' }}</span>{% endif -%}
+    </p>
+    <h3 class="tb-card__title">
+      <a class="tb-card__link" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+    </h3>
+    {%- if item.description %}
+    <p class="tb-card__excerpt">{{ item.description }}</p>
+    {%- endif %}
+  </div>
+</article>
+
+{%- elsif style == 'book' -%}
+
+{%- comment -%}
+  The rating is drawn for sighted readers and spelled out for everyone else —
+  five decorative stars mean nothing to a screen reader.
+{%- endcomment -%}
+<article class="tb-card tb-card--book">
+  <div class="tb-card__media">
+    <img src="{{ cover | relative_url }}" alt="" loading="lazy" decoding="async">
+    {%- if item.status %}
+    <span class="tb-card__media-tl tb-badge {% if item.status == 'Reading' %}tb-badge--accent{% endif %}">{{ item.status }}</span>
+    {%- endif %}
+  </div>
+  <div class="tb-card__body">
+    <h3 class="tb-card__title">
+      <a class="tb-card__link" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+    </h3>
+    {%- if item.book_author %}
+    <p class="tb-card__author">by {{ item.book_author }}</p>
+    {%- endif %}
+    {%- if item.rating %}
+    <p class="tb-stars" aria-hidden="true">
+      {%- for n in (1..5) %}<span class="tb-stars__star"{% if n <= item.rating %} data-on{% endif %}></span>{% endfor -%}
+    </p>
+    <span class="tb-sr-only">Rated {{ item.rating }} out of 5</span>
+    {%- endif %}
+  </div>
+</article>
+
+{%- elsif style == 'row' -%}
+
+<article class="tb-card tb-card--row">
+  {%- if cover %}
+  <div class="tb-card__media">
+    <img src="{{ cover | relative_url }}" alt="" loading="lazy" decoding="async">
+  </div>
+  {%- endif %}
+  <div class="tb-card__body">
+    <p class="tb-card__meta">
+      <span>{{ label }}</span>
+      {%- if item.date %}<span>{{ item.date | date: '%b %-d, %Y' }}</span>{% endif -%}
+    </p>
+    <h3 class="tb-card__title">
+      <a class="tb-card__link" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+    </h3>
+    {%- if item.description or item.excerpt %}
+    <p class="tb-card__excerpt">{{ item.description | default: item.excerpt | strip_html | normalize_whitespace }}</p>
+    {%- endif %}
+  </div>
+</article>
+
+{%- else -%}
+
+<article class="tb-card{% if item.featured %} tb-card--featured{% endif %}">
+  {%- if cover %}
+  <div class="tb-card__media">
+    <img src="{{ cover | relative_url }}" alt="" loading="lazy" decoding="async">
+    {%- if item.featured %}
+    <span class="tb-card__media-tl tb-badge tb-badge--accent">Featured</span>
+    {%- endif %}
+  </div>
+  {%- endif %}
+  <div class="tb-card__body">
+    <p class="tb-card__meta">
+      {%- if coll.icon %}{% include icon.html name=coll.icon %}{% endif -%}
+      <span>{{ label }}</span>
+      {%- if item.collection == 'courses' -%}
+        {%- comment -%}
+          The count comes from the course's actual lesson files, so the card
+          can never claim a syllabus the folder does not contain.
+        {%- endcomment -%}
+        {%- assign kids = site.courses | where_exp: 'd', 'd.url contains item.url' | where: 'type', 'lesson' -%}
+        {%- if kids.size > 0 %}<span>{{ kids.size }} lessons</span>{% endif -%}
+        {%- if item.total_duration %}<span>{{ item.total_duration }}</span>{% endif -%}
+      {%- elsif item.date %}<span>{{ item.date | date: '%b %Y' }}</span>{% endif -%}
+      {%- if item.level %}<span>{{ item.level }}</span>{% endif -%}
+    </p>
+    <h3 class="tb-card__title">
+      <a class="tb-card__link" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+    </h3>
+    {%- if item.description or item.excerpt %}
+    <p class="tb-card__excerpt">
+      {{- item.description | default: item.excerpt | strip_html | normalize_whitespace -}}
+    </p>
+    {%- endif %}
+  </div>
+  {%- if item.tags and item.tags != empty %}
+  <div class="tb-card__footer">
+    <span class="tb-cluster-sm">
+      {%- for tag in item.tags limit: 3 %}
+      <span class="tb-badge">{{ tag }}</span>
+      {%- endfor %}
+    </span>
+    {%- if item.content %}<span>{% include reading-time.html content=item.content %}</span>{% endif %}
+  </div>
+  {%- endif %}
+</article>
+
+{%- endif -%}

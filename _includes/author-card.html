@@ -1,0 +1,28 @@
+{%- comment -%}
+  AUTHOR CARD
+  Sits under an article. Everything comes from `author:` in _config.yml, so a
+  buyer fills in one block and every post is signed correctly.
+{%- endcomment -%}
+<aside class="tb-author">
+  {%- if site.author.avatar %}
+  <img class="tb-author__avatar" src="{{ site.author.avatar | relative_url }}"
+       alt="" width="56" height="56" loading="lazy" decoding="async">
+  {%- endif %}
+  <div>
+    <p class="tb-author__name">{{ site.author.name }}</p>
+    {%- if site.author.role %}
+    <p class="tb-mono-sm">{{ site.author.role }}</p>
+    {%- endif %}
+    {%- if site.author.bio %}
+    <p class="tb-author__bio">{{ site.author.bio }}</p>
+    {%- endif %}
+    <p class="tb-cluster-sm tb-u-mt-3">
+      <a class="tb-btn tb-btn--soft tb-btn--sm" href="{{ '/about/' | relative_url }}">More about {{ site.author.first_name | default: site.author.name }}</a>
+      {%- if site.author.email and site.author.email != "" %}
+      <a class="tb-btn tb-btn--quiet tb-btn--sm" href="mailto:{{ site.author.email }}">
+        {%- include icon.html name="mail" %}Get in touch
+      </a>
+      {%- endif %}
+    </p>
+  </div>
+</aside>

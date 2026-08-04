@@ -1,0 +1,36 @@
+<!--
+  OPEN GRAPH DEFAULT
+  The share image for any page that sets no `image:` of its own. Always
+  rendered at its full 1200x630 by every platform that uses it, which is why
+  this one can carry text where the collection covers cannot.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630"
+     role="img" aria-label="Trailblazer">
+  <defs>
+    <linearGradient id="g-og" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a9bef"/>
+      <stop offset="1" stop-color="#0160ab"/>
+    </linearGradient>
+    <pattern id="p-og" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#fff" opacity="0.15"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#g-og)"/>
+  <rect width="1200" height="630" fill="url(#p-og)"/>
+  <ellipse cx="980" cy="80" rx="440" ry="230" fill="#fff" opacity="0.12"/>
+
+  <g transform="translate(96 150)" fill="none" stroke="#fff" stroke-linecap="round"
+     stroke-linejoin="round" opacity="0.95">
+    <g transform="scale(5.4)" stroke-width="1.5">
+      <path d="M17.5 16H7a4 4 0 0 1-.5-7.97 5 5 0 0 1 9.6-1.1A3.6 3.6 0 0 1 17.5 16Z"/>
+      <circle cx="12" cy="11.5" r="1.8"/>
+      <path d="M9 20.5a3.2 3.2 0 0 1 6 0"/>
+    </g>
+  </g>
+
+  <text x="96" y="470" fill="#fff" font-family="'Space Grotesk', 'Inter', system-ui, sans-serif"
+        font-size="76" font-weight="700" letter-spacing="-2">Trailblazer</text>
+  <text x="96" y="522" fill="#fff" opacity="0.72"
+        font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="24" letter-spacing="3">A JEKYLL THEME FOR SALESFORCE DEVELOPERS</text>
+</svg>

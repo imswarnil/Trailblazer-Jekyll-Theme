@@ -1,0 +1,38 @@
+{%- comment -%}
+  WEB PUSH · OneSignal
+  Off unless `integrations.onesignal_app_id` is set.
+
+  A note before you turn this on: a push prompt on first visit is the single
+  most disliked pattern on the web, and browsers now penalise sites that fire
+  it unprompted. The config below sets `autoPrompt: false` deliberately — the
+  reader is asked only after they press a subscribe control, which is the
+  version that actually gets accepted.
+
+  The service worker files OneSignal needs are generated at
+  /OneSignalSDKWorker.js by the snippet below; nothing extra to commit.
+{%- endcomment -%}
+{%- if site.integrations.onesignal_app_id and site.integrations.onesignal_app_id != "" and jekyll.environment == 'production' -%}
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function (OneSignal) {
+    await OneSignal.init({
+      appId: {{ site.integrations.onesignal_app_id | jsonify }},
+      allowLocalhostAsSecureOrigin: false,
+      // Never prompt on load. The theme's subscribe button calls
+      // OneSignal.Slidedown.promptPush() when the reader asks for it.
+      autoResubscribe: true,
+      notifyButton: { enable: false }
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    var trigger = e.target.closest('[data-tb-push-subscribe]');
+    if (!trigger) return;
+    e.preventDefault();
+    window.OneSignalDeferred.push(function (OneSignal) {
+      OneSignal.Slidedown.promptPush();
+    });
+  });
+</script>
+{%- endif -%}

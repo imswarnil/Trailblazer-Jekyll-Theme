@@ -1,0 +1,76 @@
+{%- comment -%}
+  COLLECTION LIST
+
+    {% include collection-list.html items=site.projects %}
+    {% include collection-list.html items=site.posts style="deck" limit=3 %}
+
+  Wraps a set of entries in the right container for the style, and renders an
+  honest empty state when there is nothing in it — which is what a buyer sees
+  the moment they delete the demo content, so it needs to look deliberate.
+{%- endcomment -%}
+
+{%- assign items = include.items -%}
+{%- if include.limit %}{% assign items = items | slice: 0, include.limit %}{% endif -%}
+{%- assign first_item = items | first -%}
+{%- assign coll = site.collections | where: 'label', first_item.collection | first -%}
+{%- assign style = include.style | default: coll.card_style | default: 'deck' -%}
+
+{%- if items == empty or items.size == 0 -%}
+
+<div class="tb-empty">
+  {%- include icon.html name="inbox" class="tb-icon--xl" %}
+  <p class="tb-empty__title">Nothing here yet</p>
+  <p>{{ include.empty_message | default: 'The first entry in this collection will show up here.' }}</p>
+</div>
+
+{%- elsif style == 'numbered' -%}
+
+<ol class="tb-numbered">
+  {%- for item in items %}
+    {%- include card.html item=item style="numbered" index=forloop.index -%}
+  {%- endfor %}
+</ol>
+
+{%- elsif style == 'bento' -%}
+
+<div class="tb-bento">
+  {%- for item in items %}{% include card.html item=item style="deck" %}{% endfor %}
+</div>
+
+{%- elsif style == 'compact' -%}
+
+<div class="tb-grid-auto-sm">
+  {%- for item in items %}{% include card.html item=item style="compact" %}{% endfor %}
+</div>
+
+{%- elsif style == 'repo' -%}
+
+<div class="tb-grid-auto">
+  {%- for item in items %}{% include card.html item=item style="repo" %}{% endfor %}
+</div>
+
+{%- elsif style == 'video' -%}
+
+<div class="tb-deck">
+  {%- for item in items %}{% include card.html item=item style="video" %}{% endfor %}
+</div>
+
+{%- elsif style == 'book' -%}
+
+<div class="tb-deck tb-deck--sm">
+  {%- for item in items %}{% include card.html item=item style="book" %}{% endfor %}
+</div>
+
+{%- elsif style == 'rows' -%}
+
+<div class="tb-stack">
+  {%- for item in items %}{% include card.html item=item style="row" %}{% endfor %}
+</div>
+
+{%- else -%}
+
+<div class="tb-deck">
+  {%- for item in items %}{% include card.html item=item style="deck" %}{% endfor %}
+</div>
+
+{%- endif -%}
