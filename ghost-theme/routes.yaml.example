@@ -1,0 +1,21 @@
+# =============================================================================
+# TRAILBLAZER FOR GHOST — example routes
+# Optional. Upload via Ghost Admin → Settings → Labs → Routes if you want a
+# custom structure; the theme works fine with Ghost's defaults without this.
+#
+# This example gives you:
+#   /            the numbered index of posts (default collection)
+#   /about/      a static page rendered with page.hbs (create the page in
+#                admin with slug "about" — no routes change needed for that)
+# =============================================================================
+
+routes:
+
+collections:
+  /:
+    permalink: /{slug}/
+    template: index
+
+taxonomies:
+  tag: /tag/{slug}/
+  author: /author/{slug}/

@@ -487,3 +487,4 @@ exclude:
   - README.md
   - LICENSE
   - .jekyll-cache
+  - ghost-theme # the Ghost CMS port lives beside the Jekyll theme; never build it

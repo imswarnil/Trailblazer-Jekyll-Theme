@@ -1,0 +1,68 @@
+{{!--
+  FOOTER
+  Brand + tagline on the left, the secondary navigation (Settings →
+  Navigation → Secondary) and the socials Ghost knows about on the right,
+  then the sign-off. The credit line is appreciated, not required — MIT.
+--}}
+<footer class="tb-footer">
+    <div class="tb-container">
+
+        <div class="tb-footer__grid">
+            <div class="tb-footer__brand">
+                <a class="tb-footer__logo" href="{{@site.url}}">
+                    {{#if @site.icon}}<img src="{{img_url @site.icon size="xs"}}" alt="" width="28" height="28">{{/if}}
+                    <span>{{@site.title}}</span>
+                </a>
+                {{#if @custom.footer_tagline}}
+                    <p class="tb-footer__tag">{{@custom.footer_tagline}}</p>
+                {{/if}}
+
+                <div class="tb-footer__social">
+                    {{#if @site.facebook}}
+                        <a class="tb-social-link" href="{{social_url type="facebook"}}" rel="noopener" target="_blank" aria-label="Facebook (opens in a new tab)">
+                            <svg class="tb-icon" aria-hidden="true"><use href="#tb-facebook"></use></svg>
+                        </a>
+                    {{/if}}
+                    {{#if @site.twitter}}
+                        <a class="tb-social-link" href="{{social_url type="twitter"}}" rel="noopener" target="_blank" aria-label="X (opens in a new tab)">
+                            <svg class="tb-icon" aria-hidden="true"><use href="#tb-x-social"></use></svg>
+                        </a>
+                    {{/if}}
+                    <a class="tb-social-link" href="{{@site.url}}/rss/" aria-label="RSS feed">
+                        <svg class="tb-icon" aria-hidden="true"><use href="#tb-rss"></use></svg>
+                    </a>
+                </div>
+            </div>
+
+            {{#if @site.secondary_navigation}}
+                <nav aria-label="Secondary">
+                    <h2 class="tb-footer__head">Elsewhere</h2>
+                    <ul class="tb-footer__links">
+                        {{#foreach @site.secondary_navigation}}
+                            <li><a href="{{url absolute="true"}}">{{label}}</a></li>
+                        {{/foreach}}
+                    </ul>
+                </nav>
+            {{/if}}
+
+            {{#if @site.members_enabled}}
+                <div>
+                    <h2 class="tb-footer__head">Subscribe</h2>
+                    <p class="tb-footer__tag">New posts, straight to your inbox.</p>
+                    <a class="tb-btn tb-btn--primary tb-btn--sm tb-mt-3" href="#/portal/signup">Sign up free</a>
+                </div>
+            {{/if}}
+        </div>
+
+        <div class="tb-footer__signoff">
+            <span>
+                © {{date format="YYYY"}} {{@site.title}}.
+                {{!-- The credit is appreciated, not required — the theme is MIT. --}}
+                Built with <a href="https://ghost.org" rel="noopener">Ghost</a> and the
+                <a href="https://trailblazer.imswarnil.com" rel="noopener">Trailblazer</a> theme.
+            </span>
+            <a href="#main">Back to top</a>
+        </div>
+
+    </div>
+</footer>

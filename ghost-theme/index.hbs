@@ -1,0 +1,24 @@
+{{!< default}}
+{{!--
+  INDEX — the numbered post list, Trailblazer's signature shape: an index
+  with chapter marks, not another card deck. Serves the home page and every
+  paginated page after it.
+--}}
+
+<div class="tb-container">
+    <section class="tb-hero tb-hero--statement tb-pattern tb-pattern-grid-fade">
+        <p class="tb-hero__eyebrow">{{#if @site.description}}{{@site.description}}{{else}}Writing{{/if}}</p>
+        <h1 class="tb-hero__title">{{@site.title}}</h1>
+        {{#if @site.cover_image}}{{!-- The cover stays a statement, not a banner — the words are the hero. --}}{{/if}}
+    </section>
+</div>
+
+<div class="tb-container tb-section">
+    <ol class="tb-numbered">
+        {{#foreach posts}}
+            {{> "post-row"}}
+        {{/foreach}}
+    </ol>
+
+    {{pagination}}
+</div>

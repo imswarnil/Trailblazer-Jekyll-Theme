@@ -161,6 +161,15 @@ docs/            the documentation you are reading a summary of
 - Jekyll 3.9 or 4.x
 - No Node, no bundler-for-JS, no build step beyond Jekyll itself
 
+## Not on Jekyll?
+
+There is a native **Ghost CMS** port of the same design system in
+[`ghost-theme/`](ghost-theme/) — same tokens, navbar island with the
+reading-progress ring, numbered index and navy code slabs, driven entirely
+from Ghost Admin. Zip the folder, upload it in **Settings → Design**, done.
+It passes gscan for Ghost 5.x/6.x and shares this repository's MIT licence.
+See [`ghost-theme/README.md`](ghost-theme/README.md).
+
 ## Browser support
 
 The two most recent versions of Chrome, Edge, Firefox and Safari. The theme

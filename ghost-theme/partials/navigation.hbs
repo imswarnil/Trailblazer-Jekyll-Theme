@@ -1,0 +1,17 @@
+{{!--
+  NAVIGATION
+  Rendered by the {{navigation}} helper from Settings → Navigation, so the
+  menu is the publisher's to edit without touching a template. One list in
+  the markup; the mobile drawer is the same list re-flowed by CSS, which is
+  the only way the two can never drift.
+
+  The current page is marked with aria-current and the stylesheet draws a
+  small cloud beside it — the theme's mark doing the job of an active dot.
+--}}
+<ul class="tb-navbar__nav">
+    {{#foreach navigation}}
+        <li>
+            <a class="tb-navbar__link" href="{{url absolute="true"}}"{{#if current}} aria-current="page"{{/if}}>{{label}}</a>
+        </li>
+    {{/foreach}}
+</ul>

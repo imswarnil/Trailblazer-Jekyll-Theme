@@ -1,0 +1,29 @@
+{{!--
+  BYLINE CARD — the author under the article, from the Ghost author profile:
+  picture, bio, website and the socials Ghost stores. Rendered inside a
+  {{#primary_author}} block, so every field here is the author's.
+--}}
+<aside class="tb-author">
+    {{#if profile_image}}
+        <img class="tb-author__avatar" src="{{img_url profile_image size="xs"}}" alt="" width="56" height="56" loading="lazy">
+    {{/if}}
+    <div>
+        <p class="tb-author__name"><a class="tb-author__link" href="{{url}}">{{name}}</a></p>
+        {{#if bio}}<p class="tb-author__bio">{{bio}}</p>{{/if}}
+        <p class="tb-cluster-sm tb-mt-3">
+            {{#if website}}
+                <a class="tb-btn tb-btn--soft tb-btn--sm" href="{{website}}" rel="noopener" target="_blank">Website</a>
+            {{/if}}
+            {{#if twitter}}
+                <a class="tb-social-link" href="{{social_url type="twitter"}}" rel="noopener" target="_blank" aria-label="{{name}} on X (opens in a new tab)">
+                    <svg class="tb-icon" aria-hidden="true"><use href="#tb-x-social"></use></svg>
+                </a>
+            {{/if}}
+            {{#if facebook}}
+                <a class="tb-social-link" href="{{social_url type="facebook"}}" rel="noopener" target="_blank" aria-label="{{name}} on Facebook (opens in a new tab)">
+                    <svg class="tb-icon" aria-hidden="true"><use href="#tb-facebook"></use></svg>
+                </a>
+            {{/if}}
+        </p>
+    </div>
+</aside>

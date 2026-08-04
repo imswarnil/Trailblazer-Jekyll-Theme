@@ -1,0 +1,91 @@
+{{!< default}}
+{{!--
+  POST — the reading page. A prose column at measure, the SLDS-navy code
+  blocks, Ghost's own Koenig cards styled to match, and the byline card
+  under the article. Members gating, comments and search all come from
+  Ghost itself; the theme only dresses them.
+--}}
+{{#post}}
+<article class="tb-container-prose tb-section {{post_class}}">
+
+    <header class="tb-post__header">
+        <p class="tb-cluster-sm">
+            {{#primary_tag}}
+                <a class="tb-badge tb-badge--accent" href="{{url}}">{{name}}</a>
+            {{/primary_tag}}
+            {{#if featured}}<span class="tb-badge tb-badge--craft">Featured</span>{{/if}}
+        </p>
+
+        <h1 class="tb-post__title">{{title}}</h1>
+
+        {{#if custom_excerpt}}
+            <p class="tb-post__lead">{{custom_excerpt}}</p>
+        {{/if}}
+
+        <div class="tb-post__meta">
+            <span>
+                <svg class="tb-icon" aria-hidden="true"><use href="#tb-calendar"></use></svg>
+                <time datetime="{{date format="YYYY-MM-DD"}}">{{date format="MMMM D, YYYY"}}</time>
+            </span>
+            <span class="tb-post__meta-sep" aria-hidden="true">·</span>
+            <span>
+                <svg class="tb-icon" aria-hidden="true"><use href="#tb-clock"></use></svg>
+                {{reading_time}}
+            </span>
+            {{#foreach tags from="2"}}
+                <span class="tb-post__meta-sep" aria-hidden="true">·</span>
+                <a href="{{url}}">{{name}}</a>
+            {{/foreach}}
+        </div>
+    </header>
+
+    {{#if feature_image}}
+        <figure class="tb-post__cover">
+            <img src="{{img_url feature_image size="l"}}"
+                 srcset="{{img_url feature_image size="m"}} 640w, {{img_url feature_image size="l"}} 1024w, {{img_url feature_image size="xl"}} 1600w"
+                 sizes="(max-width: 48rem) 100vw, 704px"
+                 alt="{{#if feature_image_alt}}{{feature_image_alt}}{{/if}}"
+                 loading="eager" decoding="async">
+            {{#if feature_image_caption}}
+                <figcaption>{{{feature_image_caption}}}</figcaption>
+            {{/if}}
+        </figure>
+    {{/if}}
+
+    {{!-- gh-content is what Koenig card CSS keys off; tb-prose is the measure. --}}
+    <div class="tb-prose gh-content" data-tb-article>
+        {{content}}
+    </div>
+
+    <footer class="tb-post__footer">
+        {{#if @custom.show_author_card}}
+            {{#primary_author}}
+                {{> "byline"}}
+            {{/primary_author}}
+        {{/if}}
+
+        <nav class="tb-post__nav" aria-label="More posts">
+            {{#prev_post}}
+                <a class="tb-post__nav-item" href="{{url}}" rel="prev">
+                    <span class="tb-post__nav-dir">← Previous</span>
+                    <span class="tb-post__nav-title">{{title}}</span>
+                </a>
+            {{/prev_post}}
+            {{#next_post}}
+                <a class="tb-post__nav-item tb-post__nav-item--next" href="{{url}}" rel="next">
+                    <span class="tb-post__nav-dir">Next →</span>
+                    <span class="tb-post__nav-title">{{title}}</span>
+                </a>
+            {{/next_post}}
+        </nav>
+
+        {{!-- Ghost-native comments, if enabled in Settings → Membership. --}}
+        {{#if comments}}
+            <section aria-label="Comments">
+                {{comments}}
+            </section>
+        {{/if}}
+    </footer>
+
+</article>
+{{/post}}

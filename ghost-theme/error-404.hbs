@@ -1,0 +1,16 @@
+{{!< default}}
+{{!--
+  404 — the link was probably right once. Offer the routes someone who
+  mistyped a URL actually wants, rather than an apology.
+--}}
+<div class="tb-container">
+    <section class="tb-hero tb-hero--statement tb-pattern tb-pattern-grid-fade">
+        <p class="tb-hero__eyebrow">404</p>
+        <h1 class="tb-hero__title">That page has moved on.</h1>
+        <p class="tb-hero__lead">Here is everything that definitely exists.</p>
+        <div class="tb-hero__actions">
+            <a class="tb-btn tb-btn--primary tb-btn--lg" href="{{@site.url}}">Back to the front page</a>
+            <button type="button" class="tb-btn tb-btn--ghost tb-btn--lg" data-ghost-search>Search instead</button>
+        </div>
+    </section>
+</div>

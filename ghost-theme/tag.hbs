@@ -1,0 +1,26 @@
+{{!< default}}
+{{!--
+  TAG — the archive of one tag: its name, its description if the publisher
+  wrote one, its count, and the same numbered index the home page uses.
+--}}
+{{#tag}}
+<div class="tb-container">
+    <section class="tb-hero tb-hero--minimal">
+        <p class="tb-hero__eyebrow">Tag</p>
+        <h1 class="tb-hero__title">{{name}}</h1>
+        <p class="tb-hero__lead">
+            {{#if description}}{{description}}{{else}}Everything filed under “{{name}}”.{{/if}}
+        </p>
+    </section>
+</div>
+{{/tag}}
+
+<div class="tb-container tb-section">
+    <ol class="tb-numbered">
+        {{#foreach posts}}
+            {{> "post-row"}}
+        {{/foreach}}
+    </ol>
+
+    {{pagination}}
+</div>

@@ -1,0 +1,72 @@
+{
+  "name": "trailblazer-ghost",
+  "description": "Trailblazer for Ghost — the Salesforce-developer theme, ported. Token-first design, numbered post index, SLDS-navy code blocks, and a navbar that wears your reading progress as a ring.",
+  "version": "1.0.0",
+  "engines": {
+    "ghost": ">=5.0.0"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Swarnil Singhai",
+    "email": "swarnilsinghaicse@gmail.com",
+    "url": "https://trailblazer.imswarnil.com"
+  },
+  "keywords": [
+    "ghost",
+    "theme",
+    "ghost-theme",
+    "salesforce",
+    "developer",
+    "blog"
+  ],
+  "config": {
+    "posts_per_page": 8,
+    "image_sizes": {
+      "xs": { "width": 160 },
+      "s": { "width": 320 },
+      "m": { "width": 640 },
+      "l": { "width": 1024 },
+      "xl": { "width": 1600 }
+    },
+    "card_assets": true,
+    "custom": {
+      "navigation_layout": {
+        "type": "select",
+        "options": ["island", "full"],
+        "default": "island",
+        "description": "Island floats a rounded pill inside the page; Full welds an edge-to-edge bar."
+      },
+      "color_scheme": {
+        "type": "select",
+        "options": ["system", "light", "dark"],
+        "default": "system",
+        "description": "The default before a reader touches the toggle. Their choice is remembered."
+      },
+      "show_reading_progress": {
+        "type": "boolean",
+        "default": true,
+        "description": "An accent ring (island) or hairline (full) that fills as the page scrolls."
+      },
+      "cta_text": {
+        "type": "text",
+        "default": "Subscribe",
+        "description": "The header button's label. Empty hides the button."
+      },
+      "cta_url": {
+        "type": "text",
+        "default": "#/portal/signup",
+        "description": "Where the header button goes. The default opens Ghost's signup portal."
+      },
+      "footer_tagline": {
+        "type": "text",
+        "default": "Built with Ghost and a lot of opinions about spacing.",
+        "description": "One line under the footer logo."
+      },
+      "show_author_card": {
+        "type": "boolean",
+        "default": true,
+        "description": "The author byline card under every post."
+      }
+    }
+  }
+}

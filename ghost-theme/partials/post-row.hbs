@@ -1,0 +1,34 @@
+{{!--
+  ONE ROW of the numbered index. The number comes from a CSS counter on the
+  list (so pagination page 2 restarts at 01, honestly — it is an index of
+  this page), the
+  thumbnail from the feature image (hidden below the fold point — at phone
+  width the column is for words), and the whole row is one tab stop: the
+  link lives on the title and stretches over the row.
+--}}
+<li class="tb-numbered__item">
+    <span class="tb-numbered__num" aria-hidden="true"></span>
+    <div class="tb-numbered__body">
+        <h2 class="tb-numbered__heading">
+            <a class="tb-numbered__title" href="{{url}}">{{title}}</a>
+        </h2>
+        {{#if custom_excerpt}}
+            <p class="tb-numbered__excerpt">{{custom_excerpt}}</p>
+        {{else}}
+            <p class="tb-numbered__excerpt">{{excerpt words="30"}}</p>
+        {{/if}}
+        <p class="tb-numbered__meta">
+            <span>{{date format="MMM D, YYYY"}}</span>
+            <span>{{reading_time}}</span>
+            {{#primary_tag}}<span>{{name}}</span>{{/primary_tag}}
+            {{#if access}}{{else}}<span class="tb-badge tb-badge--accent">Members</span>{{/if}}
+        </p>
+    </div>
+    {{#if feature_image}}
+        <span class="tb-numbered__media" aria-hidden="true">
+            <img src="{{img_url feature_image size="s"}}"
+                 srcset="{{img_url feature_image size="s"}} 320w, {{img_url feature_image size="m"}} 640w"
+                 sizes="140px" alt="" loading="lazy" decoding="async">
+        </span>
+    {{/if}}
+</li>

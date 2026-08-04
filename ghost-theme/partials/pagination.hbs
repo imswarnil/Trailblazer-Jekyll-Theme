@@ -1,0 +1,32 @@
+{{!--
+  PAGINATION — numbers, not "load more". A reader who arrives on page 3 from
+  a search result needs page 3 to be a URL, and Ghost's pagination object
+  gives us everything but the loop.
+--}}
+{{#match pages ">" 1}}
+<nav class="tb-pagination" aria-label="Pagination">
+    {{#if prev}}
+        <a class="tb-pagination__link" rel="prev" href="{{page_url prev}}">
+            <svg class="tb-icon" aria-hidden="true"><use href="#tb-arrow-left"></use></svg>
+            <span class="tb-sr-only">Previous page</span>
+        </a>
+    {{else}}
+        <span class="tb-pagination__link" aria-disabled="true">
+            <svg class="tb-icon" aria-hidden="true"><use href="#tb-arrow-left"></use></svg>
+        </span>
+    {{/if}}
+
+    <span class="tb-pagination__state">Page {{page}} of {{pages}}</span>
+
+    {{#if next}}
+        <a class="tb-pagination__link" rel="next" href="{{page_url next}}">
+            <svg class="tb-icon" aria-hidden="true"><use href="#tb-arrow-right"></use></svg>
+            <span class="tb-sr-only">Next page</span>
+        </a>
+    {{else}}
+        <span class="tb-pagination__link" aria-disabled="true">
+            <svg class="tb-icon" aria-hidden="true"><use href="#tb-arrow-right"></use></svg>
+        </span>
+    {{/if}}
+</nav>
+{{/match}}
