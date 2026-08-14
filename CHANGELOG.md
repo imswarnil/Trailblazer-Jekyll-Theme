@@ -6,6 +6,8 @@ has to change something.
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-08-15
+
 ### Documentation
 
 - Prev / next pagination under every guide, driven by `_data/docs_nav.yml` —
