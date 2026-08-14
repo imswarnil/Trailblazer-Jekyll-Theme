@@ -1,0 +1,84 @@
+# =============================================================================
+# Release — runs when a version tag (v1.2.3) is pushed.
+#
+# What it does, in order:
+#   1. Refuses to run if the tag does not match the gemspec version.
+#   2. Rebuilds and re-verifies everything CI checks.
+#   3. Packages the gem and the marketplace zip (scripts/package.sh).
+#   4. Creates the GitHub release, with the tag's CHANGELOG section as the
+#      body and both artifacts attached.
+#   5. Publishes the gem to RubyGems — if the RUBYGEMS_API_KEY secret exists.
+#      Without it the step is skipped loudly, and everything else still works.
+#
+# The cycle that leads here:  bin/release 1.2.3  →  git push && git push --tags
+# =============================================================================
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Tag must match the gemspec
+        run: |
+          GEM_VERSION=$(ruby -e 'print Gem::Specification.load("trailblazer-jekyll-theme.gemspec").version')
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$GEM_VERSION" != "$TAG_VERSION" ]; then
+            echo "tag $GITHUB_REF_NAME but gemspec says $GEM_VERSION — run bin/release"; exit 1
+          fi
+
+      - name: Verify the demo builds
+        run: bundle exec jekyll build
+        env:
+          JEKYLL_ENV: production
+
+      - name: Build the gem and the marketplace zip
+        run: |
+          gem build trailblazer-jekyll-theme.gemspec
+          ./scripts/package.sh "${GITHUB_REF_NAME#v}"
+
+      # Pull this version's section out of the changelog for the release body:
+      # everything between "## [X.Y.Z]" and the next "## [" heading.
+      - name: Extract release notes
+        run: |
+          awk -v ver="${GITHUB_REF_NAME#v}" '
+            $0 ~ "^## \\[" ver "\\]" {on=1; next}
+            on && /^## \[/ {exit}
+            on {print}
+          ' CHANGELOG.md > RELEASE_NOTES.md
+          test -s RELEASE_NOTES.md || echo "See CHANGELOG.md." > RELEASE_NOTES.md
+
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "Trailblazer $GITHUB_REF_NAME" \
+            --notes-file RELEASE_NOTES.md \
+            trailblazer-jekyll-theme-*.gem \
+            dist/trailblazer-jekyll-theme-*.zip
+
+      - name: Publish to RubyGems
+        env:
+          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+        run: |
+          if [ -z "$GEM_HOST_API_KEY" ]; then
+            echo "::warning::RUBYGEMS_API_KEY secret not set — gem NOT published."
+            echo "Add it under Settings → Secrets and variables → Actions,"
+            echo "then re-run this job, or push manually: gem push trailblazer-jekyll-theme-*.gem"
+            exit 0
+          fi
+          gem push trailblazer-jekyll-theme-*.gem

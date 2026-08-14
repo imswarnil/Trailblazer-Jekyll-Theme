@@ -4,9 +4,47 @@ Notable changes to the Trailblazer theme. Versions follow
 [semantic versioning](https://semver.org): a major bump means a site upgrading
 has to change something.
 
-## [1.0.0] — 2026-08-04
+## [Unreleased]
+
+## [1.0.0] — 2026-08-15
 
 First release.
+
+### Packaging and developer experience
+
+- `starter/` — a complete minimal site that installs the theme as a gem: every
+  config key present with placeholders, stub `_data` files, one disposable
+  post, an index page per collection, the search palette, a 404 and the
+  GitHub Pages deploy workflow. Verified to build against the packaged gem.
+- The gem no longer packages `_data` (Jekyll does not read data files from a
+  theme gem, and shipping it only bundled the demo persona's resume).
+- `Rakefile` with `rake gem:build`, `rake gem:release` and `rake check`.
+- `package.json` with npm wrappers over the Ruby toolchain — `npm run dev`,
+  `build`, `check:css`, `gem:build` — for people who live in npm. Node
+  remains optional; nothing in the theme depends on it.
+- `scripts/css-smoke.scss` — the SCSS framework smoke test, runnable outside
+  Jekyll.
+- A drawn SVG banner in `.github/media/` fronting the README, plus README
+  sections for the starter, the gem install and the npm scripts.
+- Dropped the open-ended bundler development dependency, which conflicted
+  with Bundler 4.
+
+### Release engineering
+
+- CI workflow (`.github/workflows/ci.yml`): every push and pull request
+  builds the demo in production mode, compiles the SCSS framework standalone,
+  packages the gem, checks no demo content leaked into it, and builds the
+  starter against the packaged theme.
+- Release workflow (`.github/workflows/release.yml`): pushing a `v*` tag
+  verifies the tag matches the gemspec, publishes the gem to RubyGems (when
+  the `RUBYGEMS_API_KEY` secret is set), extracts that version's CHANGELOG
+  section, and creates a GitHub release with the gem and the marketplace zip
+  attached.
+- `bin/release <version>` mechanises the cycle: bumps gemspec and
+  package.json, rolls the Unreleased changelog section, commits and tags.
+- `scripts/package.sh` builds `dist/trailblazer-jekyll-theme-<v>.zip` — the
+  clean tracked tree, which is the Envato "Main File(s)" upload and the
+  Gumroad / Lemon Squeezy download.
 
 ### Design system
 

@@ -488,3 +488,10 @@ exclude:
   - LICENSE
   - .jekyll-cache
   - ghost-theme # the Ghost CMS port lives beside the Jekyll theme; never build it
+  - starter     # the buyer's skeleton site — its pages would collide with the demo's
+  - scripts
+  - package.json
+  - Rakefile
+  - RELEASING.md
+  - "*.gem"
+  - dist

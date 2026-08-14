@@ -1,0 +1,20 @@
+{
+  "name": "trailblazer-jekyll-theme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dev-convenience scripts for the Trailblazer Jekyll theme. The theme itself needs no Node — these wrap the Ruby toolchain so `npm run dev` works for people who live in npm.",
+  "scripts": {
+    "setup": "./bin/setup",
+    "dev": "./bin/serve",
+    "start": "./bin/serve",
+    "build": "./bin/build",
+    "check:css": "npx --yes sass@1.77.8 --no-source-map --load-path=_sass --stdin --style=compressed < scripts/css-smoke.scss > /dev/null && echo 'SCSS compiles clean.'",
+    "gem:build": "gem build trailblazer-jekyll-theme.gemspec",
+    "gem:release": "gem push trailblazer-jekyll-theme-$npm_package_version.gem"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/imswarnil/trailblazer-jekyll-theme.git"
+  },
+  "license": "MIT"
+}

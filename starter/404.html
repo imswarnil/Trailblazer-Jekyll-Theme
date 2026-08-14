@@ -1,0 +1,19 @@
+---
+title: Page not found
+permalink: /404.html
+noindex: true
+search: false
+sitemap: false
+hero_style: statement
+hero_eyebrow: 404
+hero_title: That page has moved on.
+hero_lead: >-
+  The link was probably right once. Here is everything that definitely exists.
+hero_actions:
+  - { label: Go to the blog, url: /blog/, style: primary }
+  - { label: Browse the archive, url: /archive/, style: ghost }
+---
+<div class="tb-container tb-section">
+  {%- assign recent = site.posts | slice: 0, 3 -%}
+  {%- include collection-list.html items=recent style="deck" -%}
+</div>

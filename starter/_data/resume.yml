@@ -1,0 +1,58 @@
+# =============================================================================
+# RESUME — everything /resume/ renders, minus the certifications (those live
+# in certifications.yml, because the sidebar widget and the JSON-LD read them
+# too).
+#
+# The page prints onto A4 without a PDF export. Keep bullets to one line each;
+# three or four per role is the shape that survives the page break.
+# =============================================================================
+
+# The line under the name. One sentence; the reader is skimming.
+summary: >-
+  One sentence that says what you do, how long you have done it, and what
+  kind of work you want more of.
+
+# The band under the header. Four is the maximum that reads as a band.
+stats:
+  - value: "5"
+    suffix: yrs
+    label: On platform
+  - value: "3"
+    label: Certifications
+  - value: "12"
+    label: Projects shipped
+
+experience:
+  - role: Your Current Role
+    org: Company Name
+    url: https://example.com
+    from: 2023
+    to: Present
+    current: true
+    location: City · Remote
+    note: One line of context about the team or the org.
+    bullets:
+      - What you built or improved, with a number if you have one.
+      - Another concrete outcome, one line.
+      - A third. Stop at four.
+
+  - role: Your Previous Role
+    org: Previous Company
+    from: 2020
+    to: 2023
+    location: City
+    bullets:
+      - What you did there, one line.
+      - What it changed, one line.
+
+education:
+  - degree: Your Degree
+    school: Your University
+    from: 2016
+    to: 2020
+
+skills:
+  - group: Platform
+    items: [Apex, Lightning Web Components, SOQL, Flow]
+  - group: Around it
+    items: [Git, CI/CD, REST APIs]

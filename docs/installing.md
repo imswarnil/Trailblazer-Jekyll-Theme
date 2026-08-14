@@ -19,6 +19,19 @@ Three ways to use Trailblazer. Pick by how much you expect to change.
 version-tracking a gem buys you is worth less than being able to open a layout
 and change it.
 
+**Going the gem route?** Do not assemble the site by hand — the repository
+ships [`starter/`](https://github.com/imswarnil/trailblazer-jekyll-theme/tree/main/starter),
+a complete minimal site with every config key present, one disposable post,
+an index page per collection and the deploy workflow already in place:
+
+```bash
+cp -r starter my-site && cd my-site
+git init && bundle install
+bundle exec jekyll serve
+```
+
+Its own README walks the fifteen-minute setup.
+
 ---
 
 ## 1. Fork (recommended)
@@ -82,10 +95,14 @@ end
 theme: trailblazer-jekyll-theme
 ```
 
-Then copy the parts of the demo site's `_config.yml` you want — a theme gem
-ships layouts, includes, sass and assets, but **not** configuration, and the
-theme's own `_config.yml` is not read. The collections block in particular has
-to be in your site's config or nothing has a hero style.
+A theme gem ships layouts, includes, sass and assets, but **not**
+configuration — the theme's own `_config.yml` is not read. The collections
+block in particular has to be in your site's config or nothing has a hero
+style. The easiest way to get all of it right is to start from
+[`starter/_config.yml`](https://github.com/imswarnil/trailblazer-jekyll-theme/blob/main/starter/_config.yml),
+which carries every key the theme reads. The same goes for `_data/resume.yml`
+and `_data/certifications.yml` — data files do not come from a gem either;
+the starter ships stubs of both.
 
 ```bash
 bundle install
@@ -153,6 +170,10 @@ bundle exec jekyll serve --drafts   # include _drafts/
 bundle exec jekyll build            # one-off build into _site/
 JEKYLL_ENV=production bundle exec jekyll build   # what CI runs
 ```
+
+If npm is your muscle memory, the repository's `package.json` wraps the same
+toolchain — `npm run dev`, `npm run build`, `npm run check:css`. Node is
+never required; the scripts just call Ruby.
 
 Two things worth knowing:
 

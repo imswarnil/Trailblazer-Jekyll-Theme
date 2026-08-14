@@ -1,0 +1,334 @@
+# =============================================================================
+# YOUR SITE'S CONTROL CENTRE
+#
+# This is the starter config for a site running Trailblazer as a gem. Every
+# key the theme reads is here, set to a sensible default or an obvious
+# placeholder — search for "example" and replace as you go.
+#
+# Jekyll reads this file ONCE at boot. Restart `bundle exec jekyll serve`
+# after editing it — live reload will not pick these changes up.
+#
+# The demo site's fully-commented version of this file is the reference:
+# https://github.com/imswarnil/trailblazer-jekyll-theme/blob/main/_config.yml
+# =============================================================================
+
+theme: trailblazer-jekyll-theme
+
+# ── Identity ─────────────────────────────────────────────────────────────────
+title: Your Name
+tagline: Salesforce developer
+description: >-
+  A Salesforce developer's site — blog, projects, resume and certifications.
+
+# The canonical origin. Every absolute URL — canonical tags, Open Graph, the
+# sitemap, JSON-LD — is built from this. No trailing slash.
+url: https://example.com
+baseurl: ""
+
+lang: en
+locale: en_US
+timezone: Etc/UTC
+
+# ── Author ───────────────────────────────────────────────────────────────────
+author:
+  name: Your Name
+  first_name: Your
+  role: Salesforce Developer
+  headline: One sentence about what you do.
+  avatar: /assets/img/avatar.svg   # ships with the theme; replace with a photo
+  bio: >-
+    Two or three sentences about you. This appears in the author card under
+    every post and in the Person structured data.
+  email: hello@example.com
+  location: Your City
+  # resume_pdf: /assets/files/resume.pdf   # uncomment to show a download button
+  # youtube: https://youtube.com/@you      # powers the Subscribe button on videos
+
+# ── Style ────────────────────────────────────────────────────────────────────
+# One hex regenerates the whole colour ramp — this is the re-branding knob.
+theme_style:
+  accent: "#0176d3"
+  radius_scale: 1
+  default_scheme: system     # light · dark · system
+  fonts:
+    google: true             # false = system font stack, one fewer request
+
+# ── Header ───────────────────────────────────────────────────────────────────
+header:
+  layout: island             # island (floating pill) · full (edge-to-edge bar)
+  sticky: true
+  blur: true
+  brand: both                # both · logo · title
+  search: true
+  dark_toggle: true
+  progress: true
+  cta:
+    label: Hire me
+    url: /about/
+  icon_links:
+    - icon: github
+      url: https://github.com/example
+      label: GitHub
+
+# ── Footer ───────────────────────────────────────────────────────────────────
+footer:
+  layout: columns            # columns · minimal
+  boxed: false
+  tagline: Built with Jekyll and the Trailblazer theme.
+  show_social: true
+  show_collections: true
+  links:
+    - title: About
+      url: /about/
+    - title: Archive
+      url: /archive/
+  legal: []
+
+# ── Navigation ───────────────────────────────────────────────────────────────
+navigation:
+  - title: Home
+    url: /
+    icon: cloud
+  - title: Blog
+    url: /blog/
+    icon: pen
+  - title: Projects
+    url: /projects/
+    icon: layers
+  - title: Resume
+    url: /resume/
+    icon: badge
+  - title: About
+    url: /about/
+    icon: user
+
+# ── Sharing ──────────────────────────────────────────────────────────────────
+# bluesky · x · linkedin · whatsapp · email · copy — remove a line to drop it.
+sharing:
+  - bluesky
+  - x
+  - linkedin
+  - email
+  - copy
+
+# ── Social ───────────────────────────────────────────────────────────────────
+social:
+  - name: GitHub
+    url: https://github.com/example
+    icon: github
+  - name: LinkedIn
+    url: https://linkedin.com/in/example
+    icon: linkedin
+  - name: RSS
+    url: /feed.xml
+    icon: rss
+
+# ── Collections ──────────────────────────────────────────────────────────────
+# All seven typed collections, ready to use. An empty collection renders an
+# honest empty state on its index page — add a Markdown file and it appears.
+collections:
+  posts:
+    output: true
+    permalink: /blog/:title/
+    index_url: /blog/
+    sidebar: right
+    singular: Post
+    icon: pen
+    schema: BlogPosting
+    hero_style: statement
+    card_style: numbered
+    image: /assets/img/covers/blog.svg
+
+  projects:
+    output: true
+    permalink: /projects/:name/
+    index_url: /projects/
+    sidebar: right
+    singular: Project
+    icon: layers
+    schema: CreativeWork
+    hero_style: split
+    card_style: repo
+    image: /assets/img/covers/projects.svg
+
+  snippets:
+    output: true
+    permalink: /snippets/:name/
+    index_url: /snippets/
+    sidebar: right
+    singular: Snippet
+    icon: code
+    schema: SoftwareSourceCode
+    hero_style: minimal
+    card_style: snippet
+    image: /assets/img/covers/snippets.svg
+
+  talks:
+    output: true
+    permalink: /talks/:name/
+    index_url: /talks/
+    sidebar: right
+    singular: Talk
+    icon: mic
+    schema: CreativeWork
+    hero_style: band
+    card_style: deck
+    image: /assets/img/covers/talks.svg
+
+  videos:
+    output: true
+    permalink: /videos/:name/
+    index_url: /videos/
+    sidebar: right
+    singular: Video
+    icon: play
+    schema: VideoObject
+    hero_style: band
+    card_style: video
+    image: /assets/img/covers/videos.svg
+
+  courses:
+    output: true
+    permalink: /courses/:path/
+    index_url: /courses/
+    sidebar: false
+    singular: Course
+    icon: graduation
+    schema: Course
+    hero_style: statement
+    card_style: deck
+    image: /assets/img/covers/courses.svg
+
+  books:
+    output: true
+    permalink: /books/:name/
+    index_url: /books/
+    sidebar: right
+    singular: Book
+    icon: book
+    schema: Book
+    hero_style: minimal
+    card_style: book
+    image: /assets/img/covers/books.svg
+
+defaults:
+  - scope: { path: "" }
+    values:
+      layout: page
+  # Assets with front matter are still "pages" to Jekyll; without this they
+  # inherit `layout: page` and get wrapped in the site's HTML shell.
+  - scope: { path: "assets" }
+    values:
+      layout: null
+      sitemap: false
+  - scope: { path: "", type: posts }
+    values:
+      layout: post
+      comments: true
+      share: true
+  - scope: { path: "", type: projects }
+    values: { layout: post, share: true }
+  - scope: { path: "", type: snippets }
+    values: { layout: post, comments: false, share: true }
+  - scope: { path: "", type: talks }
+    values: { layout: post, share: true }
+  - scope: { path: "", type: videos }
+    values: { layout: post, share: true }
+  - scope: { path: "", type: courses }
+    values: { layout: course }
+  - scope: { path: "", type: books }
+    values: { layout: post, comments: false, share: true }
+
+# ── Blog pagination ──────────────────────────────────────────────────────────
+paginate: 6
+paginate_path: /blog/page/:num/
+
+# ── SEO ──────────────────────────────────────────────────────────────────────
+seo:
+  default_image: /assets/img/og-default.svg
+  twitter: ""
+  json_ld: true
+  google_site_verification: ""
+  bing_site_verification: ""
+
+# ── Integrations ─────────────────────────────────────────────────────────────
+# Everything is off until you fill it in, and nothing loads outside production.
+integrations:
+  google_analytics: ""
+  google_tag_manager: ""
+  plausible_domain: ""
+  disqus_shortname: ""
+  giscus:
+    repo: ""
+    repo_id: ""
+    category: ""
+    category_id: ""
+  mailchimp_action: ""
+  buttondown_user: ""
+  convertkit_form: ""
+  contact_form_action: ""
+  onesignal_app_id: ""
+
+adsense:
+  client: ""
+  slots:
+    sidebar: ""
+    in_article: ""
+
+# ── PWA ──────────────────────────────────────────────────────────────────────
+pwa:
+  enabled: false
+  name: Your Name
+  short_name: You
+  theme_color: "#0176d3"
+  background_color: "#ffffff"
+  display: standalone
+  precache:
+    - /
+    - /blog/
+
+# ── Reading ──────────────────────────────────────────────────────────────────
+reading:
+  words_per_minute: 220
+  show_reading_time: true
+  show_toc: true
+  excerpt_words: 34
+
+# ── Build ────────────────────────────────────────────────────────────────────
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  toc_levels: 2..3
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+sass:
+  style: compressed
+  sass_dir: _sass
+  sourcemap: never
+  quiet_deps: true
+  silence_deprecations:
+    - import
+    - global-builtin
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-paginate
+
+feed:
+  path: /feed.xml
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+  - node_modules
+  - .jekyll-cache

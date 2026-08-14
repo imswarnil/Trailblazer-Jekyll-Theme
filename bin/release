@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# The release cycle, mechanised:  bin/release 1.2.3
+#
+#   1. Requires a clean working tree on main.
+#   2. Bumps the version in the gemspec and package.json.
+#   3. Rolls CHANGELOG.md: "Unreleased" becomes this version, dated today,
+#      and a fresh empty Unreleased section is opened above it.
+#   4. Commits and tags v<version>.
+#
+# It deliberately does NOT push. Review the commit, then:
+#   git push && git push --tags
+# The tag push triggers .github/workflows/release.yml, which publishes the
+# gem, creates the GitHub release and attaches the marketplace zip.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+VERSION="${1:?usage: bin/release <version, e.g. 1.2.3>}"
+case "$VERSION" in
+  [0-9]*.[0-9]*.[0-9]*) ;;
+  *) echo "✗ '$VERSION' does not look like a semantic version"; exit 1 ;;
+esac
+
+if [ -n "$(git status --porcelain)" ]; then
+  echo "✗ Working tree is not clean — commit or stash first."; exit 1
+fi
+if [ "$(git branch --show-current)" != "main" ]; then
+  echo "✗ Release from main, not $(git branch --show-current)."; exit 1
+fi
+if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+  echo "✗ Tag v$VERSION already exists."; exit 1
+fi
+if ! grep -q '^## \[Unreleased\]' CHANGELOG.md; then
+  echo "✗ CHANGELOG.md has no '## [Unreleased]' section — nothing to release."; exit 1
+fi
+
+TODAY=$(date +%Y-%m-%d)
+
+# Version bumps.
+V="$VERSION" perl -pi -e 's/^(  spec\.version       = )"[^"]*"/$1"$ENV{V}"/' trailblazer-jekyll-theme.gemspec
+V="$VERSION" perl -pi -e 's/^(  "version": )"[^"]*"/$1"$ENV{V}"/' package.json
+
+# Roll the changelog: open a fresh Unreleased section above this version.
+V="$VERSION" D="$TODAY" perl -pi -e 's/^## \[Unreleased\]$/## [Unreleased]\n\n## [$ENV{V}] — $ENV{D}/' CHANGELOG.md
+
+git add trailblazer-jekyll-theme.gemspec package.json CHANGELOG.md
+git commit -m "Release $VERSION"
+git tag "v$VERSION"
+
+echo ""
+echo "✓ Committed and tagged v$VERSION. Review it, then:"
+echo "    git push && git push --tags"

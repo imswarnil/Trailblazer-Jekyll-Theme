@@ -1,0 +1,5 @@
+// SCSS smoke test — compiles the whole framework outside Jekyll.
+// Mirrors what assets/css/main.scss does with Liquid: define the config-driven
+// variables, then import the framework. Run via `npm run check:css`.
+$tb-accent: #0176d3;
+@import "trailblazer/index";

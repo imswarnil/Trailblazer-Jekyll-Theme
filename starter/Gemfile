@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+source "https://rubygems.org"
+
+# The theme, from RubyGems.
+gem "trailblazer-jekyll-theme", "~> 1.0"
+
+# If you bought the theme as a download instead, point at the folder:
+# gem "trailblazer-jekyll-theme", path: "../trailblazer-jekyll-theme"
+
+group :jekyll_plugins do
+  gem "jekyll-feed",     "~> 0.17"
+  gem "jekyll-sitemap",  "~> 1.4"
+  gem "jekyll-paginate", "~> 1.1"
+end
+
+# Dart Sass converter (Jekyll 4).
+gem "jekyll-sass-converter", "~> 3.0"
+
+# Required on Ruby 3.0+, where WEBrick left the standard library.
+gem "webrick", "~> 1.8"
+
+# Timezone data where the OS has no tz database.
+gem "tzinfo-data", platforms: [:windows, :jruby]
+
+# Directory watcher for `jekyll serve --watch` on Windows.
+gem "wdm", "~> 0.1", platforms: [:windows]

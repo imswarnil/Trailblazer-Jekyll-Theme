@@ -4,7 +4,7 @@ Gem::Specification.new do |spec|
   spec.name          = "trailblazer-jekyll-theme"
   spec.version       = "1.0.0"
   spec.authors       = ["Swarnil Singhai"]
-  spec.email         = ["hello@example.com"]
+  spec.email         = ["swarnilsinghaicse@gmail.com"]
 
   spec.summary       = "A Jekyll theme for Salesforce developers."
   spec.description   = <<~DESC
@@ -31,9 +31,10 @@ Gem::Specification.new do |spec|
   # Only the theme's own directories. A gem that also ships the demo site would
   # drop seven posts and a resume about someone else into a buyer's build the
   # moment they install it — the demo content lives in the repository, not in
-  # the package.
+  # the package. `_data` stays out too: Jekyll does not read data files from a
+  # theme gem, so shipping it would only package the demo persona's resume.
   spec.files = Dir.glob(
-    "{_data,_includes,_layouts,_sass,assets}/**/*",
+    "{_includes,_layouts,_sass,assets}/**/*",
     File::FNM_DOTMATCH
   ).reject { |f| File.directory?(f) } + %w[
     LICENSE
@@ -52,6 +53,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "jekyll-paginate", "~> 1.1"
   spec.add_runtime_dependency "jekyll-sitemap", "~> 1.4"
 
-  spec.add_development_dependency "bundler", ">= 2.0"
   spec.add_development_dependency "rake", "~> 13.0"
 end

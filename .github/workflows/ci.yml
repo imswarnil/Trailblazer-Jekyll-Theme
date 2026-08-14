@@ -1,0 +1,94 @@
+# =============================================================================
+# CI — runs on every push and pull request.
+#
+# Three jobs, mirroring the three things a release must never break:
+#   demo     the demo site builds in production mode and its key pages exist
+#   scss     the SCSS framework compiles on its own, outside Jekyll
+#   gem      the gem packages, and the starter site builds against that gem —
+#            which is exactly what a buyer's first `bundle install` does
+# =============================================================================
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  demo:
+    name: Demo site builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Production build
+        run: bundle exec jekyll build
+        env:
+          JEKYLL_ENV: production
+
+      # jekyll build exits 0 even when a Liquid error leaves a page
+      # half-rendered — check the pages that must exist actually do.
+      - name: Check the build
+        run: |
+          set -e
+          for path in index.html blog/index.html resume/index.html \
+                      sitemap.xml feed.xml robots.txt assets/css/main.css; do
+            test -s "_site/$path" || { echo "missing or empty: $path"; exit 1; }
+          done
+
+  scss:
+    name: SCSS compiles standalone
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile the framework
+        run: |
+          npx --yes sass@1.77.8 --no-source-map --load-path=_sass \
+            --style=compressed scripts/css-smoke.scss /dev/null
+
+  gem:
+    name: Gem packages · starter builds against it
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Build the gem
+        run: gem build trailblazer-jekyll-theme.gemspec
+
+      # The gem must ship only the theme — a package that includes the demo
+      # site drops someone else's posts into every buyer's build.
+      - name: Check the package contents
+        run: |
+          set -e
+          tar -xOf trailblazer-jekyll-theme-*.gem data.tar.gz | tar -tz > /tmp/contents.txt
+          if grep -E '^(_posts|_data|docs|starter|_projects|_snippets)/' /tmp/contents.txt; then
+            echo "demo content leaked into the gem"; exit 1
+          fi
+          grep -q '^_layouts/default.html$' /tmp/contents.txt
+          grep -q '^assets/css/main.scss$'  /tmp/contents.txt
+
+      # Build the starter the way a buyer would, with the local checkout
+      # standing in for RubyGems.
+      - name: Build the starter against the gem
+        run: |
+          set -e
+          cp -r starter /tmp/starter-site
+          cd /tmp/starter-site
+          sed -i 's|^gem "trailblazer-jekyll-theme".*|gem "trailblazer-jekyll-theme", path: "'"$GITHUB_WORKSPACE"'"|' Gemfile
+          bundle install
+          JEKYLL_ENV=production bundle exec jekyll build
+          for path in index.html blog/index.html resume/index.html \
+                      sitemap.xml feed.xml search.json assets/css/main.css; do
+            test -s "_site/$path" || { echo "missing or empty: $path"; exit 1; }
+          done
+          # No half-rendered Liquid anywhere in the output.
+          ! grep -rl '{% \|{{ site\.' _site --include='*.html'

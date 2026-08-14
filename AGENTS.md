@@ -73,6 +73,8 @@ npx --yes sass@1.77.8 --no-source-map --load-path=_sass \
 | `_includes/integrations/` | one file per third party, each behind its own guard |
 | `_includes/icons.svg` | the sprite, inlined once per page |
 | `docs/` | the documentation; excluded from the build |
+| `starter/` | the buyer's skeleton site (gem install); excluded from the build, verified against the packaged gem |
+| `package.json`, `scripts/` | optional npm wrappers over the Ruby toolchain — never a real dependency |
 
 ## House rules of the CSS
 

@@ -1,0 +1,27 @@
+# =============================================================================
+# CERTIFICATIONS — the seal wall on /resume/, the sidebar widget, and the
+# hasCredential block in the Person structured data. One file, three surfaces.
+#
+#   short     2–4 characters — the acronym inside the seal. It does not grow.
+#   name      the full title, spelled the way the issuer spells it
+#   issuer    who awarded it
+#   year      when it was earned (not renewed)
+#   url       the public verification page; omit and it renders as plain text
+#   color     the shield's enamel; omit and it takes the theme accent
+#   featured  true pulls it to the front. Two or three at most.
+# =============================================================================
+
+- short: PDI
+  color: "#3b5bdb"
+  name: Platform Developer I
+  issuer: Salesforce
+  year: 2023
+  url: https://example.com/verify
+  featured: true
+
+- short: ADM
+  color: "#0c8599"
+  name: Administrator
+  issuer: Salesforce
+  year: 2022
+  url: https://example.com/verify

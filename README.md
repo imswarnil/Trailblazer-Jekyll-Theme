@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/img/logo.svg" width="72" height="72" alt="">
+<img src=".github/media/banner.svg" alt="Trailblazer — a Jekyll theme for Salesforce developers" width="100%">
 
 # Trailblazer
 
@@ -100,6 +100,42 @@ To make it yours, edit four things:
 
 Full instructions: **[docs/installing.md](docs/installing.md)**.
 
+### Prefer a clean slate?
+
+[`starter/`](starter/) is a complete minimal site that installs the theme as a
+gem — no demo content to delete, every config key present with an obvious
+placeholder, and the deploy workflow already in place:
+
+```bash
+cp -r starter my-site && cd my-site
+git init && bundle install
+bundle exec jekyll serve
+```
+
+Or add the gem to an existing Jekyll site:
+
+```ruby
+# Gemfile
+gem "trailblazer-jekyll-theme", "~> 1.0"
+```
+
+```yaml
+# _config.yml
+theme: trailblazer-jekyll-theme
+```
+
+### Live in npm? Same commands, different spelling
+
+The theme needs no Node — but if `npm run dev` is muscle memory, the repo
+ships a `package.json` whose scripts wrap the Ruby toolchain:
+
+```bash
+npm run setup       # one-command local setup (checks Ruby, installs gems)
+npm run dev         # serve with live reload at localhost:4000
+npm run build       # production build into _site/
+npm run check:css   # compile the whole SCSS framework outside Jekyll
+```
+
 ## Deploying to GitHub Pages
 
 Two routes, both documented step by step in
@@ -138,7 +174,13 @@ _layouts/        default, home, page, post, resume, archive
 _sass/           the framework: tokens → base → layout → components → utilities
 assets/          one stylesheet, one script, the icon sprite, the artwork
 docs/            the documentation you are reading a summary of
+starter/         a minimal gem-powered site, ready to copy out and own
 ```
+
+The gem (`gem build trailblazer-jekyll-theme.gemspec`, or `rake gem:build`)
+packages only `_includes`, `_layouts`, `_sass` and `assets` — the demo
+content stays in the repository, so installing the theme never drops someone
+else's posts into your site.
 
 ## Documentation
 
@@ -160,6 +202,7 @@ docs/            the documentation you are reading a summary of
 - Ruby 2.7 or newer
 - Jekyll 3.9 or 4.x
 - No Node, no bundler-for-JS, no build step beyond Jekyll itself
+  (the `package.json` is optional convenience, not a dependency)
 
 ## Not on Jekyll?
 

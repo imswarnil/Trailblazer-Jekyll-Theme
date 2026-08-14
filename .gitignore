@@ -12,6 +12,10 @@ vendor/
 Gemfile.lock
 **/Gemfile.lock
 
+# Built gem packages and marketplace zips
+*.gem
+dist/
+
 # OS / editor cruft
 .DS_Store
 *.log
