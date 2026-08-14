@@ -1,0 +1,49 @@
+{%- comment -%}
+  DOCS PAGINATION
+  Previous / next tiles under every guide, in the reading order declared in
+  _data/docs_nav.yml. Groups marked `aside: true` are references, not
+  chapters, and are skipped. Reuses the post-nav tile styles — same shape,
+  same idiom.
+{%- endcomment -%}
+{%- assign flat = "" | split: "" -%}
+{%- for group in site.data.docs_nav -%}
+  {%- unless group.aside -%}
+    {%- assign flat = flat | concat: group.items -%}
+  {%- endunless -%}
+{%- endfor -%}
+
+{%- assign prev_item = nil -%}
+{%- assign next_item = nil -%}
+{%- for item in flat -%}
+  {%- if item.url == page.url -%}
+    {%- assign i = forloop.index0 -%}
+    {%- if forloop.first == false -%}
+      {%- assign j = i | minus: 1 -%}
+      {%- assign prev_item = flat[j] -%}
+    {%- endif -%}
+    {%- if forloop.last == false -%}
+      {%- assign j = i | plus: 1 -%}
+      {%- assign next_item = flat[j] -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if prev_item or next_item %}
+<nav class="tb-post__nav" aria-label="More guides">
+  {%- if prev_item %}
+  <a class="tb-post__nav-item" href="{{ prev_item.url | relative_url }}" rel="prev">
+    <span class="tb-post__nav-dir">← Previous</span>
+    <span class="tb-post__nav-title">{{ prev_item.title }}</span>
+  </a>
+  {%- else %}
+  <span></span>
+  {%- endif %}
+
+  {%- if next_item %}
+  <a class="tb-post__nav-item tb-post__nav-item--next" href="{{ next_item.url | relative_url }}" rel="next">
+    <span class="tb-post__nav-dir">Next →</span>
+    <span class="tb-post__nav-title">{{ next_item.title }}</span>
+  </a>
+  {%- endif %}
+</nav>
+{%- endif -%}

@@ -1,0 +1,54 @@
+# =============================================================================
+# Package — keeps the sale zip continuously built.
+#
+# Every push to main rebuilds dist/trailblazer-jekyll-theme-<version>-<sha>.zip
+# (the folder that is actually sold: demo site + theme + starter + offline
+# HTML/PDF documentation) and uploads it as a workflow artifact, so the
+# latest sellable state is always one download away — Actions → Package →
+# the run's artifact. Tagged releases get the canonical copy attached by
+# release.yml; this workflow is the running preview between releases.
+# =============================================================================
+name: Package
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Build the demo site
+        run: bundle exec jekyll build
+        env:
+          JEKYLL_ENV: production
+
+      # ubuntu-latest ships Google Chrome, so the PDF builds here even when
+      # it is skipped on machines without Chrome.
+      - name: Build the sale package
+        run: |
+          VERSION=$(ruby -e 'print Gem::Specification.load("trailblazer-jekyll-theme.gemspec").version')
+          ./scripts/package.sh "$VERSION-${GITHUB_SHA::7}"
+
+      - name: Check the documentation built completely
+        run: |
+          set -e
+          ZIP=$(ls dist/trailblazer-jekyll-theme-*.zip)
+          unzip -l "$ZIP" | grep -q "documentation/index.html"
+          unzip -l "$ZIP" | grep -q "documentation/Trailblazer-Documentation.pdf"
+          unzip -l "$ZIP" | grep -q "documentation/nav.json"
+          unzip -l "$ZIP" | grep -q "starter/_config.yml"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sale-package
+          path: dist/*.zip
+          retention-days: 30

@@ -6,6 +6,39 @@ has to change something.
 
 ## [Unreleased]
 
+### Documentation
+
+- Prev / next pagination under every guide, driven by `_data/docs_nav.yml` —
+  the new single source of truth that also renders the docs rail and orders
+  the offline build. Adding a guide is one line in one file.
+- Offline documentation, generated from the rendered site by
+  `scripts/build-docs.rb` + `build-docs.sh` (`npm run docs:build`): a
+  self-contained `documentation/` folder with `index.html` (all guides, one
+  page, sidebar nav), `Trailblazer-Documentation.pdf` (printed by headless
+  Chrome), `nav.json` and the Markdown sources. Ships inside the sale zip.
+- The manual "Next: …" links at the foot of guides are gone; the pagination
+  tiles replaced them.
+
+### Fixed
+
+- **Printing produced blank pages after page one.** Two causes, both in the
+  framework: the page-entrance animation's `both` fill held `<main>` at the
+  `from` keyframe (opacity 0) wherever animations never run, and the body's
+  sideways-overflow clip made Chromium's print engine stop after one page.
+  Print now disables all animation and restores visible overflow — this also
+  fixes multi-page prints of `/resume/`.
+- The full-width navbar no longer gains a drop shadow on scroll. Elevation is
+  the island's idiom; the welded bar now only firms up its bottom hairline.
+
+### Release engineering
+
+- Package workflow (`.github/workflows/package.yml`): every push to main
+  rebuilds the sale zip — demo site, theme, starter and the offline HTML/PDF
+  documentation — and uploads it as a workflow artifact, so the latest
+  sellable state is always one download away.
+- `scripts/package.sh` now stages the tracked tree and builds the
+  documentation into it, instead of zipping the bare tree.
+
 ## [1.0.0] — 2026-08-15
 
 First release.

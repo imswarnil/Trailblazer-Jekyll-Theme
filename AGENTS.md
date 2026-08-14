@@ -72,7 +72,7 @@ npx --yes sass@1.77.8 --no-source-map --load-path=_sass \
 | `_includes/components/` | the Markdown shortcodes |
 | `_includes/integrations/` | one file per third party, each behind its own guard |
 | `_includes/icons.svg` | the sprite, inlined once per page |
-| `docs/` | the documentation; excluded from the build |
+| `docs/` | the documentation; excluded from the build. Order lives in `_data/docs_nav.yml`, which drives the rail, the prev/next pagination AND `scripts/build-docs.rb` (offline HTML + PDF) — add a guide there or it is invisible everywhere |
 | `starter/` | the buyer's skeleton site (gem install); excluded from the build, verified against the packaged gem |
 | `package.json`, `scripts/` | optional npm wrappers over the Ruby toolchain — never a real dependency |
 

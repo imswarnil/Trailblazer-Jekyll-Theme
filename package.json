@@ -9,6 +9,8 @@
     "start": "./bin/serve",
     "build": "./bin/build",
     "check:css": "npx --yes sass@1.77.8 --no-source-map --load-path=_sass --stdin --style=compressed < scripts/css-smoke.scss > /dev/null && echo 'SCSS compiles clean.'",
+    "docs:build": "./scripts/build-docs.sh",
+    "package": "./scripts/package.sh $npm_package_version",
     "gem:build": "gem build trailblazer-jekyll-theme.gemspec",
     "gem:release": "gem push trailblazer-jekyll-theme-$npm_package_version.gem"
   },

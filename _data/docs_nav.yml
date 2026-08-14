@@ -1,0 +1,45 @@
+# =============================================================================
+# DOCS NAVIGATION — the single source of truth for the order of the manual.
+#
+# Read by three consumers, which is the point of it being data:
+#   _includes/docs-nav.html          the left rail on /docs/ pages
+#   _includes/docs-pagination.html   the prev / next tiles under each guide
+#   scripts/build-docs.rb            the offline HTML + PDF documentation
+#
+# `file` is the Markdown source in docs/, used only by the offline build.
+# A group with `aside: true` renders in the rail but is skipped by the
+# pagination and the offline build — for links that are references, not
+# chapters.
+# =============================================================================
+
+- group: Start here
+  items:
+    - { title: Overview,    url: /docs/,             file: README.md }
+    - { title: Installing,  url: /docs/installing/,  file: installing.md }
+    - { title: Deploying,   url: /docs/deploying/,   file: deploying.md }
+
+- group: Build your site
+  items:
+    - { title: Configuring, url: /docs/configuring/, file: configuring.md }
+    - { title: Content,     url: /docs/content/,     file: content.md }
+    - { title: Components,  url: /docs/components/,  file: components.md }
+
+- group: Make it yours
+  items:
+    - { title: Customising, url: /docs/customising/, file: customising.md }
+
+- group: Ship it
+  items:
+    - { title: Integrations, url: /docs/integrations/, file: integrations.md }
+    - { title: SEO,          url: /docs/seo/,          file: seo.md }
+    - { title: PWA,          url: /docs/pwa/,          file: pwa.md }
+
+- group: Help
+  items:
+    - { title: FAQ, url: /docs/faq/, file: faq.md }
+
+- group: Live references
+  aside: true
+  items:
+    - { title: Style guide,     url: /style-guide/ }
+    - { title: Layout showcase, url: /showcase/ }

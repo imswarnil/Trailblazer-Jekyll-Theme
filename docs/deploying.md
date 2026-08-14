@@ -210,6 +210,3 @@ handles `baseurl` correctly — but content you write yourself has to as well:
   confirm the image and title are what you expect.
 - **Turn on analytics** — [integrations.md](/docs/integrations/).
 
----
-
-Next: **[Configuring](/docs/configuring/)**.

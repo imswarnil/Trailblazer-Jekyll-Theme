@@ -32,9 +32,18 @@ layout: default
         {%- endif %}
       </header>
 
+      {%- comment -%}
+        The extract markers bound what scripts/build-docs.rb lifts into the
+        offline HTML + PDF documentation. Regex-proof against nested markup,
+        unlike matching the closing div would be. Do not remove them.
+      {%- endcomment -%}
+      <!-- tb-docs-extract:start -->
       <div class="tb-prose" data-tb-article>
         {{ content }}
       </div>
+      <!-- tb-docs-extract:end -->
+
+      {%- include docs-pagination.html -%}
 
       <p class="tb-u-mt-12 tb-u-text-sm tb-u-fg-subtle">
         Found something wrong on this page? The source lives in

@@ -419,7 +419,3 @@ bundle exec jekyll serve --drafts
 
 Move it into `_posts/` with a date prefix to publish.
 
----
-
-Next: **[Components](/docs/components/)** — the shortcodes you can use inside
-Markdown.

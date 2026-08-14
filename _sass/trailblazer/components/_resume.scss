@@ -302,6 +302,10 @@
     background: #fff;
     color: #000;
     font-size: 11pt;
+    // The screen stylesheet clips sideways overflow; Chromium's print engine
+    // reads that clip as "one page" and blanks everything after it. Paper
+    // cannot scroll, so on paper the clip has no job to do.
+    overflow: visible;
   }
 
   .tb-navbar,

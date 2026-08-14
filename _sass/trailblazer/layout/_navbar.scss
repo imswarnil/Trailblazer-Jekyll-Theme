@@ -59,8 +59,15 @@
 
 // `is-scrolled` is set by the theme script once the page has moved. Without
 // the script the bar simply never gains the shadow, which costs nothing.
-.tb-navbar.is-scrolled .tb-navbar__inner {
+// Only the island casts one: it is a floating card, and elevation is its
+// idiom. The full bar is welded to the page — it must never appear to lift,
+// so on scroll it only firms up its bottom hairline.
+.tb-navbar--island.is-scrolled .tb-navbar__inner {
   box-shadow: var(--tb-shadow-2);
+  border-color: var(--tb-line-default);
+}
+
+.tb-navbar--full.is-scrolled .tb-navbar__inner {
   border-color: var(--tb-line-default);
 }
 

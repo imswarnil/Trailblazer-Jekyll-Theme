@@ -204,6 +204,3 @@ bundle config set --local path vendor/bundle
 bundle install
 ```
 
----
-
-Next: **[Deploying to GitHub Pages](/docs/deploying/)**.

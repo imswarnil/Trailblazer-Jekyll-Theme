@@ -132,6 +132,20 @@ main > *:nth-child(n+8) { animation-delay: 350ms; }
 // Everything off, including the reveal's starting offset — an element that
 // never animates must never be left mid-transition.
 
+// ── Print ───────────────────────────────────────────────────────────────────
+// Paper never runs an animation, but `both` fill still applies the `from`
+// keyframe — which for the entrance fade is opacity 0, i.e. a stack of blank
+// pages. Print gets the finished state of everything, unconditionally.
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 @include tb-reduced-motion {
   *,
   *::before,
