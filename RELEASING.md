@@ -1,42 +1,176 @@
 # Releasing Trailblazer
 
-The owner's checklist, from "the code is ready" to "people can buy it".
-Nothing here is needed to *use* the theme — this is the selling side.
+The owner's manual: how work flows from an edit to a versioned, sellable
+release, and where it goes to be sold. Nothing here is needed to *use* the
+theme — buyers read `docs/`; this file is for whoever ships it.
 
-## The development cycle
+## The map
 
-Day to day, work lands on `main` through commits or PRs, and CI
-(`.github/workflows/ci.yml`) guards the three promises on every push:
+```
+edit code ──► add a line under [Unreleased] ──► commit ──► push to main
+                                                              │
+                       ┌──────────────────┬───────────────────┼─ on every push ─┐
+                       ▼                  ▼                   ▼                 ▼
+                      CI              Package            Deploy Pages       (repeat…)
+               build · scss ·     sale zip rebuilt       demo site live
+               gem · starter      as an artifact
+                                                              │
+   ready to ship?   bin/release X.Y.Z   ──►   git push && git push --tags
+                                                              │
+                                                       Release workflow
+                                                              │
+                                        GitHub release: notes from CHANGELOG,
+                                        gem + sale zip attached, gem pushed
+                                        to RubyGems (when the secret is set)
+```
 
-1. the demo site builds in production mode and its key pages exist;
-2. the SCSS framework compiles standalone;
-3. the gem packages cleanly — no demo content inside — and the **starter
-   builds against the packaged theme**, which is a buyer's first
-   `bundle install` rehearsed in advance.
+Three files carry the version and they never disagree, because only
+`bin/release` writes them: `trailblazer-jekyll-theme.gemspec` (the
+authority — the release workflow refuses a tag that contradicts it),
+`package.json`, and the newest heading in `CHANGELOG.md`.
 
-Every user-visible change gets a line under `## [Unreleased]` in
-`CHANGELOG.md` in the same commit. That section *is* the next release's
-notes — the release workflow lifts it verbatim, so if it is empty at release
-time, the release page will be too.
+## Day to day
+
+Work lands on `main` through commits or PRs. Two habits make releasing
+free later:
+
+1. **Every user-visible change gets a line under `## [Unreleased]` in
+   `CHANGELOG.md`, in the same commit.** That section *is* the next
+   release's notes — the release workflow lifts it verbatim, so if it is
+   empty at release time the release page will be too. Internal-only
+   changes (CI tweaks, typo fixes in comments) can skip it.
+2. **Never edit a released section.** History is append-only; a correction
+   is a new line under Unreleased.
+
+Every push to main runs three workflows:
+
+- **CI** — the demo builds in production mode with its key pages present;
+  the SCSS framework compiles standalone; the gem packages with no demo
+  content inside; and the **starter builds against the packaged theme** —
+  a buyer's first `bundle install`, rehearsed in advance.
+- **Package** — rebuilds the sale zip (demo + theme + starter + offline
+  HTML/PDF documentation) and uploads it as a 30-day artifact under
+  Actions → Package. The latest sellable state is always one download
+  away, without cutting a release.
+- **Deploy to GitHub Pages** — the live demo redeploys itself.
+
+## Choosing the next version
+
+Semantic versioning, read from a *buyer's* point of view — "what happens
+to a site that updates?":
+
+| Bump | When | Examples from this repo |
+| --- | --- | --- |
+| **Patch** `1.1.0 → 1.1.1` | A site updating changes nothing and fixes something | the blank-pages print bug; a Liquid guard; a docs correction |
+| **Minor** `1.1.0 → 1.2.0` | New capability, existing sites unaffected | docs pagination; a new card style; a new `_config.yml` key with a safe default |
+| **Major** `1.1.0 → 2.0.0` | An updating site must change something | renaming a token; changing a layout's front-matter contract; dropping a plugin |
+
+If you are debating between two, pick the bigger one — an undersold major
+breaks buyers' sites; an oversold minor costs nothing. A major bump also
+gets a migration note at the **top** of its CHANGELOG section, in bold.
 
 ## Cutting a release
 
+Preflight, one minute:
+
 ```bash
-bin/release 1.1.0        # bumps gemspec + package.json, rolls the
-                         # changelog, commits, tags v1.1.0
+git status                    # clean tree, on main
+head -40 CHANGELOG.md         # [Unreleased] says what you think it says
+gh run list --limit 3         # CI green on the commit you are releasing
+```
+
+Then:
+
+```bash
+bin/release 1.2.0
 git push && git push --tags
 ```
 
+`bin/release` is deliberately dumb and inspectable. It refuses to run on a
+dirty tree, off main, on an existing tag, or with no `[Unreleased]`
+section; then it
+
+1. writes the version into the gemspec and `package.json`;
+2. rolls the changelog — `[Unreleased]` becomes `[1.2.0] — <today>` and a
+   fresh empty `[Unreleased]` opens above it;
+3. commits `Release 1.2.0` and tags `v1.2.0` — **without pushing**, so you
+   can `git show` the commit first. `git tag -d v1.2.0 && git reset
+   --hard HEAD^` un-does it entirely if you change your mind.
+
 The tag push triggers `.github/workflows/release.yml`, which:
 
-1. refuses to run if the tag and gemspec version disagree;
-2. rebuilds and re-verifies the site;
-3. builds the gem and `dist/trailblazer-jekyll-theme-<v>.zip`;
-4. creates the GitHub release with that version's CHANGELOG section as the
-   body and both artifacts attached;
-5. pushes the gem to RubyGems — **if** the `RUBYGEMS_API_KEY` secret is set.
+1. refuses to run if the tag and the gemspec version disagree;
+2. rebuilds and re-verifies the demo site;
+3. builds the gem and the sale zip (with the offline documentation built
+   inside it — the runner has Chrome, so the PDF is always present);
+4. creates the GitHub release, body lifted verbatim from that version's
+   CHANGELOG section, gem and zip attached;
+5. pushes the gem to RubyGems — **if** the `RUBYGEMS_API_KEY` secret is
+   set; otherwise it warns and skips, and everything else still completes.
 
-### One-time setup for the gem publish
+### After it goes green
+
+- The release page reads correctly and both assets are attached.
+- <https://rubygems.org/gems/trailblazer-jekyll-theme> shows the new
+  version (once the secret exists).
+- Click through the freshly deployed demo once.
+- Upload the new zip wherever it is sold (Gumroad / Envato — below), and
+  paste the same CHANGELOG section as the update notes there.
+
+## When something goes wrong
+
+**The Release workflow failed on "tag must match the gemspec."** The tag
+was made by hand. Delete it (`git push origin :refs/tags/vX.Y.Z && git tag
+-d vX.Y.Z`) and use `bin/release`, which cannot produce that state.
+
+**The release is out but wrong, and nobody has it yet.** A GitHub-only
+release (gem never reached RubyGems, minutes old) may be re-cut: delete
+the release and the tag, fix, `bin/release` the *same* version again.
+
+**The release is out, published, and wrong.** Never move or delete a
+published tag — `remote_theme: …@v1.2.0` pins deploy against it, and a
+moved tag silently changes buyers' live sites. Fix forward: commit the
+fix, `bin/release 1.2.1`. On RubyGems, `gem yank` is for
+never-should-have-existed versions (leaked secret, broken install), not
+for bugs — a yanked version breaks every `Gemfile.lock` that references
+it.
+
+**A severe bug, but main has unreleased work you don't want to ship.**
+Branch from the tag, cherry-pick the fix, release from there:
+
+```bash
+git checkout -b hotfix-1.2.1 v1.2.0
+git cherry-pick <fix-sha>
+# bin/release requires main, so hotfixes are the one manual case:
+#   bump gemspec + package.json + CHANGELOG by hand, commit, tag v1.2.1,
+#   push the tag — the Release workflow does the rest.
+git checkout main && git merge hotfix-1.2.1
+```
+
+**Actions is down.** The manual equivalent of the whole pipeline:
+
+```bash
+JEKYLL_ENV=production bundle exec jekyll build
+gem build trailblazer-jekyll-theme.gemspec
+./scripts/package.sh 1.2.0
+gem push trailblazer-jekyll-theme-1.2.0.gem
+gh release create v1.2.0 --title "Trailblazer v1.2.0" \
+  --notes-file <(awk -v ver=1.2.0 '$0 ~ "^## \\[" ver "\\]" {on=1; next} on && /^## \[/ {exit} on' CHANGELOG.md) \
+  trailblazer-jekyll-theme-1.2.0.gem dist/trailblazer-jekyll-theme-1.2.0.zip
+```
+
+## How updates reach buyers
+
+Worth keeping in mind when deciding what a change costs:
+
+- **Gem sites** get updates when *they* run `bundle update` — safe to
+  release often.
+- **Remote-theme sites pinned to a tag** never change until they bump the
+  pin; sites tracking `main` (discouraged in the docs) take every push.
+- **Forks** take nothing automatically; the CHANGELOG is their upgrade
+  map, which is why every entry names the file or key it touched.
+
+## One-time setup for the gem publish
 
 1. Create a RubyGems account (MFA required for new publishers) and sign in
    once locally: `gem signin`.
@@ -47,9 +181,6 @@ The tag push triggers `.github/workflows/release.yml`, which:
 
 Without the secret the workflow still releases on GitHub and just warns; you
 can push manually with `gem push trailblazer-jekyll-theme-<v>.gem`.
-
-Tags matter beyond ceremony: `remote_theme: imswarnil/trailblazer-jekyll-theme@v1.1.0`
-is how remote-theme users pin, and a moved tag changes their live site.
 
 ## Selling on Envato (ThemeForest)
 

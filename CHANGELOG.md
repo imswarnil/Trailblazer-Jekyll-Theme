@@ -6,6 +6,13 @@ has to change something.
 
 ## [Unreleased]
 
+### Fixed
+
+- The full-width navbar's background, bottom hairline and reading-progress
+  bar now run true edge to edge. They sat on the inner element inside a
+  guttered container, so all three stopped one gutter short of each viewport
+  edge and read as a misaligned underline.
+
 ## [1.1.0] — 2026-08-15
 
 ### Documentation

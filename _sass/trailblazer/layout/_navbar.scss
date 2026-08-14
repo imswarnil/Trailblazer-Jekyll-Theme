@@ -40,18 +40,28 @@
   box-shadow: var(--tb-shadow-1);
 }
 
+// The full bar earns its name at the viewport edge: background and hairline
+// sit on the nav element itself, which is full-bleed, not on the inner —
+// the inner lives inside a guttered container, and a border there stops a
+// gutter short of each edge and reads as a misaligned underline.
 .tb-navbar--full {
   padding-block: 0;
+  background: var(--tb-navbar-bg);
+  border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle);
 
+  // `static` so the absolutely-positioned progress hairline anchors to the
+  // full-bleed bar rather than the guttered inner, and runs edge to edge.
   .tb-navbar__inner {
-    border-bottom: var(--tb-border-hair) solid var(--tb-line-subtle);
+    background: none;
+    position: static;
   }
 }
 
 // Frosted glass, opt-in. Falls back to the solid surface where the browser has
 // no backdrop-filter — a translucent bar with no blur is unreadable over text.
 @supports (backdrop-filter: blur(1px)) {
-  .tb-navbar--blur .tb-navbar__inner {
+  .tb-navbar--island.tb-navbar--blur .tb-navbar__inner,
+  .tb-navbar--full.tb-navbar--blur {
     background: color-mix(in srgb, var(--tb-bg-canvas) 78%, transparent);
     backdrop-filter: saturate(180%) blur(14px);
   }
@@ -67,7 +77,7 @@
   border-color: var(--tb-line-default);
 }
 
-.tb-navbar--full.is-scrolled .tb-navbar__inner {
+.tb-navbar--full.is-scrolled {
   border-color: var(--tb-line-default);
 }
 
