@@ -36,7 +36,14 @@ Gem::Specification.new do |spec|
   spec.files = Dir.glob(
     "{_includes,_layouts,_sass,assets}/**/*",
     File::FNM_DOTMATCH
-  ).reject { |f| File.directory?(f) } + %w[
+  ).reject do |f|
+    # Demo-only media. Nothing in the framework references these — they are
+    # the demo posts' cover art, the README screenshots and a sample audio
+    # file, and together they were 95% of the package by weight.
+    File.directory?(f) ||
+      f.start_with?("assets/img/placeholders/", "assets/img/screenshots/",
+                    "assets/img/projects/", "assets/audio/")
+  end + %w[
     LICENSE
     README.md
     CHANGELOG.md

@@ -70,7 +70,7 @@ jobs:
         run: |
           set -e
           tar -xOf trailblazer-jekyll-theme-*.gem data.tar.gz | tar -tz > /tmp/contents.txt
-          if grep -E '^(_posts|_data|docs|starter|_projects|_snippets)/' /tmp/contents.txt; then
+          if grep -E '^(_posts|_data|docs|starter|_projects|_snippets)/|^assets/(audio|img/(placeholders|screenshots|projects))/' /tmp/contents.txt; then
             echo "demo content leaked into the gem"; exit 1
           fi
           grep -q '^_layouts/default.html$' /tmp/contents.txt

@@ -17,7 +17,9 @@ First release.
   post, an index page per collection, the search palette, a 404 and the
   GitHub Pages deploy workflow. Verified to build against the packaged gem.
 - The gem no longer packages `_data` (Jekyll does not read data files from a
-  theme gem, and shipping it only bundled the demo persona's resume).
+  theme gem, and shipping it only bundled the demo persona's resume), nor the
+  demo-only media (cover-art placeholders, README screenshots, sample audio)
+  — which cuts the package from 9 MB to under 1 MB. CI enforces both.
 - `Rakefile` with `rake gem:build`, `rake gem:release` and `rake check`.
 - `package.json` with npm wrappers over the Ruby toolchain — `npm run dev`,
   `build`, `check:css`, `gem:build` — for people who live in npm. Node
