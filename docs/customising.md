@@ -173,7 +173,7 @@ scripts:
 ## Where the design system comes from
 
 The framework in `_sass/trailblazer/` is a port of the
-[Creator Design System](https://creator.imswarnil.com) — same two-tier token
+[Creator Design System](https://design.imswarnil.com) — same two-tier token
 architecture, same house rules, same component grammar — re-keyed to Sass
 variables so `_config.yml` can drive it, and skinned for this theme: the
 cloud-blue accent, the `tb-` prefix, and the Salesforce-developer surfaces
